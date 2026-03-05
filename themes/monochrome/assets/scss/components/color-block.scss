@@ -19,6 +19,14 @@
   color: var(--color-colorblock-note-text);
 }
 
+.color-block-caption {
+  margin-top: -1.2rem;
+  border-top-left-radius: 0rem;
+  border-top-right-radius: 0rem; 
+  background-color: var(--color-colorblock-note-bg);
+  color: var(--color-colorblock-note-text);
+}
+
 .color-block-alert {
   background-color: $color-colorblock-alert-bg;
   color: $color-colorblock-alert-text; 

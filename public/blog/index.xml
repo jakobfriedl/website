@@ -6,7 +6,16 @@
     <description>Recent content in Blog on Home</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 06 Aug 2025 12:55:49 +0200</lastBuildDate><atom:link href="http://localhost:1313/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 05 Mar 2026 00:00:00 +0100</lastBuildDate><atom:link href="http://localhost:1313/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Customizing C2 Traffic using Advanced Malleable Network Profiles</title>
+      <link>http://localhost:1313/blog/conquest-profiles/</link>
+      <pubDate>Thu, 05 Mar 2026 00:00:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/blog/conquest-profiles/</guid>
+      <description>&lt;p&gt;One of the primary ways C2 communication is getting detected by defenders is by patterns in the network traffic between team server and agents. To counter this, modern post-exploitation frameworks, including &lt;a href=&#34;https://github.com/jakobfriedl/conquest/&#34;&gt;&lt;strong&gt;Conquest&lt;/strong&gt;&lt;/a&gt;, provide the ability to customize this network traffic using malleable C2 profiles. Using simple configuration files, operators can transform HTTP requests and responses according to their needs. This blog post aims to showcase Conquest&amp;rsquo;s profile system and all the features it provides.&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Protecting C2 Traffic in Nim</title>
       <link>http://localhost:1313/blog/nim-c2-traffic/</link>

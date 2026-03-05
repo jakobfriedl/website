@@ -10,6 +10,8 @@
     {{ $icon = "info"}}
 {{ else if eq $style "success" }}
     {{ $icon = "star"}}
+{{ else if eq $style "caption" }}
+    {{ $icon = "chevrons-up"}}
 {{ end }}
 
 <div class="color-block content-margin color-block-{{$style}}">
