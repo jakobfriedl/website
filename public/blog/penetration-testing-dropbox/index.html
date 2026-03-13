@@ -297,20 +297,7 @@
 <p>After deploying and testing the setup with a virtual machine, I decided to also configure a Raspberry Pi in the same way. The advantage of a Raspberry Pi compared to a virtual machine is that it can be used during physical red team engagements and dropped of at the location in order to get internal network access.</p>
 <p>This blog post explains how to set up red team or penetration testing infrastructure with a Raspberry Pi and OpenVPN. Furthermore, it shows how to bypass restrictive firewalls and deep packet inspection, as well as how to have the dropbox send check-in requests to a webserver.</p>
 
-<h2 id="requirements" class="header-anchor-wrapper">Requirements
-  <a href="#requirements" class="header-anchor-link">
-    <svg width="16px" height="16px" viewBox="0 0 24 24">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
-</svg>
-
-</svg>
-  </a>
-</h2>
+<h2>Requirements</h2>
 
 <p>The infrastructure should check the following boxes:</p>
 <ul>
@@ -321,20 +308,7 @@
 <li>Secure by design</li>
 </ul>
 
-<h2 id="the-idea" class="header-anchor-wrapper">The Idea
-  <a href="#the-idea" class="header-anchor-link">
-    <svg width="16px" height="16px" viewBox="0 0 24 24">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
-</svg>
-
-</svg>
-  </a>
-</h2>
+<h2>The Idea</h2>
 
 <p>My approach to this project involves a public droplet hosted on DigitalOcean which acts as the OpenVPN server for the attacker machine and the attacker dropbox. The dropbox is a Raspberry Pi with the Kali Linux OS. For internal penetration tests, where stealth is not a requirement, a simple laptop with a virtual machine does the trick here as well. Both of these devices connect to the VPN server, allowing them to communicate and reach each other via SSH. The OpenVPN traffic is encapsulated within a TLS tunnel using <code>stunnel</code>. Port 443 is used for the connection to the VPN server, as this port is usually allowed in outbound firewall rules. Due to the encryption, packet inspection firewalls are not able to inspect and block the traffic.</p>
 <p>
@@ -354,36 +328,10 @@
     
 </figure></p>
 
-<h2 id="the-server" class="header-anchor-wrapper">The Server
-  <a href="#the-server" class="header-anchor-link">
-    <svg width="16px" height="16px" viewBox="0 0 24 24">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
-</svg>
-
-</svg>
-  </a>
-</h2>
+<h2>The Server</h2>
 
 
-<h3 id="setting-up-the-server" class="header-anchor-wrapper">Setting up the server
-  <a href="#setting-up-the-server" class="header-anchor-link">
-    <svg width="16px" height="16px" viewBox="0 0 24 24">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
-</svg>
-
-</svg>
-  </a>
-</h3>
+<h3>Setting up the server</h3>
 
 <p>For the central VPN server instance, we use the cheapest, most basic ubuntu server that DigitalOcean has to offer, since that is enough for our purpose. The instance shown below will cost around 4€ a month, which is an expendable amount for the provided functionality.</p>
 <p>
@@ -404,20 +352,7 @@
 </figure></p>
 <p>We connect to the server via SSH or the DigitalOcean Console and start configuring stunnel and OpenVPN. For the setup, this blog post mainly follows <a href="https://docs.edisglobal.com/advanced-setup-guides/openvpn-over-stunnel">this</a> resource.</p>
 
-<h3 id="setting-up-stunnel" class="header-anchor-wrapper">Setting up stunnel
-  <a href="#setting-up-stunnel" class="header-anchor-link">
-    <svg width="16px" height="16px" viewBox="0 0 24 24">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
-</svg>
-
-</svg>
-  </a>
-</h3>
+<h3>Setting up stunnel</h3>
 
 <div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt update
 </span></span><span style="display:flex;"><span>sudo apt upgrade
@@ -508,20 +443,7 @@
     
 </figure></p>
 
-<h3 id="setting-up-openvpn" class="header-anchor-wrapper">Setting up OpenVPN
-  <a href="#setting-up-openvpn" class="header-anchor-link">
-    <svg width="16px" height="16px" viewBox="0 0 24 24">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
-</svg>
-
-</svg>
-  </a>
-</h3>
+<h3>Setting up OpenVPN</h3>
 
 <p>We use the OpenVPN install script to set up the VPN server with the following options.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>wget https://git.io/vpn -O openvpn-install.sh 
@@ -583,36 +505,10 @@
 </figure></p>
 <p>We are done setting up the VPN server, so the next step is to configure the Dropbox and other VPN clients to be able to communicate with the server.</p>
 
-<h2 id="the-dropbox" class="header-anchor-wrapper">The Dropbox
-  <a href="#the-dropbox" class="header-anchor-link">
-    <svg width="16px" height="16px" viewBox="0 0 24 24">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
-</svg>
-
-</svg>
-  </a>
-</h2>
+<h2>The Dropbox</h2>
 
 
-<h3 id="hardware" class="header-anchor-wrapper">Hardware
-  <a href="#hardware" class="header-anchor-link">
-    <svg width="16px" height="16px" viewBox="0 0 24 24">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
-</svg>
-
-</svg>
-  </a>
-</h3>
+<h3>Hardware</h3>
 
 <p>The following hardware is used:</p>
 <ul>
@@ -647,20 +543,7 @@
 <li>Connect to the Raspberry Pi via SSH</li>
 </ul>
 
-<h3 id="setting-up-the-connection" class="header-anchor-wrapper">Setting up the connection
-  <a href="#setting-up-the-connection" class="header-anchor-link">
-    <svg width="16px" height="16px" viewBox="0 0 24 24">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
-</svg>
-
-</svg>
-  </a>
-</h3>
+<h3>Setting up the connection</h3>
 
 <p>Like on the DigitalOcean droplet, we first install stunnel.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt update
@@ -880,37 +763,11 @@
 </figure></p>
 <p>If the Ethernet cable on the Raspberry Pi is disconnected for some reason, the connection will obviously break. However, once the cable is reattached, the dropbox is instantly reconnected to the VPN network and can be accessed via SSH.</p>
 
-<h3 id="automatic-check-in" class="header-anchor-wrapper">Automatic check-in
-  <a href="#automatic-check-in" class="header-anchor-link">
-    <svg width="16px" height="16px" viewBox="0 0 24 24">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
-</svg>
-
-</svg>
-  </a>
-</h3>
+<h3>Automatic check-in</h3>
 
 <p>One goal of mine was to configure the Raspberry Pi to send a check-in request to a server periodically so that during a red team engagement, I can see which dropboxes connected back to me and in which parts of the target network they are located. The simplest way to do that would be to install a webserver on the DigitalOcean droplet where the VPN server is running and have a cronjob send a curl request every few minutes.</p>
 
-<h4 id="webserver-setup" class="header-anchor-wrapper">Webserver Setup
-  <a href="#webserver-setup" class="header-anchor-link">
-    <svg width="16px" height="16px" viewBox="0 0 24 24">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
-</svg>
-
-</svg>
-  </a>
-</h4>
+<h4>Webserver Setup</h4>
 
 <div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install python3-venv
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir -p /var/www/html/app
@@ -1165,20 +1022,7 @@
     
 </figure></p>
 
-<h4 id="cronjob" class="header-anchor-wrapper">Cronjob
-  <a href="#cronjob" class="header-anchor-link">
-    <svg width="16px" height="16px" viewBox="0 0 24 24">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
-</svg>
-
-</svg>
-  </a>
-</h4>
+<h4>Cronjob</h4>
 
 <p>On the Raspberry Pi dropbox, after installing the necessary dependencies, we first create a simple bash script that sends the relevant data to the webserver.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install jq -y
@@ -1256,36 +1100,10 @@
     
 </figure></p>
 
-<h2 id="next-steps" class="header-anchor-wrapper">Next Steps
-  <a href="#next-steps" class="header-anchor-link">
-    <svg width="16px" height="16px" viewBox="0 0 24 24">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
-</svg>
-
-</svg>
-  </a>
-</h2>
+<h2>Next Steps</h2>
 
 
-<h3 id="network-attacks" class="header-anchor-wrapper">Network Attacks
-  <a href="#network-attacks" class="header-anchor-link">
-    <svg width="16px" height="16px" viewBox="0 0 24 24">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
-</svg>
-
-</svg>
-  </a>
-</h3>
+<h3>Network Attacks</h3>
 
 <p>The main purpose of the dropbox in this blog post is to provide access to a target&rsquo;s internal network for the purpose of a red team engagement or internal penetration test. Since the dropbox itself is running on the Kali Linux operating system, an operator has plenty of built-in tools available to perform reconnaissance and exploitation techniques in the network. Commonly used are the following:</p>
 <ul>
@@ -1297,20 +1115,7 @@
 </ul>
 <p>It is further possible to establish a tunnel to the dropbox with tools like <code>ligolo-ng</code> to use tools that are not installed on the device.</p>
 
-<h3 id="wireless-attacks" class="header-anchor-wrapper">Wireless Attacks
-  <a href="#wireless-attacks" class="header-anchor-link">
-    <svg width="16px" height="16px" viewBox="0 0 24 24">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
-</svg>
-
-</svg>
-  </a>
-</h3>
+<h3>Wireless Attacks</h3>
 
 <p>With the Wireless Adaptar taken from the Wi-Fi Pinapple, the dropbox can be used to perform wireless attacks against access points in vicinity. During an engagement, this would be used to capture WPA/WPA2 handshakes, crack the pre-shared key and authenticate to the wireless network. The screenshot below shows the output of the <code>airodump-ng</code> tool from the <code>aircrack-ng</code> suite, which comes with Kali per default.</p>
 <p>
@@ -1330,20 +1135,7 @@
     
 </figure></p>
 
-<h3 id="improvements" class="header-anchor-wrapper">Improvements
-  <a href="#improvements" class="header-anchor-link">
-    <svg width="16px" height="16px" viewBox="0 0 24 24">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
-</svg>
-
-</svg>
-  </a>
-</h3>
+<h3>Improvements</h3>
 
 <p>Of course, there are several improvements to be made in this projects to make it more usable and efficient. Since I would probably need more than just one dropbox when doing a red team engagement, the first step would be to create a setup script that automates the installation and configuration of a Raspberry Pi to turn it into a penetration testing dropbox. The webserver would then also need to be overhauled to be able to show and manage multiple dropboxes, with the hostname being the unique identifier.</p>
 <p>Additionally, there are plenty of improvements to be made regarding security, including encryption of the check-in requests and exfiltrated data on the Raspberry Pi. For now, I am very happy with this working proof-of-concept, especially since it is easy to build on and contains a lot of functionality that I originally wanted to implement.</p>

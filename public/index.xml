@@ -8,6 +8,15 @@
     <language>en-us</language>
     <lastBuildDate>Sat, 17 Feb 2024 12:34:18 +0100</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Extending Conquest using Python Modules</title>
+      <link>http://localhost:1313/blog/conquest-modules/</link>
+      <pubDate>Fri, 13 Mar 2026 14:46:12 +0100</pubDate>
+      
+      <guid>http://localhost:1313/blog/conquest-modules/</guid>
+      <description>&lt;p&gt;Command and control (C2) frameworks are sometimes also referred to as post-exploitation frameworks. This is because they enable their users to execute post-exploitation capabilities on compromised systems. To make the use of these capabilities as easy as possible, &lt;a href=&#34;https://github.com/jakobfriedl/conquest/&#34;&gt;&lt;strong&gt;Conquest&lt;/strong&gt;&lt;/a&gt; offers an advanced module system for extending the framework with Beacon Object Files or other third-party offensive tooling. This blog post showcases the creation of new commands using the Python API and serves as reference material for Conquest module development.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>Customizing C2 Traffic using Advanced Malleable Network Profiles</title>
       <link>http://localhost:1313/blog/conquest-profiles/</link>
       <pubDate>Thu, 05 Mar 2026 00:00:00 +0100</pubDate>
