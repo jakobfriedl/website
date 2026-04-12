@@ -31,7 +31,7 @@
 </details>
 {{ end }}
 
-{{- /* Two-column flex wrapper: article on left, sticky sidebar on right */ -}}
+{{- /* post-layout is position:relative; the TOC aside is absolutely placed outside the article */ -}}
 <div class="post-layout">
     <div class="post-body">
         <div class="blog-body">
@@ -52,8 +52,10 @@
     {{- /* Desktop: sticky sidebar ToC, shown at xl+ */ -}}
     {{ if $has_toc }}
     <aside class="toc-sidebar">
-        <div class="toc-sidebar-title">Contents</div>
-        {{ .TableOfContents }}
+        <div class="toc-sidebar-inner">
+            <div class="toc-sidebar-title">Contents</div>
+            {{ .TableOfContents }}
+        </div>
     </aside>
     {{ end }}
 </div>

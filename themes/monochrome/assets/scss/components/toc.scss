@@ -1,51 +1,48 @@
-// ─── Two-column post layout (content + ToC sidebar) ─────────────────────────
+// ─── Post layout: article at normal body width, TOC outside it ───────────────
 //
-// On xl+ screens the body is widened slightly so the ToC can sit flush next
-// to the article without cramping the reading column.
+// .post-layout is a position:relative block so the TOC can be placed with
+// position:absolute to the right — completely outside the article flow.
+// The article body never knows the TOC exists; its width is unchanged.
 
-@media screen and (min-width: $xl_min_width) {
-  body:has(.toc-sidebar) {
-    width: 62%;
-  }
-}
-
-@media screen and (min-width: $xxl_min_width) {
-  body:has(.toc-sidebar) {
-    width: 46%;
-  }
-}
-
-// Flex wrapper: left = article, right = sidebar
 .post-layout {
   @media screen and (min-width: $xl_min_width) {
-    display: flex;
-    gap: 2rem;
-    align-items: flex-start;
-  }
-
-  .post-body {
-    flex: 1;
-    min-width: 0; // prevent flex child from overflowing
+    position: relative;
   }
 }
 
 // ─── Desktop: sticky sidebar ToC (xl+ only) ──────────────────────────────────
+//
+// The <aside> is an absolutely-positioned, zero-impact container that spans
+// the full article height. The inner div is position:sticky so it follows
+// the reader without overlapping the article.
 
 .toc-sidebar {
   display: none;
 
   @media screen and (min-width: $xl_min_width) {
     display: block;
-    flex-shrink: 0;
-    width: 12rem;
+    position: absolute;
+    left: calc(100% + 2rem); // flush against the right edge of the article + gap
+    top: 0;
+    width: calc(27.5vw - 2rem); // fills the right margin: (100vw - 45vw) / 2 - gap
+    height: 100%;            // span the article height so sticky has room to scroll
+    pointer-events: none;    // the invisible container shouldn't block clicks
+  }
+
+  @media screen and (min-width: $xxl_min_width) {
+    width: calc(33.5vw - 2rem); // (100vw - 33vw) / 2 - gap
+  }
+
+  .toc-sidebar-inner {
     position: sticky;
     top: 5.5rem;
     max-height: calc(100vh - 7rem);
     overflow-y: auto;
-    font-size: 0.76rem;
+    font-size: 1rem;
     line-height: 1.45;
     scrollbar-width: thin;
     padding-top: 0.15rem;
+    pointer-events: auto;
   }
 
   .toc-sidebar-title {
@@ -68,11 +65,7 @@
     li { margin: 0; }
 
     ul ul {
-      a { padding-left: 1.1rem; }
-    }
-
-    ul ul ul {
-      a { padding-left: 1.8rem; }
+      padding-left: 0.6rem;
     }
 
     a {
@@ -165,11 +158,7 @@
       li { margin: 0; }
 
       ul ul {
-        a { padding-left: 1.1rem; }
-      }
-
-      ul ul ul {
-        a { padding-left: 1.8rem; }
+        padding-left: 0.6rem;
       }
 
       a {

@@ -196,6 +196,10 @@ article {
     display: block;
   }
 
+  a:hover {
+    color: var(--color-highlight);
+  }
+
   .header-anchor-link {
     display: none;
     color: var(--color-text);

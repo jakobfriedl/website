@@ -689,6 +689,8 @@ article {
     margin-left: auto;
     margin-right: auto;
     display: block; }
+  article a:hover {
+    color: var(--color-highlight); }
   article .header-anchor-link {
     display: none;
     color: var(--color-text); }
@@ -1562,38 +1564,33 @@ article#collapsible_menu_changelogs {
   margin-top: 0.5rem; }
 
 @media screen and (min-width: 80rem) {
-  body:has(.toc-sidebar) {
-    width: 62%; } }
-
-@media screen and (min-width: 120rem) {
-  body:has(.toc-sidebar) {
-    width: 46%; } }
-
-@media screen and (min-width: 80rem) {
   .post-layout {
-    display: flex;
-    gap: 2rem;
-    align-items: flex-start; } }
-
-.post-layout .post-body {
-  flex: 1;
-  min-width: 0; }
+    position: relative; } }
 
 .toc-sidebar {
   display: none; }
   @media screen and (min-width: 80rem) {
     .toc-sidebar {
       display: block;
-      flex-shrink: 0;
-      width: 12rem;
-      position: sticky;
-      top: 5.5rem;
-      max-height: calc(100vh - 7rem);
-      overflow-y: auto;
-      font-size: 0.76rem;
-      line-height: 1.45;
-      scrollbar-width: thin;
-      padding-top: 0.15rem; } }
+      position: absolute;
+      left: calc(100% + 2rem);
+      top: 0;
+      width: calc(27.5vw - 2rem);
+      height: 100%;
+      pointer-events: none; } }
+  @media screen and (min-width: 120rem) {
+    .toc-sidebar {
+      width: calc(33.5vw - 2rem); } }
+  .toc-sidebar .toc-sidebar-inner {
+    position: sticky;
+    top: 5.5rem;
+    max-height: calc(100vh - 7rem);
+    overflow-y: auto;
+    font-size: 1rem;
+    line-height: 1.45;
+    scrollbar-width: thin;
+    padding-top: 0.15rem;
+    pointer-events: auto; }
   .toc-sidebar .toc-sidebar-title {
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -1608,10 +1605,8 @@ article#collapsible_menu_changelogs {
     margin: 0; }
   .toc-sidebar nav li {
     margin: 0; }
-  .toc-sidebar nav ul ul a {
-    padding-left: 1.1rem; }
-  .toc-sidebar nav ul ul ul a {
-    padding-left: 1.8rem; }
+  .toc-sidebar nav ul ul {
+    padding-left: 0.6rem; }
   .toc-sidebar nav a {
     display: block;
     padding: 0.18rem 0.6rem;
@@ -1679,10 +1674,8 @@ article#collapsible_menu_changelogs {
       margin: 0; }
     .toc-mobile .toc-mobile-body nav li {
       margin: 0; }
-    .toc-mobile .toc-mobile-body nav ul ul a {
-      padding-left: 1.1rem; }
-    .toc-mobile .toc-mobile-body nav ul ul ul a {
-      padding-left: 1.8rem; }
+    .toc-mobile .toc-mobile-body nav ul ul {
+      padding-left: 0.6rem; }
     .toc-mobile .toc-mobile-body nav a {
       display: block;
       padding: 0.2rem 0.6rem;
