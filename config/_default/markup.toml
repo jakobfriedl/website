@@ -1,6 +1,10 @@
-[golmark.renderer]
+[goldmark.renderer]
 unsafe = true
 
+[tableOfContents]
+startLevel = 2
+endLevel = 4
+ordered = false
+
 [highlight]
-# noClasses=false
-style="evergarden"
+noClasses = false

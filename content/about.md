@@ -11,7 +11,7 @@ bookcase_cover_src_dark: 'cover/catalogue_dark.png'
 
 # Hello, I'm **Jakob**...
 
-...and I'm a information security master's student and penetration tester based in Austria. Currently, I am particularly interested in network penetration testing, especially Active Directory environments and am currently studying Windows 64-bit malware development. This site is to be used as a platform to document my journey in the field of information security and to write about my research and projects. 
+...and I'm a information security master's student and penetration tester based in Austria. Currently, I am particularly interested in network penetration testing, especially Active Directory environments and am currently studying Windows 64-bit malware development. I am the author of [Conquest](https://github.com/jakobfriedl/conquest/), an advanced, malleable C2/post-exploitation framework written in Nim, my favourite programming language. 
 
 ## Socials
 

@@ -47,7 +47,7 @@ users = [
 
 With the basic settings out of the way, let's now direct our attention to the key feature Conquest's profile system has to offer: the *HTTP traffic customization*. The settings are divided into two main sections that both offer similar configuration options: `http-get` settings and `http-post` settings. These sections are then split into the additional `agent` and `server` blocks. The `agent` block allows the customization of the requests sent by the C2 implant, while `server` options are used to define the shape of the response sent back by the team server. All sections support the configuration of URI endpoints, user-agents, HTTP headers and query parameters, as well as additional settings following the high-level structure below. 
 
-```
+```text
  http-get
  ├── agent
  │   ├── user-agent
@@ -110,10 +110,7 @@ lang = [                    # <--- The query parameter 'lang' either has the val
 page = "1$"                 # <--- Randomized page number: 10-19
 ```
 
-![Randomization](/img/c2-profile-system/1.png)
-{{< color-block style="caption">}}
-Query parameter and endpoint randomization.
-{{< /color-block>}}
+![Randomization](/img/c2-profile-system/1.png "Query parameter and endpoint randomization.")
 
 ### Data Transformation
 
@@ -157,10 +154,7 @@ prepend = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9."
 append = ".######################################-####"
 ```
 
-![Heartbeat packet disguised as a JWT Bearer token](/img/c2-profile-system/0.png)
-{{< color-block style="caption">}}
-Heartbeat packet disguised as a JWT Bearer token.
-{{< /color-block>}}
+![Heartbeat packet disguised as a JWT Bearer token](/img/c2-profile-system/0.png "Heartbeat packet disguised as a JWT Bearer token.")
 
 Conquest also supports binary prefixes and suffixes. Instead of a string, an array of integers/bytes is used instead. This is particularly useful for mimicking binary file formats, such as images or PDFs, by prepending and appending the appropriate magic bytes, as shown in the example below.
 
@@ -363,15 +357,9 @@ Alt-Svc = 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'
 body = '{"responseContext": {}}'
 ```
 
-![Youtube Profile Traffic - Tasks](/img/c2-profile-system/4.png)
-{{< color-block style="caption">}}
-Tasks sent by the team server embedded in a HTML structure.
-{{< /color-block>}}
+![Youtube Profile Traffic - Tasks](/img/c2-profile-system/4.png "Tasks sent by the team server embedded in a HTML structure.")
 
-![Youtube Profile Traffic - Results](/img/c2-profile-system/3.png)
-{{< color-block style="caption">}}
-Task results sent embedded in JSON data.
-{{< /color-block>}}
+![Youtube Profile Traffic - Results](/img/c2-profile-system/3.png "Task results sent embedded in JSON data.")
 
 ## Conclusion
 

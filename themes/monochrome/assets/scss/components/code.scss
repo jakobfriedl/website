@@ -1,0 +1,213 @@
+// ─── Chroma syntax highlighting ───────────────────────────────────────────────
+//
+// Hugo is configured with noClasses=false, so it outputs CSS class names
+// instead of inline styles. We supply two full palettes below:
+//   • Dark  — Catppuccin Mocha inspired
+//   • Light — GitHub light inspired
+//
+// The .highlight container styling lives in layout/article.scss.
+
+// ── Code block wrapper (render-codeblock hook) ───────────────────────────────
+//
+// When a fenced code block has a language tag, render-codeblock.html wraps it
+// in .code-block and adds a .code-block-header bar. The .highlight inside
+// inherits the outer container's border/radius rather than having its own.
+
+.code-block {
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  @include my-4;
+
+  // Reset the default .highlight container styles; the wrapper owns them.
+  .highlight {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+  }
+
+  // Reset plain <pre> margin for no-language blocks (no .highlight wrapper).
+  > pre {
+    margin: 0;
+    border-radius: 0;
+  }
+}
+
+// ── Shared structural rules ───────────────────────────────────────────────────
+
+pre.chroma {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  overflow-x: auto;
+
+  code {
+    font-size: 0.85em;
+    display: block;
+  }
+}
+
+// ── Dark mode ─────────────────────────────────────────────────────────────────
+
+html[data-theme="dark"] {
+
+  // Plain <pre> without a language tag
+  pre:not(.chroma) {
+    background-color: #222222;
+    color: #cdd6f4;
+  }
+
+  // Highlighted block wrapper background
+  .highlight > div,
+  .highlight > pre {
+    background-color: #222222;
+  }
+
+  .chroma {
+    background-color: #222222;
+    color: #cdd6f4;
+
+    // ── Keywords ────────────────────────────────────────────────────────────
+    .k, .kd, .kn, .kp, .kr, .kc { color: #cba6f7; }   // mauve
+    .kt                           { color: #f9e2af; }   // yellow (types)
+
+    // ── Names ────────────────────────────────────────────────────────────────
+    .nf, .fm { color: #89b4fa; }   // blue  – functions
+    .nc       { color: #f9e2af; }  // yellow – classes
+    .nb       { color: #cba6f7; }  // mauve  – builtins
+    .no       { color: #fab387; }  // peach  – constants
+    .nd       { color: #89b4fa; }  // blue   – decorators / attributes
+    .ni       { color: #89dceb; }  // sky    – entities
+    .ne       { color: #f38ba8; }  // red    – exceptions
+    .nn       { color: #f9e2af; }  // yellow – namespaces
+    .nt       { color: #f38ba8; }  // red    – HTML/XML tags
+    .na       { color: #89b4fa; }  // blue   – tag attributes
+    .nv, .vc, .vg, .vi, .vm { color: #cdd6f4; }  // text – variables
+
+    // ── Strings ──────────────────────────────────────────────────────────────
+    .s, .s1, .s2, .sb, .sc, .sd, .sh, .sx { color: #a6e3a1; }  // green
+    .si { color: #a6e3a1; }   // interpolation – green
+    .se { color: #fab387; }   // escape        – peach
+    .sr { color: #89dceb; }   // regex         – sky
+
+    // ── Comments ─────────────────────────────────────────────────────────────
+    .c, .c1, .cm, .cp, .cs {
+      color: #585b70;
+      font-style: italic;
+    }
+
+    // ── Numbers ──────────────────────────────────────────────────────────────
+    .m, .mb, .mf, .mh, .mi, .mo { color: #fab387; }  // peach
+
+    // ── Operators & punctuation ───────────────────────────────────────────────
+    .o, .ow { color: #89dceb; }    // sky
+    .p      { color: #cdd6f4; }
+
+    // ── Literals ─────────────────────────────────────────────────────────────
+    .l, .ld { color: #a6e3a1; }   // green
+
+    // ── Generic (diff, output, prompts) ──────────────────────────────────────
+    .gd { color: #f38ba8; background-color: #3d1219; }   // deleted
+    .gi { color: #a6e3a1; background-color: #1a3d22; }   // inserted
+    .ge { font-style: italic; }
+    .gs { font-weight: bold; }
+    .gp { color: #a6e3a1; user-select: none; }           // shell prompt
+    .go { color: #585b70; }                               // output
+    .gt { color: #f38ba8; }                               // traceback
+    .gh, .gu { color: #89b4fa; font-weight: bold; }      // headings
+
+    // ── Line numbers ─────────────────────────────────────────────────────────
+    .lnt, .ln {
+      color: #45475a;
+      user-select: none;
+      padding-right: 1rem;
+    }
+
+    // ── Error ─────────────────────────────────────────────────────────────────
+    .err { color: #f38ba8; }
+  }
+}
+
+// ── Light mode ────────────────────────────────────────────────────────────────
+// Palette: warm off-white background, near-black text, beige-brown strings,
+// mid-gray comments. No blues or purples — monochromatic and print-like.
+
+html[data-theme="light"] {
+
+  // Plain <pre> without a language tag
+  pre:not(.chroma) {
+    background-color: #f7f5f0;
+    color: #1a1a1a;
+  }
+
+  // Highlighted block wrapper background
+  .highlight > div,
+  .highlight > pre {
+    background-color: #f7f5f0;
+  }
+
+  .chroma {
+    background-color: #f7f5f0;
+    color: #1a1a1a;
+
+    // ── Keywords ─────────────────────────────────────────────────────────────
+    .k, .kd, .kn, .kp, .kr, .kc { color: #111111; font-weight: bold; }
+    .kt                           { color: #2e2e2e; font-weight: bold; }
+
+    // ── Names ────────────────────────────────────────────────────────────────
+    .nf, .fm { color: #1a1a1a; font-weight: 500; }  // functions
+    .nc       { color: #1a1a1a; font-weight: bold; } // classes
+    .nb       { color: #3a3530; }                    // builtins
+    .no       { color: #4a4033; }                    // constants
+    .nd       { color: #2e2e2e; }                    // decorators
+    .ni       { color: #3a3530; }                    // entities
+    .ne       { color: #2a2a2a; font-weight: bold; } // exceptions
+    .nn       { color: #2a2a2a; }                    // namespaces
+    .nt       { color: #1a1a1a; font-weight: 500; }  // HTML/XML tags
+    .na       { color: #3a3530; }                    // tag attributes
+    .nv, .vc, .vg, .vi, .vm { color: #1a1a1a; }    // variables
+
+    // ── Strings ──────────────────────────────────────────────────────────────
+    // Warm beige-brown — the main colour accent in light mode
+    .s, .s1, .s2, .sb, .sc, .sd, .sh, .sx { color: #7a5c38; }
+    .si { color: #7a5c38; }   // interpolation
+    .se { color: #5a3e20; }   // escape sequences (darker)
+    .sr { color: #5a4a30; }   // regex
+
+    // ── Comments ─────────────────────────────────────────────────────────────
+    .c, .c1, .cm, .cp, .cs {
+      color: #8a8878;
+      font-style: italic;
+    }
+
+    // ── Numbers ──────────────────────────────────────────────────────────────
+    .m, .mb, .mf, .mh, .mi, .mo { color: #4a4033; }
+
+    // ── Operators & punctuation ───────────────────────────────────────────────
+    .o, .ow { color: #2a2a2a; }
+    .p      { color: #1a1a1a; }
+
+    // ── Literals ─────────────────────────────────────────────────────────────
+    .l, .ld { color: #7a5c38; }
+
+    // ── Generic (diff, output, prompts) ──────────────────────────────────────
+    .gd { color: #5a1a1a; background-color: #f5e8e8; }  // deleted
+    .gi { color: #1a3a1a; background-color: #e8f0e8; }  // inserted
+    .ge { font-style: italic; }
+    .gs { font-weight: bold; }
+    .gp { color: #5a4a30; user-select: none; }           // shell prompt
+    .go { color: #8a8878; }                              // output
+    .gt { color: #5a1a1a; }                              // traceback
+    .gh, .gu { color: #1a1a1a; font-weight: bold; }     // headings
+
+    // ── Line numbers ─────────────────────────────────────────────────────────
+    .lnt, .ln {
+      color: #c0bdb5;
+      user-select: none;
+      padding-right: 1rem;
+    }
+
+    // ── Error ─────────────────────────────────────────────────────────────────
+    .err { color: #5a1a1a; }
+  }
+}

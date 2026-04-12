@@ -65,6 +65,11 @@
             document.documentElement.setAttribute("data-theme", "light");
         }
     </script>
+
+    <script defer src="/js/toc.js" integrity=""></script>
+
+
+
 <script defer src="/js/header.js" integrity=""></script>
 
 
@@ -224,7 +229,7 @@
     
     <span class="date">March 5, 2026</span>
     
-    
+
     
     <span> • </span>
      
@@ -243,37 +248,44 @@
     
 </div>
 
-
-
-
-<details class="collapsible-menu-wrapper"><summary class="collapsible-menu-type"><span>Table of contents</span></summary><div class="collapsible-menu">
-        
-            <nav id="TableOfContents">
+<details class="toc-mobile">
+    <summary class="toc-mobile-summary">
+        <span class="toc-mobile-label">Contents</span>
+        <span class="toc-mobile-chevron"></span>
+    </summary>
+    <div class="toc-mobile-body">
+        <nav id="TableOfContentsMobile">
   <ul>
     <li><a href="#malleable-c2">Malleable C2</a></li>
     <li><a href="#basic-settings">Basic Settings</a></li>
     <li><a href="#http-traffic-customization">HTTP Traffic Customization</a>
       <ul>
         <li><a href="#randomization">Randomization</a></li>
-        <li><a href="#data-transformation">Data Transformation</a></li>
+        <li><a href="#data-transformation">Data Transformation</a>
+          <ul>
+            <li><a href="#encoding">Encoding</a></li>
+            <li><a href="#prependingappending">Prepending/Appending</a></li>
+            <li><a href="#placement">Placement</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
     <li><a href="#example-youtubeprofile">Example: youtube.profile</a></li>
     <li><a href="#conclusion">Conclusion</a></li>
   </ul>
 </nav>
-        
-    </div></details>
+    </div>
+</details>
+<div class="post-layout">
+    <div class="post-body">
+        <div class="blog-body">
 
+            
+                <h2 class="blog-introduction-header" id="introduction">Introduction</h2>
+            
 
-<div class="blog-body">
-
-    
-        <h2 class="blog-introduction-header" id="introduction">Introduction</h2>
-      
-    
-    
-    <div class="content-margin">
+            
+            <div class="content-margin">
 
 
 
@@ -356,37 +368,37 @@
       </tr>
   </tbody>
 </table>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">12
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span>name = <span style="color:#0ff;font-weight:bold">&#34;cq-default-profile&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>private-key-file = <span style="color:#0ff;font-weight:bold">&#34;data/keys/conquest-server_x25519_private.key&#34;</span>
-</span></span><span style="display:flex;"><span>database-file = <span style="color:#0ff;font-weight:bold">&#34;data/conquest.db&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>[team-server]
-</span></span><span style="display:flex;"><span>host = <span style="color:#0ff;font-weight:bold">&#34;0.0.0.0&#34;</span>
-</span></span><span style="display:flex;"><span>port = <span style="color:#ff0;font-weight:bold">37573</span>
-</span></span><span style="display:flex;"><span>users = [
-</span></span><span style="display:flex;"><span>    { username = <span style="color:#0ff;font-weight:bold">&#34;jakob&#34;</span>, password = <span style="color:#0ff;font-weight:bold">&#34;conquest&#34;</span> }, 
-</span></span><span style="display:flex;"><span>    { username = <span style="color:#0ff;font-weight:bold">&#34;operator&#34;</span>, password = <span style="color:#0ff;font-weight:bold">&#34;conquest&#34;</span> }
-</span></span><span style="display:flex;"><span>]
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-toml" data-lang="toml"><span class="line"><span class="cl"><span class="nx">name</span> <span class="p">=</span> <span class="s2">&#34;cq-default-profile&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">private-key-file</span> <span class="p">=</span> <span class="s2">&#34;data/keys/conquest-server_x25519_private.key&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">database-file</span> <span class="p">=</span> <span class="s2">&#34;data/conquest.db&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">team-server</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">host</span> <span class="p">=</span> <span class="s2">&#34;0.0.0.0&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">port</span> <span class="p">=</span> <span class="mi">37573</span>
+</span></span><span class="line"><span class="cl"><span class="nx">users</span> <span class="p">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="nx">username</span> <span class="p">=</span> <span class="s2">&#34;jakob&#34;</span><span class="p">,</span> <span class="nx">password</span> <span class="p">=</span> <span class="s2">&#34;conquest&#34;</span> <span class="p">},</span> 
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="nx">username</span> <span class="p">=</span> <span class="s2">&#34;operator&#34;</span><span class="p">,</span> <span class="nx">password</span> <span class="p">=</span> <span class="s2">&#34;conquest&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span></span></span></code></pre></td></tr></table>
 </div>
-</div>
+</div></div>
+
 <h2 id="http-traffic-customization" class="header-anchor-wrapper">HTTP Traffic Customization
   <a href="#http-traffic-customization" class="header-anchor-link">
     <svg width="16px" height="16px" viewBox="0 0 24 24">
@@ -403,48 +415,48 @@
 </h2>
 
 <p>With the basic settings out of the way, let&rsquo;s now direct our attention to the key feature Conquest&rsquo;s profile system has to offer: the <em>HTTP traffic customization</em>. The settings are divided into two main sections that both offer similar configuration options: <code>http-get</code> settings and <code>http-post</code> settings. These sections are then split into the additional <code>agent</code> and <code>server</code> blocks. The <code>agent</code> block allows the customization of the requests sent by the C2 implant, while <code>server</code> options are used to define the shape of the response sent back by the team server. All sections support the configuration of URI endpoints, user-agents, HTTP headers and query parameters, as well as additional settings following the high-level structure below.</p>
-<pre tabindex="0"><code> http-get
- ├── agent
- │   ├── user-agent
- │   ├── endpoints
- │   ├── headers
- │   ├── query parameters
- │   └── heartbeat 
- └── server
-     ├── headers
-     └── response body
-
- http-post
- ├── agent
- │   ├── user-agent
- │   ├── endpoints
- │   ├── request methods
- │   ├── headers
- │   ├── query parameters
- │   └── request body
- └── server
-     ├── headers
-     └── response body
-</code></pre><p>While the sections responsible for agent registration and task results is labeled <code>http-post</code>, different request methods, such as PUT or GET are also supported and can be used by supplying them in form of an array instead of a string. For each request, one of them is picked based on the randomization outlined in the next section.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">6
+<div class="code-block"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl"> http-get
+</span></span><span class="line"><span class="cl"> ├── agent
+</span></span><span class="line"><span class="cl"> │   ├── user-agent
+</span></span><span class="line"><span class="cl"> │   ├── endpoints
+</span></span><span class="line"><span class="cl"> │   ├── headers
+</span></span><span class="line"><span class="cl"> │   ├── query parameters
+</span></span><span class="line"><span class="cl"> │   └── heartbeat 
+</span></span><span class="line"><span class="cl"> └── server
+</span></span><span class="line"><span class="cl">     ├── headers
+</span></span><span class="line"><span class="cl">     └── response body
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"> http-post
+</span></span><span class="line"><span class="cl"> ├── agent
+</span></span><span class="line"><span class="cl"> │   ├── user-agent
+</span></span><span class="line"><span class="cl"> │   ├── endpoints
+</span></span><span class="line"><span class="cl"> │   ├── request methods
+</span></span><span class="line"><span class="cl"> │   ├── headers
+</span></span><span class="line"><span class="cl"> │   ├── query parameters
+</span></span><span class="line"><span class="cl"> │   └── request body
+</span></span><span class="line"><span class="cl"> └── server
+</span></span><span class="line"><span class="cl">     ├── headers
+</span></span><span class="line"><span class="cl">     └── response body</span></span></code></pre></div></div>
+<p>While the sections responsible for agent registration and task results is labeled <code>http-post</code>, different request methods, such as PUT or GET are also supported and can be used by supplying them in form of an array instead of a string. For each request, one of them is picked based on the randomization outlined in the next section.</p>
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span>[http-post]
-</span></span><span style="display:flex;"><span>request-methods = [
-</span></span><span style="display:flex;"><span>    <span style="color:#0ff;font-weight:bold">&#34;POST&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#0ff;font-weight:bold">&#34;PUT&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#0ff;font-weight:bold">&#34;GET&#34;</span>
-</span></span><span style="display:flex;"><span>]
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-toml" data-lang="toml"><span class="line"><span class="cl"><span class="p">[</span><span class="nx">http-post</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">request-methods</span> <span class="p">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;POST&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;PUT&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;GET&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span></span></span></code></pre></td></tr></table>
 </div>
-</div>
+</div></div>
+
 <h3 id="randomization" class="header-anchor-wrapper">Randomization
   <a href="#randomization" class="header-anchor-link">
     <svg width="16px" height="16px" viewBox="0 0 24 24">
@@ -467,42 +479,39 @@
 </ul>
 <p>Additionally, fields that usually expect a single string value can take a list of strings instead. In case an array is passed as the value of an option, a random member is chosen with each HTTP request from the list. This makes it possible to randomize HTTP header values, query parameters and even request endpoints. On the team server, a valid route is created for each endpoint in the list, while the agent randomly selects one route it sends the request to. This helps to break up repetitive and suspicious network traffic patterns.</p>
 <p>The profile code below shows an example for how randomization can be applied to query parameters in a GET request.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">13
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span>[http-get]
-</span></span><span style="display:flex;"><span>endpoints = [               <span style="color:#007f7f"># &lt;--- Agent selects either /get or /api/v1.2/status.js for GET requests</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#0ff;font-weight:bold">&#34;/get&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#0ff;font-weight:bold">&#34;/api/v1.2/status.js&#34;</span>
-</span></span><span style="display:flex;"><span>]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>[http-get.agent.parameters]
-</span></span><span style="display:flex;"><span>id = <span style="color:#0ff;font-weight:bold">&#34;#####-#####&#34;</span>          <span style="color:#007f7f"># &lt;--- ID string consisting of random alphanumerical characters</span>
-</span></span><span style="display:flex;"><span>lang = [                    <span style="color:#007f7f"># &lt;--- The query parameter &#39;lang&#39; either has the value &#39;en-US&#39; or &#39;de-AT&#39; </span>
-</span></span><span style="display:flex;"><span>    <span style="color:#0ff;font-weight:bold">&#34;en-US&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#0ff;font-weight:bold">&#34;de-AT&#34;</span>
-</span></span><span style="display:flex;"><span>]
-</span></span><span style="display:flex;"><span>page = <span style="color:#0ff;font-weight:bold">&#34;1$&#34;</span>                 <span style="color:#007f7f"># &lt;--- Randomized page number: 10-19</span>
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-toml" data-lang="toml"><span class="line"><span class="cl"><span class="p">[</span><span class="nx">http-get</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">endpoints</span> <span class="p">=</span> <span class="p">[</span>               <span class="c"># &lt;--- Agent selects either /get or /api/v1.2/status.js for GET requests</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;/get&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;/api/v1.2/status.js&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">http-get</span><span class="p">.</span><span class="nx">agent</span><span class="p">.</span><span class="nx">parameters</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">id</span> <span class="p">=</span> <span class="s2">&#34;#####-#####&#34;</span>          <span class="c"># &lt;--- ID string consisting of random alphanumerical characters</span>
+</span></span><span class="line"><span class="cl"><span class="nx">lang</span> <span class="p">=</span> <span class="p">[</span>                    <span class="c"># &lt;--- The query parameter &#39;lang&#39; either has the value &#39;en-US&#39; or &#39;de-AT&#39; </span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;en-US&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;de-AT&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">page</span> <span class="p">=</span> <span class="s2">&#34;1$&#34;</span>                 <span class="c"># &lt;--- Randomized page number: 10-19</span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>
-
-
-
+</div></div>
+<p>
 
 
 
@@ -510,36 +519,7 @@
 
 
 <figure class="">
-    <div>
-        <img loading="lazy" alt="Randomization" src=" /img/c2-profile-system/1.png">
-    </div>
-    
-</figure>
-
-
-
-
-
-    
-
-
-<div class="color-block content-margin color-block-caption">
-
-    
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <polyline points="17 11 12 6 7 11"></polyline><polyline points="17 18 12 13 7 18"></polyline>
-</svg>
-
-
-
-    <div class="color-block-content">
-        Query parameter and endpoint randomization.
-    </div>
-</div>
+    <img loading="lazy" alt="Randomization" src="/img/c2-profile-system/1.png"><figcaption>Query parameter and endpoint randomization.</figcaption></figure>
 </p>
 
 <h3 id="data-transformation" class="header-anchor-wrapper">Data Transformation
@@ -589,23 +569,23 @@
 <li><em><code>rot</code></em> : The binary data is ROT-encoded (Caesar Cipher) with the key specified in <em><code>encoding.key</code></em>.</li>
 </ul>
 <p>The example below demonstrates how multiple of these encoding types can be chained together.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">5
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span>encoding = [
-</span></span><span style="display:flex;"><span>    { type = <span style="color:#0ff;font-weight:bold">&#34;xor&#34;</span>, key = <span style="color:#ff0;font-weight:bold">5</span> },
-</span></span><span style="display:flex;"><span>    { type = <span style="color:#0ff;font-weight:bold">&#34;hex&#34;</span> },
-</span></span><span style="display:flex;"><span>    { type = <span style="color:#0ff;font-weight:bold">&#34;base64&#34;</span>, url-safe = <span style="color:#fff;font-weight:bold">true</span> }
-</span></span><span style="display:flex;"><span>]
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-toml" data-lang="toml"><span class="line"><span class="cl"><span class="nx">encoding</span> <span class="p">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;xor&#34;</span><span class="p">,</span> <span class="nx">key</span> <span class="p">=</span> <span class="mi">5</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;hex&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;base64&#34;</span><span class="p">,</span> <span class="nx">url-safe</span> <span class="p">=</span> <span class="kc">true</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span></span></span></code></pre></td></tr></table>
 </div>
-</div>
+</div></div>
+
 <h4 id="prependingappending" class="header-anchor-wrapper">Prepending/Appending
   <a href="#prependingappending" class="header-anchor-link">
     <svg width="16px" height="16px" viewBox="0 0 24 24">
@@ -622,26 +602,23 @@
 </h4>
 
 <p>With the binary data encoded, it is now time to make it look like it belongs in the HTTP packet. This is done by prepending and/or appending strings or binary data to create a context. For instance, the following data transformation block turns the heartbeat message into a string that resembles a JWT token. Placed inside the <code>Authorization</code> header, this simple transformation can make the payload incredibly difficult to spot without knowledge of the profile configuration, as can be seen on the screenshot below. Of course, the <code>prepend</code> and <code>append</code> keys support randomization as well.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">5
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span>[http-get.agent.heartbeat]
-</span></span><span style="display:flex;"><span>placement = { type = <span style="color:#0ff;font-weight:bold">&#34;header&#34;</span>, name = <span style="color:#0ff;font-weight:bold">&#34;Authorization&#34;</span> }
-</span></span><span style="display:flex;"><span>encoding = { type = <span style="color:#0ff;font-weight:bold">&#34;base64&#34;</span>, url-safe = <span style="color:#fff;font-weight:bold">true</span> }
-</span></span><span style="display:flex;"><span>prepend = <span style="color:#0ff;font-weight:bold">&#34;Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.&#34;</span>
-</span></span><span style="display:flex;"><span>append = <span style="color:#0ff;font-weight:bold">&#34;.######################################-####&#34;</span>
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-toml" data-lang="toml"><span class="line"><span class="cl"><span class="p">[</span><span class="nx">http-get</span><span class="p">.</span><span class="nx">agent</span><span class="p">.</span><span class="nx">heartbeat</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">placement</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;header&#34;</span><span class="p">,</span> <span class="nx">name</span> <span class="p">=</span> <span class="s2">&#34;Authorization&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">encoding</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;base64&#34;</span><span class="p">,</span> <span class="nx">url-safe</span> <span class="p">=</span> <span class="kc">true</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">prepend</span> <span class="p">=</span> <span class="s2">&#34;Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">append</span> <span class="p">=</span> <span class="s2">&#34;.######################################-####&#34;</span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>
-
-
-
+</div></div>
+<p>
 
 
 
@@ -649,55 +626,26 @@
 
 
 <figure class="">
-    <div>
-        <img loading="lazy" alt="Heartbeat packet disguised as a JWT Bearer token" src=" /img/c2-profile-system/0.png">
-    </div>
-    
-</figure>
-
-
-
-
-
-    
-
-
-<div class="color-block content-margin color-block-caption">
-
-    
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <polyline points="17 11 12 6 7 11"></polyline><polyline points="17 18 12 13 7 18"></polyline>
-</svg>
-
-
-
-    <div class="color-block-content">
-        Heartbeat packet disguised as a JWT Bearer token.
-    </div>
-</div>
+    <img loading="lazy" alt="Heartbeat packet disguised as a JWT Bearer token" src="/img/c2-profile-system/0.png"><figcaption>Heartbeat packet disguised as a JWT Bearer token.</figcaption></figure>
 </p>
 <p>Conquest also supports binary prefixes and suffixes. Instead of a string, an array of integers/bytes is used instead. This is particularly useful for mimicking binary file formats, such as images or PDFs, by prepending and appending the appropriate magic bytes, as shown in the example below.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">5
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span>[http-get.agent.heartbeat]
-</span></span><span style="display:flex;"><span>placement = { type = <span style="color:#0ff;font-weight:bold">&#34;body&#34;</span> }
-</span></span><span style="display:flex;"><span>encoding = { type = <span style="color:#0ff;font-weight:bold">&#34;xor&#34;</span>, key = <span style="color:#ff0;font-weight:bold">100</span> }
-</span></span><span style="display:flex;"><span>prepend = [<span style="color:#ff0;font-weight:bold">0</span>x25, <span style="color:#ff0;font-weight:bold">0</span>x50, <span style="color:#ff0;font-weight:bold">0</span>x44, <span style="color:#ff0;font-weight:bold">0</span>x46]          <span style="color:#007f7f"># &lt;--- %PDF</span>
-</span></span><span style="display:flex;"><span>append = [<span style="color:#ff0;font-weight:bold">0</span>x25, <span style="color:#ff0;font-weight:bold">0</span>x25, <span style="color:#ff0;font-weight:bold">0</span>x45, <span style="color:#ff0;font-weight:bold">0</span>x4F, <span style="color:#ff0;font-weight:bold">0</span>x46]     <span style="color:#007f7f"># &lt;--- %%EOF</span>
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-toml" data-lang="toml"><span class="line"><span class="cl"><span class="p">[</span><span class="nx">http-get</span><span class="p">.</span><span class="nx">agent</span><span class="p">.</span><span class="nx">heartbeat</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">placement</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;body&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">encoding</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;xor&#34;</span><span class="p">,</span> <span class="nx">key</span> <span class="p">=</span> <span class="mi">100</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">prepend</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span><span class="nx">x25</span><span class="p">,</span> <span class="mi">0</span><span class="nx">x50</span><span class="p">,</span> <span class="mi">0</span><span class="nx">x44</span><span class="p">,</span> <span class="mi">0</span><span class="nx">x46</span><span class="p">]</span>          <span class="c"># &lt;--- %PDF</span>
+</span></span><span class="line"><span class="cl"><span class="nx">append</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span><span class="nx">x25</span><span class="p">,</span> <span class="mi">0</span><span class="nx">x25</span><span class="p">,</span> <span class="mi">0</span><span class="nx">x45</span><span class="p">,</span> <span class="mi">0</span><span class="nx">x4F</span><span class="p">,</span> <span class="mi">0</span><span class="nx">x46</span><span class="p">]</span>     <span class="c"># &lt;--- %%EOF</span></span></span></code></pre></td></tr></table>
 </div>
-</div>
+</div></div>
+
 <h4 id="placement" class="header-anchor-wrapper">Placement
   <a href="#placement" class="header-anchor-link">
     <svg width="16px" height="16px" viewBox="0 0 24 24">
@@ -720,79 +668,79 @@
 <li><em><code>query</code></em> : Payload is placed in a specified HTTP query parameter. Requires the <em><code>placement.name</code></em> key to be set.</li>
 </ul>
 <p>When it comes to retrieving data from the HTTP request or response, the order of the aforementioned steps is reversed. First, the transformed string is retrieved from the location it was placed in, the prefix and suffix are stripped and finally the encodings are reversed. What remains is the binary packet that can then be decompressed, decrypted and parsed by the recipient. Here are some examples on how data transformation can be used to hide C2 traffic within benign structures.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">16
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">17
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">18
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">19
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">20
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">21
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">22
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">23
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">24
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">25
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">26
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">27
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">28
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">29
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">30
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">31
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">32
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">33
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span><span style="color:#007f7f"># Heartbeat in PHPSESSID Cookie</span>
-</span></span><span style="display:flex;"><span>[http-get.agent.heartbeat]
-</span></span><span style="display:flex;"><span>placement = { type = <span style="color:#0ff;font-weight:bold">&#34;header&#34;</span>, name = <span style="color:#0ff;font-weight:bold">&#34;Cookie&#34;</span> }
-</span></span><span style="display:flex;"><span>encoding = { type = <span style="color:#0ff;font-weight:bold">&#34;base64&#34;</span>, url-safe = <span style="color:#fff;font-weight:bold">true</span> }
-</span></span><span style="display:flex;"><span>prepend = <span style="color:#0ff;font-weight:bold">&#34;PHPSESSID=&#34;</span>
-</span></span><span style="display:flex;"><span>append = <span style="color:#0ff;font-weight:bold">&#34;, path=/&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#007f7f"># Heartbeat in query parameter mimicking Windows error telemetry upload</span>
-</span></span><span style="display:flex;"><span>[http-get.agent.heartbeat]
-</span></span><span style="display:flex;"><span>placement = { type = <span style="color:#0ff;font-weight:bold">&#34;query&#34;</span>, name = <span style="color:#0ff;font-weight:bold">&#34;cab&#34;</span> }
-</span></span><span style="display:flex;"><span>encoding = [
-</span></span><span style="display:flex;"><span>    { type = <span style="color:#0ff;font-weight:bold">&#34;xor&#34;</span>, key = <span style="color:#ff0;font-weight:bold">31</span> },
-</span></span><span style="display:flex;"><span>    { type = <span style="color:#0ff;font-weight:bold">&#34;hex&#34;</span> }
-</span></span><span style="display:flex;"><span>]
-</span></span><span style="display:flex;"><span>prepend = <span style="color:#0ff;font-weight:bold">&#34;##########&#34;</span>
-</span></span><span style="display:flex;"><span>append = <span style="color:#0ff;font-weight:bold">&#34;.cab&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#007f7f"># Tasks returned as Microsoft Graph API response body</span>
-</span></span><span style="display:flex;"><span>[http-get.server.output]
-</span></span><span style="display:flex;"><span>placement = { type = <span style="color:#0ff;font-weight:bold">&#34;body&#34;</span> }
-</span></span><span style="display:flex;"><span>encoding = { type = <span style="color:#0ff;font-weight:bold">&#34;base64&#34;</span>, url-safe = <span style="color:#fff;font-weight:bold">true</span> }
-</span></span><span style="display:flex;"><span>prepend = <span style="color:#0ff;font-weight:bold">&#39;{&#34;@odata.context&#34;:&#34;https://graph.microsoft.com/v1.0/$metadata#users&#34;,&#34;value&#34;:&#34;&#39;</span>
-</span></span><span style="display:flex;"><span>append = <span style="color:#0ff;font-weight:bold">&#39;&#34;}&#39;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#007f7f"># Task result hidden as ZIP file</span>
-</span></span><span style="display:flex;"><span>[http-post.agent.output]
-</span></span><span style="display:flex;"><span>placement = { type = <span style="color:#0ff;font-weight:bold">&#34;body&#34;</span> }
-</span></span><span style="display:flex;"><span>encoding = [
-</span></span><span style="display:flex;"><span>    { type = <span style="color:#0ff;font-weight:bold">&#34;xor&#34;</span>, key = <span style="color:#ff0;font-weight:bold">7</span> },
-</span></span><span style="display:flex;"><span>    { type = <span style="color:#0ff;font-weight:bold">&#34;rot&#34;</span>, key = <span style="color:#ff0;font-weight:bold">13</span> }
-</span></span><span style="display:flex;"><span>]
-</span></span><span style="display:flex;"><span>prepend = [<span style="color:#ff0;font-weight:bold">0</span>x50, <span style="color:#ff0;font-weight:bold">0</span>x4B, <span style="color:#ff0;font-weight:bold">0</span>x03, <span style="color:#ff0;font-weight:bold">0</span>x04]
-</span></span><span style="display:flex;"><span>append = [<span style="color:#ff0;font-weight:bold">0</span>x50, <span style="color:#ff0;font-weight:bold">0</span>x4B, <span style="color:#ff0;font-weight:bold">0</span>x05, <span style="color:#ff0;font-weight:bold">0</span>x06, <span style="color:#ff0;font-weight:bold">0</span>x00, <span style="color:#ff0;font-weight:bold">0</span>x00, <span style="color:#ff0;font-weight:bold">0</span>x00, <span style="color:#ff0;font-weight:bold">0</span>x00]
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-toml" data-lang="toml"><span class="line"><span class="cl"><span class="c"># Heartbeat in PHPSESSID Cookie</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">http-get</span><span class="p">.</span><span class="nx">agent</span><span class="p">.</span><span class="nx">heartbeat</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">placement</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;header&#34;</span><span class="p">,</span> <span class="nx">name</span> <span class="p">=</span> <span class="s2">&#34;Cookie&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">encoding</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;base64&#34;</span><span class="p">,</span> <span class="nx">url-safe</span> <span class="p">=</span> <span class="kc">true</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">prepend</span> <span class="p">=</span> <span class="s2">&#34;PHPSESSID=&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">append</span> <span class="p">=</span> <span class="s2">&#34;, path=/&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Heartbeat in query parameter mimicking Windows error telemetry upload</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">http-get</span><span class="p">.</span><span class="nx">agent</span><span class="p">.</span><span class="nx">heartbeat</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">placement</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;query&#34;</span><span class="p">,</span> <span class="nx">name</span> <span class="p">=</span> <span class="s2">&#34;cab&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">encoding</span> <span class="p">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;xor&#34;</span><span class="p">,</span> <span class="nx">key</span> <span class="p">=</span> <span class="mi">31</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;hex&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">prepend</span> <span class="p">=</span> <span class="s2">&#34;##########&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">append</span> <span class="p">=</span> <span class="s2">&#34;.cab&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Tasks returned as Microsoft Graph API response body</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">http-get</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">output</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">placement</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;body&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">encoding</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;base64&#34;</span><span class="p">,</span> <span class="nx">url-safe</span> <span class="p">=</span> <span class="kc">true</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">prepend</span> <span class="p">=</span> <span class="s1">&#39;{&#34;@odata.context&#34;:&#34;https://graph.microsoft.com/v1.0/$metadata#users&#34;,&#34;value&#34;:&#34;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">append</span> <span class="p">=</span> <span class="s1">&#39;&#34;}&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Task result hidden as ZIP file</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">http-post</span><span class="p">.</span><span class="nx">agent</span><span class="p">.</span><span class="nx">output</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">placement</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;body&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">encoding</span> <span class="p">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;xor&#34;</span><span class="p">,</span> <span class="nx">key</span> <span class="p">=</span> <span class="mi">7</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;rot&#34;</span><span class="p">,</span> <span class="nx">key</span> <span class="p">=</span> <span class="mi">13</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">prepend</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span><span class="nx">x50</span><span class="p">,</span> <span class="mi">0</span><span class="nx">x4B</span><span class="p">,</span> <span class="mi">0</span><span class="nx">x03</span><span class="p">,</span> <span class="mi">0</span><span class="nx">x04</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">append</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span><span class="nx">x50</span><span class="p">,</span> <span class="mi">0</span><span class="nx">x4B</span><span class="p">,</span> <span class="mi">0</span><span class="nx">x05</span><span class="p">,</span> <span class="mi">0</span><span class="nx">x06</span><span class="p">,</span> <span class="mi">0</span><span class="nx">x00</span><span class="p">,</span> <span class="mi">0</span><span class="nx">x00</span><span class="p">,</span> <span class="mi">0</span><span class="nx">x00</span><span class="p">,</span> <span class="mi">0</span><span class="nx">x00</span><span class="p">]</span></span></span></code></pre></td></tr></table>
 </div>
-</div>
+</div></div>
+
 <h2 id="example-youtubeprofile" class="header-anchor-wrapper">Example: youtube.profile
   <a href="#example-youtubeprofile" class="header-anchor-link">
     <svg width="16px" height="16px" viewBox="0 0 24 24">
@@ -810,288 +758,285 @@
 
 <p>Putting it all together, the following snippet shows a complete profile emulating YouTube video browsing traffic. It was built by capturing real browser traffic and identifying the most realistic structures to hide C2 data in.</p>
 <p>Agent check-ins are sent as GET requests to <code>/watch</code> with a randomized <code>v</code> parameter mimicking a video ID. The heartbeat is base64-encoded and placed inside the Cookie header as the VISITOR_PRIVACY_METADATA value, surrounded by realistic YouTube session cookies. The server wraps its response in the opening of an actual YouTube HTML page, with the task data embedded as the content of an <code>origin-trial</code> meta tag. Task results are exfiltrated via POST requests to one of three YouTube internal API endpoints, selected randomly per request. The result data is embedded as the <code>appInstallData</code> field inside a JSON request body. The server responds with a minimal but valid responseContext object, just as the real API would.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">  1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">  2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">  3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">  4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">  5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">  6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">  7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">  8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">  9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 16
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 17
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 18
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 19
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 20
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 21
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 22
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 23
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 24
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 25
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 26
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 27
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 28
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 29
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 30
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 31
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 32
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 33
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 34
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 35
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 36
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 37
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 38
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 39
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 40
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 41
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 42
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 43
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 44
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 45
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 46
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 47
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 48
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 49
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 50
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 51
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 52
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 53
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 54
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 55
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 56
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 57
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 58
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 59
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 60
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 61
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 62
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 63
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 64
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 65
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 66
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 67
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 68
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 69
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 70
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 71
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 72
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 73
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 74
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 75
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 76
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 77
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 78
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 79
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 80
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 81
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 82
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 83
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 84
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 85
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 86
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 87
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 88
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 89
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 90
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 91
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 92
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 93
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 94
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 95
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 96
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 97
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 98
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 99
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">100
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">101
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">102
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">103
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">104
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">105
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">106
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">107
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">108
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">109
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">110
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">111
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">112
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">113
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">114
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">115
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">116
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">117
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">118
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">119
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">120
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">121
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">122
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">123
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">124
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">125
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">126
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">127
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">128
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">129
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">130
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">131
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">132
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">133
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">134
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">135
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">136
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span><span style="color:#007f7f"># Conquest youtube video profile </span>
-</span></span><span style="display:flex;"><span>name = <span style="color:#0ff;font-weight:bold">&#34;youtube-video-profile&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#007f7f"># Important file paths and locations</span>
-</span></span><span style="display:flex;"><span>private-key-file = <span style="color:#0ff;font-weight:bold">&#34;data/keys/conquest-server_x25519_private.key&#34;</span>
-</span></span><span style="display:flex;"><span>database-file = <span style="color:#0ff;font-weight:bold">&#34;data/conquest.db&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#007f7f"># Team server settings (WebSocket server port, users, ...)</span>
-</span></span><span style="display:flex;"><span>[team-server]
-</span></span><span style="display:flex;"><span>host = <span style="color:#0ff;font-weight:bold">&#34;0.0.0.0&#34;</span>
-</span></span><span style="display:flex;"><span>port = <span style="color:#ff0;font-weight:bold">37573</span>
-</span></span><span style="display:flex;"><span>users = [
-</span></span><span style="display:flex;"><span>    { username = <span style="color:#0ff;font-weight:bold">&#34;operator&#34;</span>, password = <span style="color:#0ff;font-weight:bold">&#34;conquest&#34;</span> }
-</span></span><span style="display:flex;"><span>]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#007f7f"># ----------------------------------------------------------</span>
-</span></span><span style="display:flex;"><span><span style="color:#007f7f"># HTTP GET </span>
-</span></span><span style="display:flex;"><span><span style="color:#007f7f"># ----------------------------------------------------------</span>
-</span></span><span style="display:flex;"><span>[http-get]
-</span></span><span style="display:flex;"><span>user-agent = <span style="color:#0ff;font-weight:bold">&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36&#34;</span>
-</span></span><span style="display:flex;"><span>endpoints = [
-</span></span><span style="display:flex;"><span>    <span style="color:#0ff;font-weight:bold">&#34;/watch&#34;</span>
-</span></span><span style="display:flex;"><span>]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#007f7f"># Heartbeat is hidden as a Youtube cookie</span>
-</span></span><span style="display:flex;"><span>[http-get.agent.heartbeat]
-</span></span><span style="display:flex;"><span>placement = { type = <span style="color:#0ff;font-weight:bold">&#34;header&#34;</span>, name = <span style="color:#0ff;font-weight:bold">&#34;Cookie&#34;</span> }
-</span></span><span style="display:flex;"><span>encoding = { type = <span style="color:#0ff;font-weight:bold">&#34;base64&#34;</span>, url-safe = <span style="color:#fff;font-weight:bold">true</span> }
-</span></span><span style="display:flex;"><span>prepend = <span style="color:#0ff;font-weight:bold">&#39;YSC=###########; SOCS=##############################################; VISITOR_PRIVACY_METADATA=&#39;</span>
-</span></span><span style="display:flex;"><span>append = <span style="color:#0ff;font-weight:bold">&#39;; __Secure-1PSIDTS=sidts-#######_##########################################_#########################; __Secure-3PSIDTS=sidts-#######_##########################################_#########################; HSID=####################;&#39;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>[http-get.agent.parameters]
-</span></span><span style="display:flex;"><span>v = <span style="color:#0ff;font-weight:bold">&#34;###########&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>[http-get.agent.headers]
-</span></span><span style="display:flex;"><span>Host = <span style="color:#0ff;font-weight:bold">&#34;www.youtube.com&#34;</span>
-</span></span><span style="display:flex;"><span>Sec-Ch-Ua = <span style="color:#0ff;font-weight:bold">&#39;&#34;Not.A/Brand&#34;;v=&#34;99&#34;, &#34;Chromium&#34;;v=&#34;136&#34;&#39;</span>
-</span></span><span style="display:flex;"><span>Sec-Ch-Ua-Mobile = <span style="color:#0ff;font-weight:bold">&#34;?0&#34;</span>
-</span></span><span style="display:flex;"><span>Sec-Ch-Ua-Full-Version = <span style="color:#0ff;font-weight:bold">&#39;&#34;&#34;&#39;</span>
-</span></span><span style="display:flex;"><span>Sec-Ch-Ua-Arch = <span style="color:#0ff;font-weight:bold">&#39;&#34;&#34;&#39;</span>
-</span></span><span style="display:flex;"><span>Sec-Ch-Ua-Platform = <span style="color:#0ff;font-weight:bold">&#39;&#34;Windows&#34;&#39;</span>
-</span></span><span style="display:flex;"><span>Sec-Ch-Ua-Platform-Version = <span style="color:#0ff;font-weight:bold">&#39;&#34;&#34;&#39;</span>
-</span></span><span style="display:flex;"><span>Sec-Ch-Ua-Model = <span style="color:#0ff;font-weight:bold">&#39;&#34;&#34;&#39;</span>
-</span></span><span style="display:flex;"><span>Sec-Ch-Ua-Bitness = <span style="color:#0ff;font-weight:bold">&#39;&#34;&#34;&#39;</span>
-</span></span><span style="display:flex;"><span>Sec-Ch-Ua-Wow64 = <span style="color:#0ff;font-weight:bold">&#34;?0&#34;</span>
-</span></span><span style="display:flex;"><span>Accept-Language = [
-</span></span><span style="display:flex;"><span>    <span style="color:#0ff;font-weight:bold">&#34;en-US,en;q=0.9&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#0ff;font-weight:bold">&#34;de-AT,de;q=0.9,en;q=0.8&#34;</span>
-</span></span><span style="display:flex;"><span>]
-</span></span><span style="display:flex;"><span>Upgrade-Insecure-Requests = <span style="color:#0ff;font-weight:bold">&#34;1&#34;</span>
-</span></span><span style="display:flex;"><span>Accept = <span style="color:#0ff;font-weight:bold">&#34;text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7&#34;</span>
-</span></span><span style="display:flex;"><span>Service-Worker-Navigation-Preload = <span style="color:#0ff;font-weight:bold">&#34;true&#34;</span>
-</span></span><span style="display:flex;"><span>Sec-Fetch-Site = <span style="color:#0ff;font-weight:bold">&#34;none&#34;</span>
-</span></span><span style="display:flex;"><span>Sec-Fetch-Mode = <span style="color:#0ff;font-weight:bold">&#34;navigate&#34;</span>
-</span></span><span style="display:flex;"><span>Sec-Fetch-User = <span style="color:#0ff;font-weight:bold">&#34;?1&#34;</span>
-</span></span><span style="display:flex;"><span>Sec-Fetch-Dest = <span style="color:#0ff;font-weight:bold">&#34;document&#34;</span>
-</span></span><span style="display:flex;"><span>Priority = <span style="color:#0ff;font-weight:bold">&#34;u=0, i&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>[http-get.server.headers]
-</span></span><span style="display:flex;"><span>Content-Type = <span style="color:#0ff;font-weight:bold">&#34;text/html; charset=utf-8&#34;</span>
-</span></span><span style="display:flex;"><span>X-Content-Type-Options = <span style="color:#0ff;font-weight:bold">&#34;nosniff&#34;</span>
-</span></span><span style="display:flex;"><span>Cache-Control = <span style="color:#0ff;font-weight:bold">&#34;no-cache, no-store, max-age=0, must-revalidate&#34;</span>
-</span></span><span style="display:flex;"><span>Pragma = <span style="color:#0ff;font-weight:bold">&#34;no-cache&#34;</span>
-</span></span><span style="display:flex;"><span>Expires = <span style="color:#0ff;font-weight:bold">&#34;Mon, 01 Jan 1990 00:00:00 GMT&#34;</span>
-</span></span><span style="display:flex;"><span>Strict-Transport-Security = <span style="color:#0ff;font-weight:bold">&#34;max-age=31536000&#34;</span>
-</span></span><span style="display:flex;"><span>X-Frame-Options = <span style="color:#0ff;font-weight:bold">&#34;SAMEORIGIN&#34;</span>
-</span></span><span style="display:flex;"><span>Content-Security-Policy = <span style="color:#0ff;font-weight:bold">&#39;require-trusted-types-for &#34;script&#34;&#39;</span>
-</span></span><span style="display:flex;"><span>Server = <span style="color:#0ff;font-weight:bold">&#34;ESF&#34;</span>
-</span></span><span style="display:flex;"><span>X-Xss-Protection = <span style="color:#0ff;font-weight:bold">&#34;0&#34;</span>
-</span></span><span style="display:flex;"><span>P3p = <span style="color:#0ff;font-weight:bold">&#39;CP=&#34;This is not a P3P policy! See http://support.google.com/accounts/answer/151657?hl=de for more info.&#34;&#39;</span>
-</span></span><span style="display:flex;"><span>Alt-Svc = <span style="color:#0ff;font-weight:bold">&#39;h3=&#34;:443&#34;; ma=2592000,h3-29=&#34;:443&#34;; ma=2592000&#39;</span>
-</span></span><span style="display:flex;"><span>Set-Cookie = <span style="color:#0ff;font-weight:bold">&#34;__Secure-YEC=##############################################################################; Domain=.youtube.com; Expires=Mon, 07-Dec-2026 11:39:54 GMT; Path=/; Secure; HttpOnly; SameSite=lax&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#007f7f"># Tasks are returned by the server in a HTML format, base64-encoded as script content</span>
-</span></span><span style="display:flex;"><span>[http-get.server.output]
-</span></span><span style="display:flex;"><span>placement = { type = <span style="color:#0ff;font-weight:bold">&#34;body&#34;</span> }
-</span></span><span style="display:flex;"><span>encoding = { type = <span style="color:#0ff;font-weight:bold">&#34;base64&#34;</span> }
-</span></span><span style="display:flex;"><span>prepend = <span style="color:#0ff;font-weight:bold">&#39;&lt;!DOCTYPE html&gt;&lt;html style=&#34;font-size: 10px;font-family: Roboto, Arial, sans-serif;&#34; lang=&#34;de-DE&#34;&gt;&lt;head&gt;&lt;script data-id=&#34;_gd&#34; nonce=&#34;iqZzTrtVB86B0KRGblxg9Q&#34;&gt;window.WIZ_global_data = {&#34;HiPsbb&#34;:0,&#34;MUE6Ne&#34;:&#34;youtube_web&#34;,&#34;MuJWjd&#34;:false};&lt;/script&gt;&lt;meta http-equiv=&#34;origin-trial&#34; content=&#34;&#39;</span>
-</span></span><span style="display:flex;"><span>append = <span style="color:#0ff;font-weight:bold">&#39;&#34;/&gt;&lt;script nonce=&#34;iqZzTrtVB86B0KRGblxg9Q&#34;&gt;var ytcfg={d:function(){return window.yt&amp;&amp;yt.config_||ytcfg.data_||(ytcfg.data_={})},get:function(k,o){return k in ytcfg.d()?ytcfg.d()[k]:o},set:function(){var a=arguments;if(a.length&gt;1)ytcfg.d()[a[0]]=a[1];else{var k;for(k in a[0])ytcfg.d()[k]=a[0][k]}}};window.ytcfg.set(&#34;EMERGENCY_BASE_URL&#34;, &#34;/error_204?&#39;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#007f7f"># ----------------------------------------------------------</span>
-</span></span><span style="display:flex;"><span><span style="color:#007f7f"># HTTP POST </span>
-</span></span><span style="display:flex;"><span><span style="color:#007f7f"># ----------------------------------------------------------</span>
-</span></span><span style="display:flex;"><span>[http-post]
-</span></span><span style="display:flex;"><span>user-agent = <span style="color:#0ff;font-weight:bold">&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36&#34;</span>
-</span></span><span style="display:flex;"><span>endpoints = [
-</span></span><span style="display:flex;"><span>    <span style="color:#0ff;font-weight:bold">&#34;/youtubei/v1/like/like&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#0ff;font-weight:bold">&#34;/youtubei/v1/log_event&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#0ff;font-weight:bold">&#34;/youtubei/v1/player&#34;</span>
-</span></span><span style="display:flex;"><span>]
-</span></span><span style="display:flex;"><span>request-methods = <span style="color:#0ff;font-weight:bold">&#34;POST&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>[http-post.agent.headers]
-</span></span><span style="display:flex;"><span>Host = <span style="color:#0ff;font-weight:bold">&#34;www.youtube.com&#34;</span>
-</span></span><span style="display:flex;"><span>Referer = <span style="color:#0ff;font-weight:bold">&#34;https://www.youtube.com/watch?v=###########&#34;</span>
-</span></span><span style="display:flex;"><span>Content-Type = <span style="color:#0ff;font-weight:bold">&#34;application/json&#34;</span> 
-</span></span><span style="display:flex;"><span>Connection = <span style="color:#0ff;font-weight:bold">&#34;Keep-Alive&#34;</span>
-</span></span><span style="display:flex;"><span>Cache-Control = <span style="color:#0ff;font-weight:bold">&#34;no-cache&#34;</span>
-</span></span><span style="display:flex;"><span>Sec-Ch-Ua = <span style="color:#0ff;font-weight:bold">&#39;&#34;Not.A/Brand&#34;;v=&#34;99&#34;, &#34;Chromium&#34;;v=&#34;136&#34;&#39;</span>
-</span></span><span style="display:flex;"><span>Sec-Ch-Ua-Mobile = <span style="color:#0ff;font-weight:bold">&#34;?0&#34;</span>
-</span></span><span style="display:flex;"><span>Sec-Ch-Ua-Full-Version = <span style="color:#0ff;font-weight:bold">&#39;&#34;&#34;&#39;</span>
-</span></span><span style="display:flex;"><span>Sec-Ch-Ua-Arch = <span style="color:#0ff;font-weight:bold">&#39;&#34;&#34;&#39;</span>
-</span></span><span style="display:flex;"><span>Sec-Ch-Ua-Platform = <span style="color:#0ff;font-weight:bold">&#39;&#34;Windows&#34;&#39;</span>
-</span></span><span style="display:flex;"><span>Sec-Ch-Ua-Platform-Version = <span style="color:#0ff;font-weight:bold">&#39;&#34;&#34;&#39;</span>
-</span></span><span style="display:flex;"><span>Sec-Ch-Ua-Model = <span style="color:#0ff;font-weight:bold">&#39;&#34;&#34;&#39;</span>
-</span></span><span style="display:flex;"><span>Sec-Ch-Ua-Bitness = <span style="color:#0ff;font-weight:bold">&#39;&#34;&#34;&#39;</span>
-</span></span><span style="display:flex;"><span>Sec-Ch-Ua-Wow64 = <span style="color:#0ff;font-weight:bold">&#34;?0&#34;</span>
-</span></span><span style="display:flex;"><span>Cookie = <span style="color:#0ff;font-weight:bold">&#39;YSC=###########; SOCS=##############################################; VISITOR_PRIVACY_METADATA=##################################################################; __Secure-1PSIDTS=sidts-#######_##########################################_#########################; __Secure-3PSIDTS=sidts-#######_##########################################_#########################; HSID=####################;&#39;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>[http-post.agent.parameters]
-</span></span><span style="display:flex;"><span>pretty-print = [
-</span></span><span style="display:flex;"><span>    <span style="color:#0ff;font-weight:bold">&#34;true&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#0ff;font-weight:bold">&#34;false&#34;</span>
-</span></span><span style="display:flex;"><span>]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#007f7f"># Task result embedded in the appInstallData key in a JSON structure</span>
-</span></span><span style="display:flex;"><span>[http-post.agent.output]
-</span></span><span style="display:flex;"><span>placement = { type = <span style="color:#0ff;font-weight:bold">&#34;body&#34;</span> }
-</span></span><span style="display:flex;"><span>encoding = { type = <span style="color:#0ff;font-weight:bold">&#34;base64&#34;</span>, url-safe = <span style="color:#fff;font-weight:bold">true</span> }
-</span></span><span style="display:flex;"><span>prepend = <span style="color:#0ff;font-weight:bold">&#39;{&#34;context&#34;:{&#34;client&#34;:{&#34;hl&#34;:&#34;de&#34;,&#34;gl&#34;:&#34;AT&#34;,&#34;remoteHost&#34;:&#34;$$.1$$.$$.1$$&#34;,&#34;deviceMake&#34;:&#34;&#34;,&#34;deviceModel&#34;:&#34;&#34;,&#34;visitorData&#34;:&#34;Cgt1M016MzRrZmhTUSj12MbIBjInCgJBVBIhEh0SGwsMDg8QERITFBUWFxgZGhscHR4fICEiIyQlJiBe&#34;,&#34;userAgent&#34;:&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36,gzip(gfe)&#34;,&#34;clientName&#34;:&#34;WEB&#34;,&#34;clientVersion&#34;:&#34;2.20251107.01.00&#34;,&#34;osName&#34;:&#34;Windows&#34;,&#34;osVersion&#34;:&#34;10.0&#34;,&#34;originalUrl&#34;:&#34;https://www.youtube.com/&#34;,&#34;screenPixelDensity&#34;:2,&#34;platform&#34;:&#34;DESKTOP&#34;,&#34;clientFormFactor&#34;:&#34;UNKNOWN_FORM_FACTOR&#34;,&#34;configInfo&#34;:{&#34;appInstallData&#34;:&#34;&#39;</span>
-</span></span><span style="display:flex;"><span>append = <span style="color:#0ff;font-weight:bold">&#39;&#34;},&#34;screenDensityFloat&#34;:1.5,&#34;userInterfaceTheme&#34;:&#34;USER_INTERFACE_THEME_DARK&#34;,&#34;timeZone&#34;:&#34;Europe/Vienna&#34;,&#34;browserName&#34;:&#34;Chrome&#34;,&#34;browserVersion&#34;:&#34;142.0.0.0&#34;,&#34;acceptHeader&#34;:&#34;text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7&#34;,&#34;deviceExperimentId&#34;:&#34;ChxOelUzTVRBeU1qQTJPVEV4TkRFNU5qUXhOQT09EPXYxsgGGPXYxsgG&#34;,&#34;rolloutToken&#34;:&#34;CJu4u9qz64jjcxCr8dad-t-QAxjzyIbunueQAw%3D%3D&#34;,&#34;screenWidthPoints&#34;:1920,&#34;screenHeightPoints&#34;:1065,&#34;utcOffsetMinutes&#34;:60,&#34;connectionType&#34;:&#34;CONN_CELLULAR_3G&#34;,&#34;memoryTotalKbytes&#34;:&#34;8000000&#34;,&#34;mainAppWebInfo&#34;:{&#34;graftUrl&#34;:&#34;https://www.youtube.com/watch?v=###########&amp;list=RD4WIMyqBG9gs&amp;start_radio=1&#34;,&#34;pwaInstallabilityStatus&#34;:&#34;PWA_INSTALLABILITY_STATUS_UNKNOWN&#34;,&#34;webDisplayMode&#34;:&#34;WEB_DISPLAY_MODE_BROWSER&#34;,&#34;isWebNativeShareAvailable&#34;:true}},&#34;user&#34;:{&#34;lockedSafetyMode&#34;:false},&#34;request&#34;:{&#34;useSsl&#34;:true,&#34;internalExperimentFlags&#34;:[],&#34;consistencyTokenJars&#34;:[]},&#34;clickTracking&#34;:{&#34;clickTrackingParams&#34;:&#34;CJgFEKVBIhMIucGi957nkAMVneRJBx3cFhscygEErMFOaw==&#34;},&#34;adSignalsInfo&#34;:{&#34;params&#34;:[{&#34;key&#34;:&#34;dt&#34;,&#34;value&#34;:&#34;1762765953510&#34;},{&#34;key&#34;:&#34;flash&#34;,&#34;value&#34;:&#34;0&#34;},{&#34;key&#34;:&#34;frm&#34;,&#34;value&#34;:&#34;0&#34;},{&#34;key&#34;:&#34;u_tz&#34;,&#34;value&#34;:&#34;60&#34;},{&#34;key&#34;:&#34;u_his&#34;,&#34;value&#34;:&#34;4&#34;},{&#34;key&#34;:&#34;u_h&#34;,&#34;value&#34;:&#34;1200&#34;},{&#34;key&#34;:&#34;u_w&#34;,&#34;value&#34;:&#34;1920&#34;},{&#34;key&#34;:&#34;u_ah&#34;,&#34;value&#34;:&#34;1152&#34;},{&#34;key&#34;:&#34;u_aw&#34;,&#34;value&#34;:&#34;1920&#34;},{&#34;key&#34;:&#34;u_cd&#34;,&#34;value&#34;:&#34;24&#34;},{&#34;key&#34;:&#34;bc&#34;,&#34;value&#34;:&#34;31&#34;},{&#34;key&#34;:&#34;bih&#34;,&#34;value&#34;:&#34;1065&#34;},{&#34;key&#34;:&#34;biw&#34;,&#34;value&#34;:&#34;1905&#34;},{&#34;key&#34;:&#34;brdim&#34;,&#34;value&#34;:&#34;0,0,0,0,1920,0,1920,1152,1920,1065&#34;},{&#34;key&#34;:&#34;vis&#34;,&#34;value&#34;:&#34;1&#34;},{&#34;key&#34;:&#34;wgl&#34;,&#34;value&#34;:&#34;true&#34;},{&#34;key&#34;:&#34;ca_type&#34;,&#34;value&#34;:&#34;image&#34;}],&#34;bid&#34;:&#34;ANyPxKqp2RGW0TLEXMjNbBRm6ZPDYteE8iHnYK0DaJMOiTEHrbqefZtn6qfK_MhA2-ZgnoosEwKaN8pi77jJRptRzz5Rsm-P_w&#34;}},&#34;target&#34;:{&#34;videoId&#34;:&#34;###########&#34;},&#34;params&#34;:&#34;Cg0KCzRXSU15cUJHOWdzIAAyDAiJ2cbIBhCm6ueLAQ%3D%3D&#34;}&#39;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>[http-post.server.headers]
-</span></span><span style="display:flex;"><span>Content-Type = <span style="color:#0ff;font-weight:bold">&#34;application/json; charset=utf-8&#34;</span>
-</span></span><span style="display:flex;"><span>X-Content-Type-Options = <span style="color:#0ff;font-weight:bold">&#34;nosniff&#34;</span>
-</span></span><span style="display:flex;"><span>Cache-Control = <span style="color:#0ff;font-weight:bold">&#34;no-cache, no-store, max-age=0, must-revalidate&#34;</span>
-</span></span><span style="display:flex;"><span>Pragma = <span style="color:#0ff;font-weight:bold">&#34;no-cache&#34;</span>
-</span></span><span style="display:flex;"><span>Expires = <span style="color:#0ff;font-weight:bold">&#34;Mon, 01 Jan 1990 00:00:00 GMT&#34;</span>
-</span></span><span style="display:flex;"><span>Server = <span style="color:#0ff;font-weight:bold">&#34;ESF&#34;</span>
-</span></span><span style="display:flex;"><span>X-Xss-Protection = <span style="color:#0ff;font-weight:bold">&#34;0&#34;</span>
-</span></span><span style="display:flex;"><span>Strict-Transport-Security = <span style="color:#0ff;font-weight:bold">&#34;max-age=31536000&#34;</span>
-</span></span><span style="display:flex;"><span>Alt-Svc = <span style="color:#0ff;font-weight:bold">&#39;h3=&#34;:443&#34;; ma=2592000,h3-29=&#34;:443&#34;; ma=2592000&#39;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#007f7f"># Server&#39;s response to task results</span>
-</span></span><span style="display:flex;"><span>[http-post.server.output]
-</span></span><span style="display:flex;"><span>body = <span style="color:#0ff;font-weight:bold">&#39;{&#34;responseContext&#34;: {}}&#39;</span>
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-toml" data-lang="toml"><span class="line"><span class="cl"><span class="c"># Conquest youtube video profile </span>
+</span></span><span class="line"><span class="cl"><span class="nx">name</span> <span class="p">=</span> <span class="s2">&#34;youtube-video-profile&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Important file paths and locations</span>
+</span></span><span class="line"><span class="cl"><span class="nx">private-key-file</span> <span class="p">=</span> <span class="s2">&#34;data/keys/conquest-server_x25519_private.key&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">database-file</span> <span class="p">=</span> <span class="s2">&#34;data/conquest.db&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Team server settings (WebSocket server port, users, ...)</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">team-server</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">host</span> <span class="p">=</span> <span class="s2">&#34;0.0.0.0&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">port</span> <span class="p">=</span> <span class="mi">37573</span>
+</span></span><span class="line"><span class="cl"><span class="nx">users</span> <span class="p">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="nx">username</span> <span class="p">=</span> <span class="s2">&#34;operator&#34;</span><span class="p">,</span> <span class="nx">password</span> <span class="p">=</span> <span class="s2">&#34;conquest&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># ----------------------------------------------------------</span>
+</span></span><span class="line"><span class="cl"><span class="c"># HTTP GET </span>
+</span></span><span class="line"><span class="cl"><span class="c"># ----------------------------------------------------------</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">http-get</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">user-agent</span> <span class="p">=</span> <span class="s2">&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">endpoints</span> <span class="p">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;/watch&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Heartbeat is hidden as a Youtube cookie</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">http-get</span><span class="p">.</span><span class="nx">agent</span><span class="p">.</span><span class="nx">heartbeat</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">placement</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;header&#34;</span><span class="p">,</span> <span class="nx">name</span> <span class="p">=</span> <span class="s2">&#34;Cookie&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">encoding</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;base64&#34;</span><span class="p">,</span> <span class="nx">url-safe</span> <span class="p">=</span> <span class="kc">true</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">prepend</span> <span class="p">=</span> <span class="s1">&#39;YSC=###########; SOCS=##############################################; VISITOR_PRIVACY_METADATA=&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">append</span> <span class="p">=</span> <span class="s1">&#39;; __Secure-1PSIDTS=sidts-#######_##########################################_#########################; __Secure-3PSIDTS=sidts-#######_##########################################_#########################; HSID=####################;&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">http-get</span><span class="p">.</span><span class="nx">agent</span><span class="p">.</span><span class="nx">parameters</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">v</span> <span class="p">=</span> <span class="s2">&#34;###########&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">http-get</span><span class="p">.</span><span class="nx">agent</span><span class="p">.</span><span class="nx">headers</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Host</span> <span class="p">=</span> <span class="s2">&#34;www.youtube.com&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Ch-Ua</span> <span class="p">=</span> <span class="s1">&#39;&#34;Not.A/Brand&#34;;v=&#34;99&#34;, &#34;Chromium&#34;;v=&#34;136&#34;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Ch-Ua-Mobile</span> <span class="p">=</span> <span class="s2">&#34;?0&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Ch-Ua-Full-Version</span> <span class="p">=</span> <span class="s1">&#39;&#34;&#34;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Ch-Ua-Arch</span> <span class="p">=</span> <span class="s1">&#39;&#34;&#34;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Ch-Ua-Platform</span> <span class="p">=</span> <span class="s1">&#39;&#34;Windows&#34;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Ch-Ua-Platform-Version</span> <span class="p">=</span> <span class="s1">&#39;&#34;&#34;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Ch-Ua-Model</span> <span class="p">=</span> <span class="s1">&#39;&#34;&#34;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Ch-Ua-Bitness</span> <span class="p">=</span> <span class="s1">&#39;&#34;&#34;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Ch-Ua-Wow64</span> <span class="p">=</span> <span class="s2">&#34;?0&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Accept-Language</span> <span class="p">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;en-US,en;q=0.9&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;de-AT,de;q=0.9,en;q=0.8&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Upgrade-Insecure-Requests</span> <span class="p">=</span> <span class="s2">&#34;1&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Accept</span> <span class="p">=</span> <span class="s2">&#34;text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Service-Worker-Navigation-Preload</span> <span class="p">=</span> <span class="s2">&#34;true&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Fetch-Site</span> <span class="p">=</span> <span class="s2">&#34;none&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Fetch-Mode</span> <span class="p">=</span> <span class="s2">&#34;navigate&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Fetch-User</span> <span class="p">=</span> <span class="s2">&#34;?1&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Fetch-Dest</span> <span class="p">=</span> <span class="s2">&#34;document&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Priority</span> <span class="p">=</span> <span class="s2">&#34;u=0, i&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">http-get</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">headers</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Content-Type</span> <span class="p">=</span> <span class="s2">&#34;text/html; charset=utf-8&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">X-Content-Type-Options</span> <span class="p">=</span> <span class="s2">&#34;nosniff&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Cache-Control</span> <span class="p">=</span> <span class="s2">&#34;no-cache, no-store, max-age=0, must-revalidate&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Pragma</span> <span class="p">=</span> <span class="s2">&#34;no-cache&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Expires</span> <span class="p">=</span> <span class="s2">&#34;Mon, 01 Jan 1990 00:00:00 GMT&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Strict-Transport-Security</span> <span class="p">=</span> <span class="s2">&#34;max-age=31536000&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">X-Frame-Options</span> <span class="p">=</span> <span class="s2">&#34;SAMEORIGIN&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Content-Security-Policy</span> <span class="p">=</span> <span class="s1">&#39;require-trusted-types-for &#34;script&#34;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Server</span> <span class="p">=</span> <span class="s2">&#34;ESF&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">X-Xss-Protection</span> <span class="p">=</span> <span class="s2">&#34;0&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">P3p</span> <span class="p">=</span> <span class="s1">&#39;CP=&#34;This is not a P3P policy! See http://support.google.com/accounts/answer/151657?hl=de for more info.&#34;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Alt-Svc</span> <span class="p">=</span> <span class="s1">&#39;h3=&#34;:443&#34;; ma=2592000,h3-29=&#34;:443&#34;; ma=2592000&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Set-Cookie</span> <span class="p">=</span> <span class="s2">&#34;__Secure-YEC=##############################################################################; Domain=.youtube.com; Expires=Mon, 07-Dec-2026 11:39:54 GMT; Path=/; Secure; HttpOnly; SameSite=lax&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Tasks are returned by the server in a HTML format, base64-encoded as script content</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">http-get</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">output</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">placement</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;body&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">encoding</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;base64&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">prepend</span> <span class="p">=</span> <span class="s1">&#39;&lt;!DOCTYPE html&gt;&lt;html style=&#34;font-size: 10px;font-family: Roboto, Arial, sans-serif;&#34; lang=&#34;de-DE&#34;&gt;&lt;head&gt;&lt;script data-id=&#34;_gd&#34; nonce=&#34;iqZzTrtVB86B0KRGblxg9Q&#34;&gt;window.WIZ_global_data = {&#34;HiPsbb&#34;:0,&#34;MUE6Ne&#34;:&#34;youtube_web&#34;,&#34;MuJWjd&#34;:false};&lt;/script&gt;&lt;meta http-equiv=&#34;origin-trial&#34; content=&#34;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">append</span> <span class="p">=</span> <span class="s1">&#39;&#34;/&gt;&lt;script nonce=&#34;iqZzTrtVB86B0KRGblxg9Q&#34;&gt;var ytcfg={d:function(){return window.yt&amp;&amp;yt.config_||ytcfg.data_||(ytcfg.data_={})},get:function(k,o){return k in ytcfg.d()?ytcfg.d()[k]:o},set:function(){var a=arguments;if(a.length&gt;1)ytcfg.d()[a[0]]=a[1];else{var k;for(k in a[0])ytcfg.d()[k]=a[0][k]}}};window.ytcfg.set(&#34;EMERGENCY_BASE_URL&#34;, &#34;/error_204?&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># ----------------------------------------------------------</span>
+</span></span><span class="line"><span class="cl"><span class="c"># HTTP POST </span>
+</span></span><span class="line"><span class="cl"><span class="c"># ----------------------------------------------------------</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">http-post</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">user-agent</span> <span class="p">=</span> <span class="s2">&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">endpoints</span> <span class="p">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;/youtubei/v1/like/like&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;/youtubei/v1/log_event&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;/youtubei/v1/player&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">request-methods</span> <span class="p">=</span> <span class="s2">&#34;POST&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">http-post</span><span class="p">.</span><span class="nx">agent</span><span class="p">.</span><span class="nx">headers</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Host</span> <span class="p">=</span> <span class="s2">&#34;www.youtube.com&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Referer</span> <span class="p">=</span> <span class="s2">&#34;https://www.youtube.com/watch?v=###########&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Content-Type</span> <span class="p">=</span> <span class="s2">&#34;application/json&#34;</span> 
+</span></span><span class="line"><span class="cl"><span class="nx">Connection</span> <span class="p">=</span> <span class="s2">&#34;Keep-Alive&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Cache-Control</span> <span class="p">=</span> <span class="s2">&#34;no-cache&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Ch-Ua</span> <span class="p">=</span> <span class="s1">&#39;&#34;Not.A/Brand&#34;;v=&#34;99&#34;, &#34;Chromium&#34;;v=&#34;136&#34;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Ch-Ua-Mobile</span> <span class="p">=</span> <span class="s2">&#34;?0&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Ch-Ua-Full-Version</span> <span class="p">=</span> <span class="s1">&#39;&#34;&#34;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Ch-Ua-Arch</span> <span class="p">=</span> <span class="s1">&#39;&#34;&#34;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Ch-Ua-Platform</span> <span class="p">=</span> <span class="s1">&#39;&#34;Windows&#34;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Ch-Ua-Platform-Version</span> <span class="p">=</span> <span class="s1">&#39;&#34;&#34;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Ch-Ua-Model</span> <span class="p">=</span> <span class="s1">&#39;&#34;&#34;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Ch-Ua-Bitness</span> <span class="p">=</span> <span class="s1">&#39;&#34;&#34;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Sec-Ch-Ua-Wow64</span> <span class="p">=</span> <span class="s2">&#34;?0&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Cookie</span> <span class="p">=</span> <span class="s1">&#39;YSC=###########; SOCS=##############################################; VISITOR_PRIVACY_METADATA=##################################################################; __Secure-1PSIDTS=sidts-#######_##########################################_#########################; __Secure-3PSIDTS=sidts-#######_##########################################_#########################; HSID=####################;&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">http-post</span><span class="p">.</span><span class="nx">agent</span><span class="p">.</span><span class="nx">parameters</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">pretty-print</span> <span class="p">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;true&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;false&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Task result embedded in the appInstallData key in a JSON structure</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">http-post</span><span class="p">.</span><span class="nx">agent</span><span class="p">.</span><span class="nx">output</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">placement</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;body&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">encoding</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">type</span> <span class="p">=</span> <span class="s2">&#34;base64&#34;</span><span class="p">,</span> <span class="nx">url-safe</span> <span class="p">=</span> <span class="kc">true</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">prepend</span> <span class="p">=</span> <span class="s1">&#39;{&#34;context&#34;:{&#34;client&#34;:{&#34;hl&#34;:&#34;de&#34;,&#34;gl&#34;:&#34;AT&#34;,&#34;remoteHost&#34;:&#34;$$.1$$.$$.1$$&#34;,&#34;deviceMake&#34;:&#34;&#34;,&#34;deviceModel&#34;:&#34;&#34;,&#34;visitorData&#34;:&#34;Cgt1M016MzRrZmhTUSj12MbIBjInCgJBVBIhEh0SGwsMDg8QERITFBUWFxgZGhscHR4fICEiIyQlJiBe&#34;,&#34;userAgent&#34;:&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36,gzip(gfe)&#34;,&#34;clientName&#34;:&#34;WEB&#34;,&#34;clientVersion&#34;:&#34;2.20251107.01.00&#34;,&#34;osName&#34;:&#34;Windows&#34;,&#34;osVersion&#34;:&#34;10.0&#34;,&#34;originalUrl&#34;:&#34;https://www.youtube.com/&#34;,&#34;screenPixelDensity&#34;:2,&#34;platform&#34;:&#34;DESKTOP&#34;,&#34;clientFormFactor&#34;:&#34;UNKNOWN_FORM_FACTOR&#34;,&#34;configInfo&#34;:{&#34;appInstallData&#34;:&#34;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">append</span> <span class="p">=</span> <span class="s1">&#39;&#34;},&#34;screenDensityFloat&#34;:1.5,&#34;userInterfaceTheme&#34;:&#34;USER_INTERFACE_THEME_DARK&#34;,&#34;timeZone&#34;:&#34;Europe/Vienna&#34;,&#34;browserName&#34;:&#34;Chrome&#34;,&#34;browserVersion&#34;:&#34;142.0.0.0&#34;,&#34;acceptHeader&#34;:&#34;text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7&#34;,&#34;deviceExperimentId&#34;:&#34;ChxOelUzTVRBeU1qQTJPVEV4TkRFNU5qUXhOQT09EPXYxsgGGPXYxsgG&#34;,&#34;rolloutToken&#34;:&#34;CJu4u9qz64jjcxCr8dad-t-QAxjzyIbunueQAw%3D%3D&#34;,&#34;screenWidthPoints&#34;:1920,&#34;screenHeightPoints&#34;:1065,&#34;utcOffsetMinutes&#34;:60,&#34;connectionType&#34;:&#34;CONN_CELLULAR_3G&#34;,&#34;memoryTotalKbytes&#34;:&#34;8000000&#34;,&#34;mainAppWebInfo&#34;:{&#34;graftUrl&#34;:&#34;https://www.youtube.com/watch?v=###########&amp;list=RD4WIMyqBG9gs&amp;start_radio=1&#34;,&#34;pwaInstallabilityStatus&#34;:&#34;PWA_INSTALLABILITY_STATUS_UNKNOWN&#34;,&#34;webDisplayMode&#34;:&#34;WEB_DISPLAY_MODE_BROWSER&#34;,&#34;isWebNativeShareAvailable&#34;:true}},&#34;user&#34;:{&#34;lockedSafetyMode&#34;:false},&#34;request&#34;:{&#34;useSsl&#34;:true,&#34;internalExperimentFlags&#34;:[],&#34;consistencyTokenJars&#34;:[]},&#34;clickTracking&#34;:{&#34;clickTrackingParams&#34;:&#34;CJgFEKVBIhMIucGi957nkAMVneRJBx3cFhscygEErMFOaw==&#34;},&#34;adSignalsInfo&#34;:{&#34;params&#34;:[{&#34;key&#34;:&#34;dt&#34;,&#34;value&#34;:&#34;1762765953510&#34;},{&#34;key&#34;:&#34;flash&#34;,&#34;value&#34;:&#34;0&#34;},{&#34;key&#34;:&#34;frm&#34;,&#34;value&#34;:&#34;0&#34;},{&#34;key&#34;:&#34;u_tz&#34;,&#34;value&#34;:&#34;60&#34;},{&#34;key&#34;:&#34;u_his&#34;,&#34;value&#34;:&#34;4&#34;},{&#34;key&#34;:&#34;u_h&#34;,&#34;value&#34;:&#34;1200&#34;},{&#34;key&#34;:&#34;u_w&#34;,&#34;value&#34;:&#34;1920&#34;},{&#34;key&#34;:&#34;u_ah&#34;,&#34;value&#34;:&#34;1152&#34;},{&#34;key&#34;:&#34;u_aw&#34;,&#34;value&#34;:&#34;1920&#34;},{&#34;key&#34;:&#34;u_cd&#34;,&#34;value&#34;:&#34;24&#34;},{&#34;key&#34;:&#34;bc&#34;,&#34;value&#34;:&#34;31&#34;},{&#34;key&#34;:&#34;bih&#34;,&#34;value&#34;:&#34;1065&#34;},{&#34;key&#34;:&#34;biw&#34;,&#34;value&#34;:&#34;1905&#34;},{&#34;key&#34;:&#34;brdim&#34;,&#34;value&#34;:&#34;0,0,0,0,1920,0,1920,1152,1920,1065&#34;},{&#34;key&#34;:&#34;vis&#34;,&#34;value&#34;:&#34;1&#34;},{&#34;key&#34;:&#34;wgl&#34;,&#34;value&#34;:&#34;true&#34;},{&#34;key&#34;:&#34;ca_type&#34;,&#34;value&#34;:&#34;image&#34;}],&#34;bid&#34;:&#34;ANyPxKqp2RGW0TLEXMjNbBRm6ZPDYteE8iHnYK0DaJMOiTEHrbqefZtn6qfK_MhA2-ZgnoosEwKaN8pi77jJRptRzz5Rsm-P_w&#34;}},&#34;target&#34;:{&#34;videoId&#34;:&#34;###########&#34;},&#34;params&#34;:&#34;Cg0KCzRXSU15cUJHOWdzIAAyDAiJ2cbIBhCm6ueLAQ%3D%3D&#34;}&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">http-post</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">headers</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Content-Type</span> <span class="p">=</span> <span class="s2">&#34;application/json; charset=utf-8&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">X-Content-Type-Options</span> <span class="p">=</span> <span class="s2">&#34;nosniff&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Cache-Control</span> <span class="p">=</span> <span class="s2">&#34;no-cache, no-store, max-age=0, must-revalidate&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Pragma</span> <span class="p">=</span> <span class="s2">&#34;no-cache&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Expires</span> <span class="p">=</span> <span class="s2">&#34;Mon, 01 Jan 1990 00:00:00 GMT&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Server</span> <span class="p">=</span> <span class="s2">&#34;ESF&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">X-Xss-Protection</span> <span class="p">=</span> <span class="s2">&#34;0&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Strict-Transport-Security</span> <span class="p">=</span> <span class="s2">&#34;max-age=31536000&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Alt-Svc</span> <span class="p">=</span> <span class="s1">&#39;h3=&#34;:443&#34;; ma=2592000,h3-29=&#34;:443&#34;; ma=2592000&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Server&#39;s response to task results</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">http-post</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">output</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">body</span> <span class="p">=</span> <span class="s1">&#39;{&#34;responseContext&#34;: {}}&#39;</span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>
-
-
-
+</div></div>
+<p>
 
 
 
@@ -1099,36 +1044,7 @@
 
 
 <figure class="">
-    <div>
-        <img loading="lazy" alt="Youtube Profile Traffic - Tasks" src=" /img/c2-profile-system/4.png">
-    </div>
-    
-</figure>
-
-
-
-
-
-    
-
-
-<div class="color-block content-margin color-block-caption">
-
-    
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <polyline points="17 11 12 6 7 11"></polyline><polyline points="17 18 12 13 7 18"></polyline>
-</svg>
-
-
-
-    <div class="color-block-content">
-        Tasks sent by the team server embedded in a HTML structure.
-    </div>
-</div>
+    <img loading="lazy" alt="Youtube Profile Traffic - Tasks" src="/img/c2-profile-system/4.png"><figcaption>Tasks sent by the team server embedded in a HTML structure.</figcaption></figure>
 </p>
 <p>
 
@@ -1137,40 +1053,8 @@
 
 
 
-
-
-
 <figure class="">
-    <div>
-        <img loading="lazy" alt="Youtube Profile Traffic - Results" src=" /img/c2-profile-system/3.png">
-    </div>
-    
-</figure>
-
-
-
-
-
-    
-
-
-<div class="color-block content-margin color-block-caption">
-
-    
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <polyline points="17 11 12 6 7 11"></polyline><polyline points="17 18 12 13 7 18"></polyline>
-</svg>
-
-
-
-    <div class="color-block-content">
-        Task results sent embedded in JSON data.
-    </div>
-</div>
+    <img loading="lazy" alt="Youtube Profile Traffic - Results" src="/img/c2-profile-system/3.png"><figcaption>Task results sent embedded in JSON data.</figcaption></figure>
 </p>
 
 <h2 id="conclusion" class="header-anchor-wrapper">Conclusion
@@ -1200,7 +1084,35 @@
 </li>
 </ol>
 </div>
-</article></div>
+</article>
+</div>
+            
+
+        </div>
+    </div>
+    <aside class="toc-sidebar">
+        <div class="toc-sidebar-title">Contents</div>
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#malleable-c2">Malleable C2</a></li>
+    <li><a href="#basic-settings">Basic Settings</a></li>
+    <li><a href="#http-traffic-customization">HTTP Traffic Customization</a>
+      <ul>
+        <li><a href="#randomization">Randomization</a></li>
+        <li><a href="#data-transformation">Data Transformation</a>
+          <ul>
+            <li><a href="#encoding">Encoding</a></li>
+            <li><a href="#prependingappending">Prepending/Appending</a></li>
+            <li><a href="#placement">Placement</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#example-youtubeprofile">Example: youtube.profile</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </aside>
     
 </div>
 

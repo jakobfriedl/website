@@ -32,7 +32,7 @@ Originally, I chose the JSON format for the network communication, due to it bei
 
 To address these limitations, I decided to ditch the JSON approach and focused on essentially designing a binary protocol from scratch instead. Each packet consists of a fixed-size header and a variable-length body, with the header containing important unencrypted metadata that helps the recipient process the rest of the packet. Among other fields, it contains the 4-byte hex-identifier of the agent, which tells the team server which agent is polling for tasks or posting results. The variable-length payload body is encrypted using AES-256 GCM using a asymmetrically shared session key and a randomly generated initialization vector (IV), which is included in the header for every message. The GCM mode of operation creates the 16-byte Galois Message Authentication Code (GMAC), which is used to verify that the message has not been tampered with. The cryptographic implementations are more thoroughly explained in sections [Key Exchange](#key-exchange) and [Packet Encryption](#packet-encryption)
 
-```
+```text
    0               1               2               3               4
    ├───────────────┴───────────────┴───────────────┴───────────────┤
 4  │                          Magic Value                          │
@@ -61,7 +61,7 @@ To address these limitations, I decided to ditch the JSON approach and focused o
 
 While the structure of the header stays the same across all packet types, it is the encrypted payload body that changes. When a new task is dispatched and fetched by an agent, a packet with the structure below is created. It contains the ID of the task, listener and command to be executed, as well as a list of arguments that have been passed to the command.
 
-```
+```text
    0               2               4               6               8
    ├───────────────┴───────────────┴───────────────┴───────────────┤
 0  │                                                               |
@@ -86,7 +86,7 @@ While the structure of the header stays the same across all packet types, it is 
 
 The number of arguments the agent needs to process is indicated by the argument count (argc) field. The first byte of an argument defines the argument's type, such as *INT*, *STRING* or *BINARY*. While some argument types have fixed sized (boolean = 1 byte, integers = 4 bytes, ...), variable-length arguments, such as strings or binary data are further prefixed with a 4-byte data length field that tells the recipient how many bytes they have to read until the next argument is defined. For example, the command `shell whoami /all` would produce the following packet body, before it would be encrypted.
 
-```
+```text
 DE AD BE EF DE AD BE EF 12 34 56 78 01 00 02 00 06 00 00 00 77 68 6F 61 6D 69 00 04 00 00 00 2F 61 6C 6C  
 └────┬────┘ └────┬────┘ └────┬────┘ └─┬─┘ └┤ └┤ └────┬────┘ └───────┬───────┘ └┤ └────┬────┘ └────┬────┘
    Task       Listener   Timestamp    │    │  │  Length: 6      'whoami'       │  Length: 4     '/all'
@@ -100,7 +100,7 @@ DE AD BE EF DE AD BE EF 12 34 56 78 01 00 02 00 06 00 00 00 77 68 6F 61 6D 69 00
 
 For each task that an agent executes, a result packet is sent to the team server. This packet is structured similarly to the task, with the difference being that it contains the task output instead of the arguments. The *Status* field indicates whether the task was completed successfully or if an error was encountered during the execution. The *Type* field informs the team server of the data type of the task output, with the options being *STRING*, *BINARY* or *NO_OUTPUT*. While string data would be displayed in the user interface to the operator, binary data could be written directly to a file.
 
-```
+```text
    0               2               4               6               8
    ├───────────────┴───────────────┴───────────────┴───────────────┤
 0  │                                                               |
@@ -214,7 +214,7 @@ As the server's public key is a byte array, it is **base64-encoded** to embed it
 
 When the agent is executed, it generates its own key pair. Using the newly created private key and the servers' public key, it subsequently derives the session key used for the packet encryption. At that point, the agent can wipe its own private key from memory, as it is no longer needed. For the server to be able to derive the same session key, the agent includes its public key in the registration packet.
 
-```
+```text
    0               4               8              12              16
    ├───────────────┴───────────────┴───────────────┴───────────────┤
 0  │                                                               |

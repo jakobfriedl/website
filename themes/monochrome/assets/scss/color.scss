@@ -38,7 +38,9 @@ html[data-theme="light"] {
   --color-navbar-item-in-section: #{$gray-600};
   --color-highlight: #f07167;
   --color-colorblock-note-bg: #0f0f0f40;
-  --color-colorblock-note-text: #0f0f0f; 
+  --color-colorblock-note-text: #0f0f0f;
+  --color-code-bg: #f7f5f0;
+  --color-code-text: #1a1a1a;
 }
 
 html[data-theme="dark"] {
@@ -60,7 +62,9 @@ html[data-theme="dark"] {
   --color-navbar-item-in-section: #{$gray-250};
   --color-highlight: #E8DDB5;
   --color-colorblock-note-bg: #f0f0f040;
-  --color-colorblock-note-text: #f0f0f0; 
+  --color-colorblock-note-text: #f0f0f0;
+  --color-code-bg: #222222;
+  --color-code-text: #cdd6f4;
 }
 
 

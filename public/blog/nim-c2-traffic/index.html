@@ -65,6 +65,11 @@
             document.documentElement.setAttribute("data-theme", "light");
         }
     </script>
+
+    <script defer src="/js/toc.js" integrity=""></script>
+
+
+
 <script defer src="/js/header.js" integrity=""></script>
 
 
@@ -224,7 +229,7 @@
     
     <span class="date">August 6, 2025</span>
     
-    
+
     
     <span> • </span>
      
@@ -243,12 +248,13 @@
     
 </div>
 
-
-
-
-<details class="collapsible-menu-wrapper"><summary class="collapsible-menu-type"><span>Table of contents</span></summary><div class="collapsible-menu">
-        
-            <nav id="TableOfContents">
+<details class="toc-mobile">
+    <summary class="toc-mobile-summary">
+        <span class="toc-mobile-label">Contents</span>
+        <span class="toc-mobile-chevron"></span>
+    </summary>
+    <div class="toc-mobile-body">
+        <nav id="TableOfContentsMobile">
   <ul>
     <li><a href="#packet-structure">Packet Structure</a>
       <ul>
@@ -263,18 +269,18 @@
     <li><a href="#closing-remarks">Closing Remarks</a></li>
   </ul>
 </nav>
-        
-    </div></details>
+    </div>
+</details>
+<div class="post-layout">
+    <div class="post-body">
+        <div class="blog-body">
 
+            
+                <h2 class="blog-introduction-header" id="introduction">Introduction</h2>
+            
 
-<div class="blog-body">
-
-    
-        <h2 class="blog-introduction-header" id="introduction">Introduction</h2>
-      
-    
-    
-    <div class="content-margin">
+            
+            <div class="content-margin">
 
 
 
@@ -290,15 +296,9 @@
 
 
 
-
-
-
 <figure class="">
-    <div>
-        <img loading="lazy" alt="Conquest" src=" /img/c2-traffic-nim/0.png">
-    </div>
-    
-</figure></p>
+    <img loading="lazy" alt="Conquest" src="/img/c2-traffic-nim/0.png"></figure>
+</p>
 
 <h2 id="packet-structure" class="header-anchor-wrapper">Packet Structure
   <a href="#packet-structure" class="header-anchor-link">
@@ -330,15 +330,9 @@
 
 
 
-
-
-
 <figure class="">
-    <div>
-        <img loading="lazy" alt="C2 Taffic using JSON" src=" /img/c2-traffic-nim/1.png">
-    </div>
-    
-</figure></p>
+    <img loading="lazy" alt="C2 Taffic using JSON" src="/img/c2-traffic-nim/1.png"></figure>
+</p>
 
 <h3 id="header" class="header-anchor-wrapper">Header
   <a href="#header" class="header-anchor-link">
@@ -356,29 +350,29 @@
 </h3>
 
 <p>To address these limitations, I decided to ditch the JSON approach and focused on essentially designing a binary protocol from scratch instead. Each packet consists of a fixed-size header and a variable-length body, with the header containing important unencrypted metadata that helps the recipient process the rest of the packet. Among other fields, it contains the 4-byte hex-identifier of the agent, which tells the team server which agent is polling for tasks or posting results. The variable-length payload body is encrypted using AES-256 GCM using a asymmetrically shared session key and a randomly generated initialization vector (IV), which is included in the header for every message. The GCM mode of operation creates the 16-byte Galois Message Authentication Code (GMAC), which is used to verify that the message has not been tampered with. The cryptographic implementations are more thoroughly explained in sections <a href="#key-exchange">Key Exchange</a> and <a href="#packet-encryption">Packet Encryption</a></p>
-<pre tabindex="0"><code>   0               1               2               3               4
-   ├───────────────┴───────────────┴───────────────┴───────────────┤
-4  │                          Magic Value                          │
-   ├───────────────┬───────────────┬───────────────────────────────┤
-8  │    Version    │  Packet Type  │         Packet Flags          │
-   ├───────────────┴───────────────┴───────────────────────────────┤
-12 │                         Payload Size                          │
-   ├───────────────────────────────────────────────────────────────┤
-16 │                           Agent ID                            │
-   ├───────────────────────────────────────────────────────────────┤
-20 │                       Sequence Number                         │
-   ├───────────────────────────────────────────────────────────────┤
-24 │                                                               │
-28 │                        IV (12 bytes)                          │
-32 │                                                               │
-   ├───────────────────────────────────────────────────────────────┤
-36 │                                                               │
-40 │                   GMAC Authentication Tag                     │
-44 │                          (16 bytes)                           │
-48 │                                                               │
-   └───────────────────────────────────────────────────────────────┘
-                               [Header]
-</code></pre>
+<div class="code-block"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">   0               1               2               3               4
+</span></span><span class="line"><span class="cl">   ├───────────────┴───────────────┴───────────────┴───────────────┤
+</span></span><span class="line"><span class="cl">4  │                          Magic Value                          │
+</span></span><span class="line"><span class="cl">   ├───────────────┬───────────────┬───────────────────────────────┤
+</span></span><span class="line"><span class="cl">8  │    Version    │  Packet Type  │         Packet Flags          │
+</span></span><span class="line"><span class="cl">   ├───────────────┴───────────────┴───────────────────────────────┤
+</span></span><span class="line"><span class="cl">12 │                         Payload Size                          │
+</span></span><span class="line"><span class="cl">   ├───────────────────────────────────────────────────────────────┤
+</span></span><span class="line"><span class="cl">16 │                           Agent ID                            │
+</span></span><span class="line"><span class="cl">   ├───────────────────────────────────────────────────────────────┤
+</span></span><span class="line"><span class="cl">20 │                       Sequence Number                         │
+</span></span><span class="line"><span class="cl">   ├───────────────────────────────────────────────────────────────┤
+</span></span><span class="line"><span class="cl">24 │                                                               │
+</span></span><span class="line"><span class="cl">28 │                        IV (12 bytes)                          │
+</span></span><span class="line"><span class="cl">32 │                                                               │
+</span></span><span class="line"><span class="cl">   ├───────────────────────────────────────────────────────────────┤
+</span></span><span class="line"><span class="cl">36 │                                                               │
+</span></span><span class="line"><span class="cl">40 │                   GMAC Authentication Tag                     │
+</span></span><span class="line"><span class="cl">44 │                          (16 bytes)                           │
+</span></span><span class="line"><span class="cl">48 │                                                               │
+</span></span><span class="line"><span class="cl">   └───────────────────────────────────────────────────────────────┘
+</span></span><span class="line"><span class="cl">                               [Header]</span></span></code></pre></div></div>
+
 <h3 id="task-packet" class="header-anchor-wrapper">Task Packet
   <a href="#task-packet" class="header-anchor-link">
     <svg width="16px" height="16px" viewBox="0 0 24 24">
@@ -395,35 +389,35 @@
 </h3>
 
 <p>While the structure of the header stays the same across all packet types, it is the encrypted payload body that changes. When a new task is dispatched and fetched by an agent, a packet with the structure below is created. It contains the ID of the task, listener and command to be executed, as well as a list of arguments that have been passed to the command.</p>
-<pre tabindex="0"><code>   0               2               4               6               8
-   ├───────────────┴───────────────┴───────────────┴───────────────┤
-0  │                                                               |
-   |                       Header (48 bytes)                       |
-   |                                                               |
-   ├───────────────────────────────┬───────────────────────────────┤
-48 │            Task ID            │           Listener ID         │
-   ├───────────────────────────────┼───────────────┬────────┬──────┤
-56 |           Timestamp           │      CMD      │  ARGC  │      │
-   ├───────────────────────────────┴───────────────┴────────┘      │
-   │                                                               │
-   │                           Argument 1                          │
-   │                                                               │
-   ├───────────────────────────────────────────────────────────────┤
-   │                                                               │
-   │                           Argument X                          │
-   │                              ...                              │
-?? │                                                               │
-   └───────────────────────────────────────────────────────────────┘
-                                [Task]
-</code></pre><p>The number of arguments the agent needs to process is indicated by the argument count (argc) field. The first byte of an argument defines the argument&rsquo;s type, such as <em>INT</em>, <em>STRING</em> or <em>BINARY</em>. While some argument types have fixed sized (boolean = 1 byte, integers = 4 bytes, &hellip;), variable-length arguments, such as strings or binary data are further prefixed with a 4-byte data length field that tells the recipient how many bytes they have to read until the next argument is defined. For example, the command <code>shell whoami /all</code> would produce the following packet body, before it would be encrypted.</p>
-<pre tabindex="0"><code>DE AD BE EF DE AD BE EF 12 34 56 78 01 00 02 00 06 00 00 00 77 68 6F 61 6D 69 00 04 00 00 00 2F 61 6C 6C  
-└────┬────┘ └────┬────┘ └────┬────┘ └─┬─┘ └┤ └┤ └────┬────┘ └───────┬───────┘ └┤ └────┬────┘ └────┬────┘
-   Task       Listener   Timestamp    │    │  │  Length: 6      &#39;whoami&#39;       │  Length: 4     &#39;/all&#39;
-                                      │    │  │                                │
-                       Command ID: &#39;shell&#39; │ Arg Type: String          Arg Type: String
-                                           │
-                                      Arg Count: 2
-</code></pre>
+<div class="code-block"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">   0               2               4               6               8
+</span></span><span class="line"><span class="cl">   ├───────────────┴───────────────┴───────────────┴───────────────┤
+</span></span><span class="line"><span class="cl">0  │                                                               |
+</span></span><span class="line"><span class="cl">   |                       Header (48 bytes)                       |
+</span></span><span class="line"><span class="cl">   |                                                               |
+</span></span><span class="line"><span class="cl">   ├───────────────────────────────┬───────────────────────────────┤
+</span></span><span class="line"><span class="cl">48 │            Task ID            │           Listener ID         │
+</span></span><span class="line"><span class="cl">   ├───────────────────────────────┼───────────────┬────────┬──────┤
+</span></span><span class="line"><span class="cl">56 |           Timestamp           │      CMD      │  ARGC  │      │
+</span></span><span class="line"><span class="cl">   ├───────────────────────────────┴───────────────┴────────┘      │
+</span></span><span class="line"><span class="cl">   │                                                               │
+</span></span><span class="line"><span class="cl">   │                           Argument 1                          │
+</span></span><span class="line"><span class="cl">   │                                                               │
+</span></span><span class="line"><span class="cl">   ├───────────────────────────────────────────────────────────────┤
+</span></span><span class="line"><span class="cl">   │                                                               │
+</span></span><span class="line"><span class="cl">   │                           Argument X                          │
+</span></span><span class="line"><span class="cl">   │                              ...                              │
+</span></span><span class="line"><span class="cl">?? │                                                               │
+</span></span><span class="line"><span class="cl">   └───────────────────────────────────────────────────────────────┘
+</span></span><span class="line"><span class="cl">                                [Task]</span></span></code></pre></div></div>
+<p>The number of arguments the agent needs to process is indicated by the argument count (argc) field. The first byte of an argument defines the argument&rsquo;s type, such as <em>INT</em>, <em>STRING</em> or <em>BINARY</em>. While some argument types have fixed sized (boolean = 1 byte, integers = 4 bytes, &hellip;), variable-length arguments, such as strings or binary data are further prefixed with a 4-byte data length field that tells the recipient how many bytes they have to read until the next argument is defined. For example, the command <code>shell whoami /all</code> would produce the following packet body, before it would be encrypted.</p>
+<div class="code-block"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">DE AD BE EF DE AD BE EF 12 34 56 78 01 00 02 00 06 00 00 00 77 68 6F 61 6D 69 00 04 00 00 00 2F 61 6C 6C  
+</span></span><span class="line"><span class="cl">└────┬────┘ └────┬────┘ └────┬────┘ └─┬─┘ └┤ └┤ └────┬────┘ └───────┬───────┘ └┤ └────┬────┘ └────┬────┘
+</span></span><span class="line"><span class="cl">   Task       Listener   Timestamp    │    │  │  Length: 6      &#39;whoami&#39;       │  Length: 4     &#39;/all&#39;
+</span></span><span class="line"><span class="cl">                                      │    │  │                                │
+</span></span><span class="line"><span class="cl">                       Command ID: &#39;shell&#39; │ Arg Type: String          Arg Type: String
+</span></span><span class="line"><span class="cl">                                           │
+</span></span><span class="line"><span class="cl">                                      Arg Count: 2</span></span></code></pre></div></div>
+
 <h3 id="result-packet" class="header-anchor-wrapper">Result Packet
   <a href="#result-packet" class="header-anchor-link">
     <svg width="16px" height="16px" viewBox="0 0 24 24">
@@ -440,24 +434,24 @@
 </h3>
 
 <p>For each task that an agent executes, a result packet is sent to the team server. This packet is structured similarly to the task, with the difference being that it contains the task output instead of the arguments. The <em>Status</em> field indicates whether the task was completed successfully or if an error was encountered during the execution. The <em>Type</em> field informs the team server of the data type of the task output, with the options being <em>STRING</em>, <em>BINARY</em> or <em>NO_OUTPUT</em>. While string data would be displayed in the user interface to the operator, binary data could be written directly to a file.</p>
-<pre tabindex="0"><code>   0               2               4               6               8
-   ├───────────────┴───────────────┴───────────────┴───────────────┤
-0  │                                                               |
-   |                       Header (48 bytes)                       |
-   |                                                               |
-   ├───────────────────────────────┬───────────────────────────────┤
-48 │            Task ID            │           Listener ID         │
-   ├───────────────────────────────┼───────────────┬────────┬──────┤
-56 |           Timestamp           │      CMD      │ Status │ Type │
-   ├───────────────────────────────┼───────────────┴────────┴──────┤
-64 │            Length             │                               │
-   ├───────────────────────────────┘                               │
-   │                                                               │
-   │                         Result Data                           │
-?? │                                                               │
-   └───────────────────────────────────────────────────────────────┘
-                               [Result]
-</code></pre><p>As far as the payload bodies of the other message types are concerned, the heartbeat message only contains the listener ID and a timestamp, while the registration payload includes information collected from the host the agent is running on, including username, hostname, IPv4 address, information about the operating system and information about the process the agent is running in. As with the command arguments, variable-length data fields contain a 4-byte prefix which defines the length of the data that follows. Alongside this metadata, the agent registration packet also contains the public key of the agent, which is then used by the team server to derive the AES encryption key, as outlined in the subsequent section in more detail.</p>
+<div class="code-block"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">   0               2               4               6               8
+</span></span><span class="line"><span class="cl">   ├───────────────┴───────────────┴───────────────┴───────────────┤
+</span></span><span class="line"><span class="cl">0  │                                                               |
+</span></span><span class="line"><span class="cl">   |                       Header (48 bytes)                       |
+</span></span><span class="line"><span class="cl">   |                                                               |
+</span></span><span class="line"><span class="cl">   ├───────────────────────────────┬───────────────────────────────┤
+</span></span><span class="line"><span class="cl">48 │            Task ID            │           Listener ID         │
+</span></span><span class="line"><span class="cl">   ├───────────────────────────────┼───────────────┬────────┬──────┤
+</span></span><span class="line"><span class="cl">56 |           Timestamp           │      CMD      │ Status │ Type │
+</span></span><span class="line"><span class="cl">   ├───────────────────────────────┼───────────────┴────────┴──────┤
+</span></span><span class="line"><span class="cl">64 │            Length             │                               │
+</span></span><span class="line"><span class="cl">   ├───────────────────────────────┘                               │
+</span></span><span class="line"><span class="cl">   │                                                               │
+</span></span><span class="line"><span class="cl">   │                         Result Data                           │
+</span></span><span class="line"><span class="cl">?? │                                                               │
+</span></span><span class="line"><span class="cl">   └───────────────────────────────────────────────────────────────┘
+</span></span><span class="line"><span class="cl">                               [Result]</span></span></code></pre></div></div>
+<p>As far as the payload bodies of the other message types are concerned, the heartbeat message only contains the listener ID and a timestamp, while the registration payload includes information collected from the host the agent is running on, including username, hostname, IPv4 address, information about the operating system and information about the process the agent is running in. As with the command arguments, variable-length data fields contain a 4-byte prefix which defines the length of the data that follows. Alongside this metadata, the agent registration packet also contains the public key of the agent, which is then used by the team server to derive the AES encryption key, as outlined in the subsequent section in more detail.</p>
 
 <h2 id="key-exchange" class="header-anchor-wrapper">Key Exchange
   <a href="#key-exchange" class="header-anchor-link">
@@ -483,143 +477,143 @@
 </ol>
 <p>While the <em>Nim</em> language does not offer many battle-tested ECC libraries, it has some useful language features that made the implementation of the key exchange straightforward and elegant. Due to Nim&rsquo;s excellent interoperability with the C language via its foreign function interface (FFI), I was able to create a wrapper for the <a href="https://monocypher.org/">Monocypher</a> crypto-library to use it&rsquo;s X25519 implementation.</p>
 <p>Using the <code>{.compile.}</code> directive, the Monocypher library is directly included in the Nim build process, allowing the import of functions defined in the C source code using the <code>{.importc.}</code> pragma shown below.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">16
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-nim" data-lang="nim"><span style="display:flex;"><span><span style="color:#007f7f">#[
-</span></span></span><span style="display:flex;"><span><span style="color:#007f7f">    Directory structure
-</span></span></span><span style="display:flex;"><span><span style="color:#007f7f">    - monocypher
-</span></span></span><span style="display:flex;"><span><span style="color:#007f7f">        - monocypher.c
-</span></span></span><span style="display:flex;"><span><span style="color:#007f7f">        - monocypher.h
-</span></span></span><span style="display:flex;"><span><span style="color:#007f7f">    - crypto.nim
-</span></span></span><span style="display:flex;"><span><span style="color:#007f7f">    - ...
-</span></span></span><span style="display:flex;"><span><span style="color:#007f7f">]#</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>{.compile: <span style="color:#0ff;font-weight:bold">&#34;monocypher/monocypher.c&#34;</span>.}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#007f7f"># C function imports from (monocypher/monocypher.c)</span>
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">proc </span>crypto_x25519*(shared_secret: <span style="color:#fff;font-weight:bold">ptr</span> byte, your_secret_key: <span style="color:#fff;font-weight:bold">ptr</span> byte, their_public_key: <span style="color:#fff;font-weight:bold">ptr</span> byte) {.importc, cdecl.}
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">proc </span>crypto_x25519_public_key*(public_key: <span style="color:#fff;font-weight:bold">ptr</span> byte, secret_key: <span style="color:#fff;font-weight:bold">ptr</span> byte) {.importc, cdecl.}
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">proc </span>crypto_blake2b_keyed*(hash: <span style="color:#fff;font-weight:bold">ptr</span> byte, hash_size: csize_t, key: <span style="color:#fff;font-weight:bold">ptr</span> byte, key_size: csize_t, message: <span style="color:#fff;font-weight:bold">ptr</span> byte, message_size: csize_t) {.importc, cdecl.}
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">proc </span>crypto_wipe*(data: <span style="color:#fff;font-weight:bold">ptr</span> byte, size: csize_t) {.importc, cdecl.}
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-nim" data-lang="nim"><span class="line"><span class="cl"><span class="cm">#[
+</span></span></span><span class="line"><span class="cl"><span class="cm">    Directory structure
+</span></span></span><span class="line"><span class="cl"><span class="cm">    - monocypher
+</span></span></span><span class="line"><span class="cl"><span class="cm">        - monocypher.c
+</span></span></span><span class="line"><span class="cl"><span class="cm">        - monocypher.h
+</span></span></span><span class="line"><span class="cl"><span class="cm">    - crypto.nim
+</span></span></span><span class="line"><span class="cl"><span class="cm">    - ...
+</span></span></span><span class="line"><span class="cl"><span class="cm">]#</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">{.</span><span class="n">compile</span><span class="p">:</span> <span class="s">&#34;monocypher/monocypher.c&#34;</span><span class="p">.}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># C function imports from (monocypher/monocypher.c)</span>
+</span></span><span class="line"><span class="cl"><span class="k">proc </span><span class="nf">crypto_x25519</span><span class="o">*</span><span class="p">(</span><span class="n">shared_secret</span><span class="p">:</span> <span class="k">ptr</span> <span class="n">byte</span><span class="p">,</span> <span class="n">your_secret_key</span><span class="p">:</span> <span class="k">ptr</span> <span class="n">byte</span><span class="p">,</span> <span class="n">their_public_key</span><span class="p">:</span> <span class="k">ptr</span> <span class="n">byte</span><span class="p">)</span> <span class="p">{.</span><span class="n">importc</span><span class="p">,</span> <span class="n">cdecl</span><span class="p">.}</span>
+</span></span><span class="line"><span class="cl"><span class="k">proc </span><span class="nf">crypto_x25519_public_key</span><span class="o">*</span><span class="p">(</span><span class="n">public_key</span><span class="p">:</span> <span class="k">ptr</span> <span class="n">byte</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">:</span> <span class="k">ptr</span> <span class="n">byte</span><span class="p">)</span> <span class="p">{.</span><span class="n">importc</span><span class="p">,</span> <span class="n">cdecl</span><span class="p">.}</span>
+</span></span><span class="line"><span class="cl"><span class="k">proc </span><span class="nf">crypto_blake2b_keyed</span><span class="o">*</span><span class="p">(</span><span class="n">hash</span><span class="p">:</span> <span class="k">ptr</span> <span class="n">byte</span><span class="p">,</span> <span class="n">hash_size</span><span class="p">:</span> <span class="n">csize_t</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="k">ptr</span> <span class="n">byte</span><span class="p">,</span> <span class="n">key_size</span><span class="p">:</span> <span class="n">csize_t</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="k">ptr</span> <span class="n">byte</span><span class="p">,</span> <span class="n">message_size</span><span class="p">:</span> <span class="n">csize_t</span><span class="p">)</span> <span class="p">{.</span><span class="n">importc</span><span class="p">,</span> <span class="n">cdecl</span><span class="p">.}</span>
+</span></span><span class="line"><span class="cl"><span class="k">proc </span><span class="nf">crypto_wipe</span><span class="o">*</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="k">ptr</span> <span class="n">byte</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="n">csize_t</span><span class="p">)</span> <span class="p">{.</span><span class="n">importc</span><span class="p">,</span> <span class="n">cdecl</span><span class="p">.}</span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>Although it is possible to use the imported functions with their C types, it is preferred to implement wrapper functions that use Nim types instead, as shown using the <code>keyExchange</code> function below for example. This highly increases the comprehensibility of the code and makes it easier to use.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">4
+</div></div>
+<p>Although it is possible to use the imported functions with their C types, it is preferred to implement wrapper functions that use Nim types instead, as shown using the <code>keyExchange</code> function below for example. This highly increases the comprehensibility of the code and makes it easier to use.</p>
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-nim" data-lang="nim"><span style="display:flex;"><span><span style="color:#007f7f"># Perform X25519 key exchange</span>
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">type</span> Key = <span style="color:#fff;font-weight:bold">array</span>[<span style="color:#ff0;font-weight:bold">32</span>, byte]
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">proc </span>keyExchange*(privateKey: Key, publicKey: Key): Key =
-</span></span><span style="display:flex;"><span>    crypto_x25519(result[<span style="color:#ff0;font-weight:bold">0</span>].<span style="color:#fff;font-weight:bold">addr</span>, privateKey[<span style="color:#ff0;font-weight:bold">0</span>].<span style="color:#fff;font-weight:bold">addr</span>, publicKey[<span style="color:#ff0;font-weight:bold">0</span>].<span style="color:#fff;font-weight:bold">addr</span>)
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-nim" data-lang="nim"><span class="line"><span class="cl"><span class="c"># Perform X25519 key exchange</span>
+</span></span><span class="line"><span class="cl"><span class="k">type</span> <span class="n">Key</span> <span class="o">=</span> <span class="kt">array</span><span class="o">[</span><span class="mi">32</span><span class="p">,</span> <span class="n">byte</span><span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="k">proc </span><span class="nf">keyExchange</span><span class="o">*</span><span class="p">(</span><span class="n">privateKey</span><span class="p">:</span> <span class="n">Key</span><span class="p">,</span> <span class="n">publicKey</span><span class="p">:</span> <span class="n">Key</span><span class="p">):</span> <span class="n">Key</span> <span class="o">=</span>
+</span></span><span class="line"><span class="cl">    <span class="n">crypto_x25519</span><span class="p">(</span><span class="n">result</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="k">addr</span><span class="p">,</span> <span class="n">privateKey</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="k">addr</span><span class="p">,</span> <span class="n">publicKey</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="k">addr</span><span class="p">)</span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>As mentioned before, the key exchange calculates a shared secret that is used for key derivation. This secret is, however, not suitable to be used as the encryption key, as it is not cryptographically random. To derive a session key, the secret is hashed using the Blake2B hashing algorithm along with some other information, such as the public keys and a message, to create a secure 32-byte key.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">16
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">17
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">18
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">19
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">20
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">21
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">22
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">23
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">24
+</div></div>
+<p>As mentioned before, the key exchange calculates a shared secret that is used for key derivation. This secret is, however, not suitable to be used as the encryption key, as it is not cryptographically random. To derive a session key, the secret is hashed using the Blake2B hashing algorithm along with some other information, such as the public keys and a message, to create a secure 32-byte key.</p>
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-nim" data-lang="nim"><span style="display:flex;"><span><span style="color:#007f7f"># Key derivation</span>
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">proc </span>combineKeys(publicKey, otherPublicKey: Key): Key = 
-</span></span><span style="display:flex;"><span>    <span style="color:#007f7f"># XOR is a commutative operation, that ensures that the order of the public keys does not matter</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">for</span> i in <span style="color:#ff0;font-weight:bold">0</span>..&lt;<span style="color:#ff0;font-weight:bold">32</span>:
-</span></span><span style="display:flex;"><span>        result[i] = publicKey[i] xor otherPublicKey[i]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">proc </span>deriveSessionKey*(keyPair: KeyPair, publicKey: Key): Key =
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">var</span> key: Key
-</span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    <span style="color:#007f7f"># Calculate shared secret (https://monocypher.org/manual/x25519)</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">var</span> sharedSecret = keyExchange(keyPair.privateKey, publicKey)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#007f7f"># Add combined public keys to hash</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">let</span> combinedKeys: Key = combineKeys(keyPair.publicKey, publicKey)
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">let</span> hashMessage: <span style="color:#fff;font-weight:bold">seq</span>[byte] = <span style="color:#0ff;font-weight:bold">&#34;CONQUEST&#34;</span>.toBytes() &amp; @combinedKeys 
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#007f7f"># Calculate Blake2b hash and extract the first 32 bytes for the AES key (https://monocypher.org/manual/blake2b)</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">let</span> hash = blake2b(hashMessage, sharedSecret)
-</span></span><span style="display:flex;"><span>    copyMem(key[<span style="color:#ff0;font-weight:bold">0</span>].<span style="color:#fff;font-weight:bold">addr</span>, hash[<span style="color:#ff0;font-weight:bold">0</span>].<span style="color:#fff;font-weight:bold">addr</span>, sizeof(Key))
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#007f7f"># Cleanup </span>
-</span></span><span style="display:flex;"><span>    wipeKey(sharedSecret)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">return</span> key
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-nim" data-lang="nim"><span class="line"><span class="cl"><span class="c"># Key derivation</span>
+</span></span><span class="line"><span class="cl"><span class="k">proc </span><span class="nf">combineKeys</span><span class="p">(</span><span class="n">publicKey</span><span class="p">,</span> <span class="n">otherPublicKey</span><span class="p">:</span> <span class="n">Key</span><span class="p">):</span> <span class="n">Key</span> <span class="o">=</span> 
+</span></span><span class="line"><span class="cl">    <span class="c"># XOR is a commutative operation, that ensures that the order of the public keys does not matter</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mf">0</span><span class="p">..</span><span class="o">&lt;</span><span class="mi">32</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">result</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">publicKey</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="ow">xor</span> <span class="n">otherPublicKey</span><span class="o">[</span><span class="n">i</span><span class="o">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">proc </span><span class="nf">deriveSessionKey</span><span class="o">*</span><span class="p">(</span><span class="n">keyPair</span><span class="p">:</span> <span class="n">KeyPair</span><span class="p">,</span> <span class="n">publicKey</span><span class="p">:</span> <span class="n">Key</span><span class="p">):</span> <span class="n">Key</span> <span class="o">=</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="n">key</span><span class="p">:</span> <span class="n">Key</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c"># Calculate shared secret (https://monocypher.org/manual/x25519)</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="n">sharedSecret</span> <span class="o">=</span> <span class="n">keyExchange</span><span class="p">(</span><span class="n">keyPair</span><span class="p">.</span><span class="n">privateKey</span><span class="p">,</span> <span class="n">publicKey</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c"># Add combined public keys to hash</span>
+</span></span><span class="line"><span class="cl">    <span class="k">let</span> <span class="n">combinedKeys</span><span class="p">:</span> <span class="n">Key</span> <span class="o">=</span> <span class="n">combineKeys</span><span class="p">(</span><span class="n">keyPair</span><span class="p">.</span><span class="n">publicKey</span><span class="p">,</span> <span class="n">publicKey</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">let</span> <span class="n">hashMessage</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> <span class="s">&#34;CONQUEST&#34;</span><span class="p">.</span><span class="n">toBytes</span><span class="p">()</span> <span class="o">&amp;</span> <span class="o">@</span><span class="n">combinedKeys</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c"># Calculate Blake2b hash and extract the first 32 bytes for the AES key (https://monocypher.org/manual/blake2b)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">let</span> <span class="n">hash</span> <span class="o">=</span> <span class="n">blake2b</span><span class="p">(</span><span class="n">hashMessage</span><span class="p">,</span> <span class="n">sharedSecret</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">copyMem</span><span class="p">(</span><span class="n">key</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="k">addr</span><span class="p">,</span> <span class="n">hash</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="k">addr</span><span class="p">,</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">Key</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c"># Cleanup </span>
+</span></span><span class="line"><span class="cl">    <span class="n">wipeKey</span><span class="p">(</span><span class="n">sharedSecret</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">key</span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>With the actual key derivation covered, one question remains: How do the agent and the team server exchange their public keys? As the agent initiates the C2 communication, I needs to have the server&rsquo;s public key embedded into it&rsquo;s binary to avoid unnecessary network handshakes. This is straightforward to implement, thanks to Nim&rsquo;s <em>compile-time variables</em>. By adding the <code>-d</code> flag to the Nim compiler, we can pass values to variables that are defined using the <code>{.strdefine.}</code> or <code>{.intdefine.}</code> pragmas, making this feature incredibly useful for adding listener configuration to the agent or embedding the server&rsquo;s public key.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">3
+</div></div>
+<p>With the actual key derivation covered, one question remains: How do the agent and the team server exchange their public keys? As the agent initiates the C2 communication, I needs to have the server&rsquo;s public key embedded into it&rsquo;s binary to avoid unnecessary network handshakes. This is straightforward to implement, thanks to Nim&rsquo;s <em>compile-time variables</em>. By adding the <code>-d</code> flag to the Nim compiler, we can pass values to variables that are defined using the <code>{.strdefine.}</code> or <code>{.intdefine.}</code> pragmas, making this feature incredibly useful for adding listener configuration to the agent or embedding the server&rsquo;s public key.</p>
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-nim" data-lang="nim"><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">const</span> ListenerUuid {.strdefine.}: <span style="color:#fff;font-weight:bold">string</span> = <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">const</span> SleepDelay {.intdefine.}: <span style="color:#fff;font-weight:bold">int</span> = <span style="color:#ff0;font-weight:bold">10</span>
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">const</span> ServerPublicKey {.strdefine.}: <span style="color:#fff;font-weight:bold">string</span> = <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-nim" data-lang="nim"><span class="line"><span class="cl"><span class="k">const</span> <span class="n">ListenerUuid</span> <span class="p">{.</span><span class="n">strdefine</span><span class="p">.}:</span> <span class="kt">string</span> <span class="o">=</span> <span class="s">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="n">SleepDelay</span> <span class="p">{.</span><span class="n">intdefine</span><span class="p">.}:</span> <span class="kt">int</span> <span class="o">=</span> <span class="mi">10</span>
+</span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="n">ServerPublicKey</span> <span class="p">{.</span><span class="n">strdefine</span><span class="p">.}:</span> <span class="kt">string</span> <span class="o">=</span> <span class="s">&#34;&#34;</span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>In addition to processing compiler flags passed to the command-line, Nim also checks for configuration files named <code>nim.cfg</code> or <code>config.nims</code> in the current directory. I implemented an agent build process into Conquest, where this configuration file is overwritten with the relevant information, such as the IP address and port of the listener or the standard sleep delay. For the above-mentioned compile-time define pragmas, a <code>nim.cfg</code> file could look like the following.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">4
+</div></div>
+<p>In addition to processing compiler flags passed to the command-line, Nim also checks for configuration files named <code>nim.cfg</code> or <code>config.nims</code> in the current directory. I implemented an agent build process into Conquest, where this configuration file is overwritten with the relevant information, such as the IP address and port of the listener or the standard sleep delay. For the above-mentioned compile-time define pragmas, a <code>nim.cfg</code> file could look like the following.</p>
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-nim" data-lang="nim"><span style="display:flex;"><span><span style="color:#007f7f"># nim.cfg </span>
-</span></span><span style="display:flex;"><span>-d:ListenerUuid=<span style="color:#0ff;font-weight:bold">&#34;D3AC0FF3&#34;</span>
-</span></span><span style="display:flex;"><span>-d:SleepDelay=<span style="color:#ff0;font-weight:bold">3</span>
-</span></span><span style="display:flex;"><span>-d:ServerPublicKey=<span style="color:#0ff;font-weight:bold">&#34;mi9o0kPu1ZSbuYfnG5FmDUMAvEXEvp11OW9CQLCyL1U=&#34;</span>
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-nim" data-lang="nim"><span class="line"><span class="cl"><span class="c"># nim.cfg </span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span><span class="n">d</span><span class="p">:</span><span class="n">ListenerUuid</span><span class="o">=</span><span class="s">&#34;D3AC0FF3&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span><span class="n">d</span><span class="p">:</span><span class="n">SleepDelay</span><span class="o">=</span><span class="mi">3</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span><span class="n">d</span><span class="p">:</span><span class="n">ServerPublicKey</span><span class="o">=</span><span class="s">&#34;mi9o0kPu1ZSbuYfnG5FmDUMAvEXEvp11OW9CQLCyL1U=&#34;</span></span></span></code></pre></td></tr></table>
 </div>
-</div>
+</div></div>
+
 
 
 
@@ -644,24 +638,24 @@
 </div>
 
 <p>When the agent is executed, it generates its own key pair. Using the newly created private key and the servers&rsquo; public key, it subsequently derives the session key used for the packet encryption. At that point, the agent can wipe its own private key from memory, as it is no longer needed. For the server to be able to derive the same session key, the agent includes its public key in the registration packet.</p>
-<pre tabindex="0"><code>   0               4               8              12              16
-   ├───────────────┴───────────────┴───────────────┴───────────────┤
-0  │                                                               |
-   |                       Header (48 bytes)                       |
-   |                                                               |
-   ├───────────────────────────────────────────────────────────────┤
-48 │                       Agent Public Key                        │
-   │                          (32 bytes)                           │
-   ├───────────────────────────────────────────────────────────────┤
-80 │                                                               │
-   │                                                               │
-   │                      Encrypted Metadata                       │
-   │                                                               │
-   │                                                               │
-?? │                                                               │
-   └───────────────────────────────────────────────────────────────┘
-                            [Registration]
-</code></pre><p>When the server deserializes and parses the registration packet, it uses its own private key and the agent&rsquo;s public key to derive the same session key and stores it in a database. Following this exchange, all communication between an agent and the server is encrypted using this session key as explained in the following section.</p>
+<div class="code-block"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">   0               4               8              12              16
+</span></span><span class="line"><span class="cl">   ├───────────────┴───────────────┴───────────────┴───────────────┤
+</span></span><span class="line"><span class="cl">0  │                                                               |
+</span></span><span class="line"><span class="cl">   |                       Header (48 bytes)                       |
+</span></span><span class="line"><span class="cl">   |                                                               |
+</span></span><span class="line"><span class="cl">   ├───────────────────────────────────────────────────────────────┤
+</span></span><span class="line"><span class="cl">48 │                       Agent Public Key                        │
+</span></span><span class="line"><span class="cl">   │                          (32 bytes)                           │
+</span></span><span class="line"><span class="cl">   ├───────────────────────────────────────────────────────────────┤
+</span></span><span class="line"><span class="cl">80 │                                                               │
+</span></span><span class="line"><span class="cl">   │                                                               │
+</span></span><span class="line"><span class="cl">   │                      Encrypted Metadata                       │
+</span></span><span class="line"><span class="cl">   │                                                               │
+</span></span><span class="line"><span class="cl">   │                                                               │
+</span></span><span class="line"><span class="cl">?? │                                                               │
+</span></span><span class="line"><span class="cl">   └───────────────────────────────────────────────────────────────┘
+</span></span><span class="line"><span class="cl">                            [Registration]</span></span></code></pre></div></div>
+<p>When the server deserializes and parses the registration packet, it uses its own private key and the agent&rsquo;s public key to derive the same session key and stores it in a database. Following this exchange, all communication between an agent and the server is encrypted using this session key as explained in the following section.</p>
 
 <h2 id="packet-encryption" class="header-anchor-wrapper">Packet Encryption
   <a href="#packet-encryption" class="header-anchor-link">
@@ -680,75 +674,75 @@
 
 <p>With the key exchange completed, what follows is the encryption of a network packet&rsquo;s body using the AES-256 block cipher in the <em>Galois/Counter Mode (GCM)</em> mode of operation<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup><sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>. GCM provides authenticated encryption with associated data (AEAD), ensuring that both confidentiality and integrity are guaranteed. This is achieved by combining the Counter Mode (CTR) for encryption and GHASH for authentication. In addition to encrypting the data, an authentication tag, also known as <em>Galois Message Authentication Code (GMAC)</em> is calculated based on the encrypted data and additional authenticated data (AAD). AAD is any unencrypted data, for which integrity and authenticity should be ensured, such as the <em>sequence number</em> that prevents packet replay attacks. If the ciphertext or sequence number of a packet are modified before it is received, the recipient&rsquo;s recalculation of the 16-byte GMAC will not match the tag included in the packet header, allowing the server or agent to detect tampering and discard the packet.</p>
 <p>The <code>nimcrypto</code> library provides a easy-to-use AES-GCM implementation in Nim. As mentioned before, the packet&rsquo;s sequence number is added as AAD to ensure that modifications made to it are detected.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">16
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">17
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">18
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">19
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">20
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">21
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">22
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">23
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">24
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">25
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">26
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">27
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">28
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">29
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">30
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">31
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-nim" data-lang="nim"><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">import</span> nimcrypto 
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">proc </span>encrypt*(key: Key, iv: Iv, data: <span style="color:#fff;font-weight:bold">seq</span>[byte], sequenceNumber: uint32): (<span style="color:#fff;font-weight:bold">seq</span>[byte], AuthenticationTag) =
-</span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    <span style="color:#007f7f"># Encrypt data using AES-256 GCM</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">var</span> encData = newSeq[byte](data.len)
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">var</span> tag: AuthenticationTag
-</span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">var</span> ctx: GCM[aes256]
-</span></span><span style="display:flex;"><span>    ctx.init(key, iv, sequenceNumber.toBytes())    
-</span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    ctx.encrypt(data, encData)
-</span></span><span style="display:flex;"><span>    ctx.getTag(tag)
-</span></span><span style="display:flex;"><span>    ctx.clear()
-</span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">return</span> (encData, tag)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">proc </span>decrypt*(key: Key, iv: Iv, encData: <span style="color:#fff;font-weight:bold">seq</span>[byte], sequenceNumber: uint32): (<span style="color:#fff;font-weight:bold">seq</span>[byte], AuthenticationTag) =
-</span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    <span style="color:#007f7f"># Decrypt data using AES-256 GCM</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">var</span> data = newSeq[byte](encData.len)
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">var</span> tag: AuthenticationTag
-</span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">var</span> ctx: GCM[aes256]
-</span></span><span style="display:flex;"><span>    ctx.init(key, iv, sequenceNumber.toBytes())
-</span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    ctx.decrypt(encData, data)
-</span></span><span style="display:flex;"><span>    ctx.getTag(tag)
-</span></span><span style="display:flex;"><span>    ctx.clear()
-</span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">return</span> (data, tag)
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-nim" data-lang="nim"><span class="line"><span class="cl"><span class="kn">import</span> <span class="n">nimcrypto</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">proc </span><span class="nf">encrypt</span><span class="o">*</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="n">Key</span><span class="p">,</span> <span class="n">iv</span><span class="p">:</span> <span class="n">Iv</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="p">,</span> <span class="n">sequenceNumber</span><span class="p">:</span> <span class="n">uint32</span><span class="p">):</span> <span class="p">(</span><span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="p">,</span> <span class="n">AuthenticationTag</span><span class="p">)</span> <span class="o">=</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c"># Encrypt data using AES-256 GCM</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="n">encData</span> <span class="o">=</span> <span class="n">newSeq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">len</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="n">tag</span><span class="p">:</span> <span class="n">AuthenticationTag</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">GCM</span><span class="o">[</span><span class="n">aes256</span><span class="o">]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ctx</span><span class="p">.</span><span class="n">init</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">iv</span><span class="p">,</span> <span class="n">sequenceNumber</span><span class="p">.</span><span class="n">toBytes</span><span class="p">())</span>    
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">ctx</span><span class="p">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">encData</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ctx</span><span class="p">.</span><span class="n">getTag</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ctx</span><span class="p">.</span><span class="n">clear</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="p">(</span><span class="n">encData</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">proc </span><span class="nf">decrypt</span><span class="o">*</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="n">Key</span><span class="p">,</span> <span class="n">iv</span><span class="p">:</span> <span class="n">Iv</span><span class="p">,</span> <span class="n">encData</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="p">,</span> <span class="n">sequenceNumber</span><span class="p">:</span> <span class="n">uint32</span><span class="p">):</span> <span class="p">(</span><span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="p">,</span> <span class="n">AuthenticationTag</span><span class="p">)</span> <span class="o">=</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c"># Decrypt data using AES-256 GCM</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="n">data</span> <span class="o">=</span> <span class="n">newSeq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="p">(</span><span class="n">encData</span><span class="p">.</span><span class="n">len</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="n">tag</span><span class="p">:</span> <span class="n">AuthenticationTag</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">GCM</span><span class="o">[</span><span class="n">aes256</span><span class="o">]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ctx</span><span class="p">.</span><span class="n">init</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">iv</span><span class="p">,</span> <span class="n">sequenceNumber</span><span class="p">.</span><span class="n">toBytes</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">ctx</span><span class="p">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">encData</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ctx</span><span class="p">.</span><span class="n">getTag</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ctx</span><span class="p">.</span><span class="n">clear</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>Looking at a registration request in Wireshark, we can see and differentiate the fields in the packet. The registration packet kicks off the sequence tracking with the sequence number 1, which is then incremented for each task and result packet sent. This sequence number is validated whenever a packet is received to prevent replay attacks. The hex data below also clearly shows the 12-byte IV, 16-byte GMAC and 32-byte public key. The byte-array with 101 entries contains the encrypted metadata collected from the target host.</p>
+</div></div>
+<p>Looking at a registration request in Wireshark, we can see and differentiate the fields in the packet. The registration packet kicks off the sequence tracking with the sequence number 1, which is then incremented for each task and result packet sent. This sequence number is validated whenever a packet is received to prevent replay attacks. The hex data below also clearly shows the 12-byte IV, 16-byte GMAC and 32-byte public key. The byte-array with 101 entries contains the encrypted metadata collected from the target host.</p>
 <p>
 
 
@@ -756,15 +750,9 @@
 
 
 
-
-
-
 <figure class="">
-    <div>
-        <img loading="lazy" alt="Registration packet bytes" src=" /img/c2-traffic-nim/reg.png">
-    </div>
-    
-</figure></p>
+    <img loading="lazy" alt="Registration packet bytes" src="/img/c2-traffic-nim/reg.png"></figure>
+</p>
 
 <h2 id="demo" class="header-anchor-wrapper">Demo
   <a href="#demo" class="header-anchor-link">
@@ -789,15 +777,9 @@
 
 
 
-
-
-
 <figure class="">
-    <div>
-        <img loading="lazy" alt="Executing whoami /all" src=" /img/c2-traffic-nim/whoami.png">
-    </div>
-    
-</figure></p>
+    <img loading="lazy" alt="Executing whoami /all" src="/img/c2-traffic-nim/whoami.png"></figure>
+</p>
 <p>
 
 
@@ -805,15 +787,9 @@
 
 
 
-
-
-
 <figure class="">
-    <div>
-        <img loading="lazy" alt="Filesystem operations" src=" /img/c2-traffic-nim/fs.png">
-    </div>
-    
-</figure></p>
+    <img loading="lazy" alt="Filesystem operations" src="/img/c2-traffic-nim/fs.png"></figure>
+</p>
 <p>
 
 
@@ -821,15 +797,9 @@
 
 
 
-
-
-
 <figure class="">
-    <div>
-        <img loading="lazy" alt="Conquest traffic" src=" /img/c2-traffic-nim/traffic.png">
-    </div>
-    
-</figure></p>
+    <img loading="lazy" alt="Conquest traffic" src="/img/c2-traffic-nim/traffic.png"></figure>
+</p>
 
 <h2 id="closing-remarks" class="header-anchor-wrapper">Closing Remarks
   <a href="#closing-remarks" class="header-anchor-link">
@@ -867,7 +837,30 @@
 </li>
 </ol>
 </div>
-</article></div>
+</article>
+</div>
+            
+
+        </div>
+    </div>
+    <aside class="toc-sidebar">
+        <div class="toc-sidebar-title">Contents</div>
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#packet-structure">Packet Structure</a>
+      <ul>
+        <li><a href="#header">Header</a></li>
+        <li><a href="#task-packet">Task Packet</a></li>
+        <li><a href="#result-packet">Result Packet</a></li>
+      </ul>
+    </li>
+    <li><a href="#key-exchange">Key Exchange</a></li>
+    <li><a href="#packet-encryption">Packet Encryption</a></li>
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#closing-remarks">Closing Remarks</a></li>
+  </ul>
+</nav>
+    </aside>
     
 </div>
 

@@ -65,6 +65,11 @@
             document.documentElement.setAttribute("data-theme", "light");
         }
     </script>
+
+    <script defer src="/js/toc.js" integrity=""></script>
+
+
+
 <script defer src="/js/header.js" integrity=""></script>
 
 
@@ -217,7 +222,7 @@
     
     <span class="date">January 27, 2024</span>
     
-    
+
     
     <span> • </span>
      
@@ -236,12 +241,13 @@
     
 </div>
 
-
-
-
-<details class="collapsible-menu-wrapper"><summary class="collapsible-menu-type"><span>Table of contents</span></summary><div class="collapsible-menu">
-        
-            <nav id="TableOfContents">
+<details class="toc-mobile">
+    <summary class="toc-mobile-summary">
+        <span class="toc-mobile-label">Contents</span>
+        <span class="toc-mobile-chevron"></span>
+    </summary>
+    <div class="toc-mobile-body">
+        <nav id="TableOfContentsMobile">
   <ul>
     <li><a href="#cybernetics-advanced-ad">Cybernetics: Advanced AD</a></li>
     <li><a href="#aptlabs-hardcore-threat-simulation">APTLabs: Hardcore Threat Simulation</a></li>
@@ -249,18 +255,18 @@
     <li><a href="#conclusion">Conclusion</a></li>
   </ul>
 </nav>
-        
-    </div></details>
+    </div>
+</details>
+<div class="post-layout">
+    <div class="post-body">
+        <div class="blog-body">
 
+            
+                <h2 class="blog-introduction-header" id="introduction">Introduction</h2>
+            
 
-<div class="blog-body">
-
-    
-        <h2 class="blog-introduction-header" id="introduction">Introduction</h2>
-      
-    
-    
-    <div class="content-margin">
+            
+            <div class="content-margin">
 
 
 
@@ -372,6 +378,21 @@
 
 <p>As already mentioned, Cybernetics and APTLabs elevated my knowledge on Active Directory enumeration and exploitation techniques, expanded my adversarial toolset and helped me develop situational awareness in complex environments. I am very grateful to have been able to complete them and to now consider myself a Level 3 Red Team Operator. The labs provide a challenge which I would recommend to anyone interested in advanced Active Directory attacks and are definitely worth the price. For more beginner- or intermediate-level difficulty, I would recommend the other Pro Labs, like Offshore and Zephyr, which I have reviewed in my previous blog post.</p>
 </article></div>
+            
+
+        </div>
+    </div>
+    <aside class="toc-sidebar">
+        <div class="toc-sidebar-title">Contents</div>
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#cybernetics-advanced-ad">Cybernetics: Advanced AD</a></li>
+    <li><a href="#aptlabs-hardcore-threat-simulation">APTLabs: Hardcore Threat Simulation</a></li>
+    <li><a href="#recommended-toolset">Recommended Toolset</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </aside>
     
 </div>
 

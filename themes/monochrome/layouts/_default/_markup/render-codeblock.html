@@ -1,0 +1,14 @@
+{{- $lang := .Type | default "" -}}
+
+{{/* Rebuild the options string from the fenced block attributes
+     e.g. ```nim {lineNos=table} becomes "lineNos=table" */}}
+{{- $opts := slice -}}
+{{- range $k, $v := .Options -}}
+  {{- $opts = $opts | append (printf "%s=%v" $k $v) -}}
+{{- end -}}
+{{- $optsStr := delimit $opts "," -}}
+
+{{- $highlighted := transform.Highlight .Inner $lang $optsStr -}}
+<div class="code-block">
+  {{- $highlighted -}}
+</div>

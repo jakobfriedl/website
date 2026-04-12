@@ -1,0 +1,198 @@
+// ─── Two-column post layout (content + ToC sidebar) ─────────────────────────
+//
+// On xl+ screens the body is widened slightly so the ToC can sit flush next
+// to the article without cramping the reading column.
+
+@media screen and (min-width: $xl_min_width) {
+  body:has(.toc-sidebar) {
+    width: 62%;
+  }
+}
+
+@media screen and (min-width: $xxl_min_width) {
+  body:has(.toc-sidebar) {
+    width: 46%;
+  }
+}
+
+// Flex wrapper: left = article, right = sidebar
+.post-layout {
+  @media screen and (min-width: $xl_min_width) {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+  }
+
+  .post-body {
+    flex: 1;
+    min-width: 0; // prevent flex child from overflowing
+  }
+}
+
+// ─── Desktop: sticky sidebar ToC (xl+ only) ──────────────────────────────────
+
+.toc-sidebar {
+  display: none;
+
+  @media screen and (min-width: $xl_min_width) {
+    display: block;
+    flex-shrink: 0;
+    width: 12rem;
+    position: sticky;
+    top: 5.5rem;
+    max-height: calc(100vh - 7rem);
+    overflow-y: auto;
+    font-size: 0.76rem;
+    line-height: 1.45;
+    scrollbar-width: thin;
+    padding-top: 0.15rem;
+  }
+
+  .toc-sidebar-title {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.68rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.5rem;
+    padding-left: 0.6rem;
+    @include font-bold;
+  }
+
+  nav {
+    ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    li { margin: 0; }
+
+    ul ul {
+      a { padding-left: 1.1rem; }
+    }
+
+    ul ul ul {
+      a { padding-left: 1.8rem; }
+    }
+
+    a {
+      display: block;
+      padding: 0.18rem 0.6rem;
+      color: var(--color-text-secondary);
+      border-left: 2px solid var(--color-border);
+      transition: color 0.15s ease, border-color 0.15s ease;
+      word-break: break-word;
+
+      &:hover {
+        color: var(--color-link);
+        border-left-color: var(--color-link);
+      }
+
+      &.toc-active {
+        color: var(--color-link);
+        border-left-color: var(--color-link);
+        @include font-bold;
+      }
+    }
+  }
+}
+
+// ─── Mobile: collapsible <details> at top of post (hidden on xl+) ───────────
+
+.toc-mobile {
+  display: block;
+  margin-top: 2rem;
+  margin-bottom: 2.25rem;
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--color-link);
+  border-radius: 0.25rem;
+  overflow: hidden;
+
+  @media screen and (min-width: $xl_min_width) {
+    display: none;
+  }
+
+  summary.toc-mobile-summary {
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.65rem 1rem;
+    background-color: var(--color-background-overlay);
+
+    &::-webkit-details-marker { display: none; }
+    &:hover { background-color: var(--color-background-hover); }
+
+    .toc-mobile-label {
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 0.7rem;
+      color: var(--color-link);
+      @include font-bold;
+    }
+
+    .toc-mobile-chevron {
+      display: inline-block;
+      flex-shrink: 0;
+      width: 0.45rem;
+      height: 0.45rem;
+      border-right: 2px solid var(--color-link);
+      border-bottom: 2px solid var(--color-link);
+      transform: rotate(45deg);
+      transition: transform 0.2s ease, margin-top 0.2s ease;
+      margin-top: -0.2rem;
+    }
+  }
+
+  &[open] summary.toc-mobile-summary .toc-mobile-chevron {
+    transform: rotate(225deg);
+    margin-top: 0.2rem;
+  }
+
+  .toc-mobile-body {
+    padding: 0.85rem 1rem 1rem;
+    border-top: 1px solid var(--color-border);
+
+    nav {
+      ul {
+        list-style: none;
+        padding-left: 0;
+        margin: 0;
+      }
+
+      li { margin: 0; }
+
+      ul ul {
+        a { padding-left: 1.1rem; }
+      }
+
+      ul ul ul {
+        a { padding-left: 1.8rem; }
+      }
+
+      a {
+        display: block;
+        padding: 0.2rem 0.6rem;
+        font-size: 0.82rem;
+        line-height: 1.5;
+        color: var(--color-text-secondary);
+        border-left: 2px solid var(--color-border);
+        transition: color 0.15s ease, border-color 0.15s ease;
+        word-break: break-word;
+
+        &:hover {
+          color: var(--color-link);
+          border-left-color: var(--color-link);
+        }
+
+        &.toc-active {
+          color: var(--color-link);
+          border-left-color: var(--color-link);
+          @include font-bold;
+        }
+      }
+    }
+  }
+}

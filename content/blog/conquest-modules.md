@@ -18,7 +18,7 @@ Command and control (C2) frameworks are sometimes also referred to as post-explo
 
 The primary reason why post-exploitation capabilities are usually out-sourced to third party tools is because this allows the C2 agent to remain as lightweight as possible. The more code and features the agent contains, the larger its detection surface, so the focus is to limit the built-in functionality to the bare minimum. This includes essential features such as being able to send data back to the team server via a network protocol between sleep cycles, basic target reconnaissance, self-termination and some sort of task execution mechanism. Other capabilities, such as techniques for performing local and remote situational awareness, code execution and post-exploitation are either optionally enabled or fully external. In Conquest, certain modules can be selected during payload generation to be included in the agent in order to keep the agent size reduced to the essentials when specific capabilities are not needed during an engagement. Shown in the screenshot below, these *modules* include filesystem operations, file transfer, token manipulation and most importantly, different techniques to execute code or additional tools. In the next section, we will take a closer look at one of the most widely used: *Beacon Object Files*.
 
-![Conquest Core Modules](/img/c2-module-system/0.png)
+![Conquest Core Modules](/img/c2-module-system/0.png "Conquest Core Modules")
 
 ## Post-Exploitation using Beacon Object Files
 
@@ -48,8 +48,8 @@ Conquest's module system allows users to turn their favourite BOFs into complete
 
 The diagram below describes the module system architecture and how the different components work together. The engine processes uploaded Python scripts and registers them to command groups or modules. When a command-line is entered into the agent console, the client parses the input and looks up the matching command in an internal table. From there, the arguments are parsed and packaged into a task object that can then be sent to the team server and queued. 
 
-![Module System Architecture](/img/c2-module-system/arch-dark.png#dark)
-![Module System Architecture](/img/c2-module-system/arch-light.png#light)
+![Module System Architecture](/img/c2-module-system/arch-dark.png#dark "Conquest Module System Architecture")
+![Module System Architecture](/img/c2-module-system/arch-light.png#light "Conquest Module System Architecture")
 
 ## Creating Commands
 
@@ -62,7 +62,7 @@ With the theory covered, this part of the blog post shows practical examples of 
 
 Every Conquest module starts with the imports at the top. The `conquest` module is required to access the Python API, but any other standard Python libraries can be added as well.
 
-```py {lineNos=table lineNoStart=1}
+```python {lineNos=table lineNoStart=1}
 import conquest
 import os.path
 ```
@@ -81,13 +81,14 @@ Although not necessarily required, it is recommended to assign the command defin
 
 This blog post takes the `scshell` command as an example, which wraps a variation of the [SCShell](https://github.com/Mr-Un1k0d3r/SCShell) BOF. This technique enables lateral movement via SMB without the need for creating a service on the target system.  
 
-```py {lineNos=table lineNoStart=3}
+```python {lineNos=table lineNoStart=3}
 cmd_scshell = (
     conquest.createCommand(name="scshell", 
                            description="Perform fileless lateral movement by modifying an existing remote service's binary path (SCShell tool).", 
                            example="scshell dc01 bin/monarch.smb_x64.svc.exe --service Spooler --name update.exe",
                            message="Tasked agent to perform fileless lateral movement via SCShell.", 
                            mitre=["T1021.002"])
+                           
 ```
 
 ### Command Arguments
@@ -105,7 +106,7 @@ Arguments passed to a command must be defined in the Python module. Conquest sup
 
 In the case of `scshell`, the following arguments are supported. 
 
-```py {lineNos=table lineNoStart=9} 
+```python {lineNos=table lineNoStart=9} 
 .addArgString("target", "Target system hostname or IP address.", True)
 .addArgFile("payload", "Path to payload to execute on the target.", True)
 .addFlagString("--service", "service", "Target service (default: defragsvc).", False, "defragsvc")
@@ -125,7 +126,7 @@ For BOF wrappers, the command handler is the most critical part of the command d
 
 Within the handler, Conquest's Python API provides a set of `get_<type>` functions to extract individual arguments from the args list by index, in the same order they were defined on the command. This step also allows for additional validation and preprocessing. For instance, this includes handling mutually exclusive flags or converting string options to integer values before passing them to the BOF.
 
-```py {lineNos=table}
+```python {lineNos=table}
 def _scshell(agentId, cmdline, args): 
     target = conquest.get_string(args, 0)
     payloadName, payloadBytes = conquest.get_file(args, 1)
@@ -150,12 +151,10 @@ The `bof_pack` function constructs the hex-encoded argument string passed to the
 
 To figure out which type chars are expected by the BOF, we take a look at its `go` entry point. In the case of the SCShell BOF, `BeaconDataExtract` is called 4 times and assigned to `CHAR *` variables. This means that the `z` type char is to be used. Since `get_file` returns the contents of the executable as a byte array, we use `b` to pack the binary data, resulting in the format string `zzzb`. 
 
-![SCShell BOF entry point](/img/c2-module-system/3.png)
-{{< color-block style="caption">}}
-Entry point of the `scshell` BOF.
-{{< /color-block>}}
+![SCShell BOF entry point](/img/c2-module-system/3.png "Entry point of the `scshell` BOF.")
 
-```py {lineNos=table lineNoStart=12}
+
+```python {lineNos=table lineNoStart=12}
     bof = conquest.modules_root() + "/lateral-movement/scshell/scshell.x64.o"
     params = conquest.bof_pack("zzzb", [
         target,         # z: Target system
@@ -167,7 +166,7 @@ Entry point of the `scshell` BOF.
 
 Finally, the `bof` command is executed as an alias with the hex string as the argument. 
 
-```py {lineNos=table lineNoStart=19}
+```python {lineNos=table lineNoStart=19}
     if os.path.exists(bof):
         conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
     else:
@@ -176,18 +175,15 @@ Finally, the `bof` command is executed as an alias with the hex string as the ar
 
 The handler function is assigned to the command using `setHandler`. 
 
-```py {lineNos=table lineNoStart=14} 
+```python {lineNos=table lineNoStart=14} 
  .setHandler(_scshell)  
 ```
 
 Unless the handler function of a BOF is highly complex, it is recommended to define the handler as an inline lambda function, as shown for the `shutdown` command below, as this keeps the module code more concise and clean. Note that the `:=` is used to assign variables in this case. 
 
-![Shutdown BOF entry point](/img/c2-module-system/4.png)
-{{< color-block style="caption">}}
-Entry point of the `shutdown` BOF.
-{{< /color-block>}}
+![Shutdown BOF entry point](/img/c2-module-system/4.png "Entry point of the `shutdown` BOF.")
 
-```py {lineNos=table}
+```python {lineNos=table}
 cmd_shutdown = ( 
     conquest.createCommand(name="shutdown", description="Shutdown or reboot a target system.", example="shutdown --message \"Goodbye from Conquest\" --in 20 --reboot",
                            message="Tasked agent to shutdown a computer.", mitre=["T1529"])
@@ -228,13 +224,13 @@ cmd_shutdown = (
 
 In order to be able to actually use the defined command, it needs to be added to a command group using the `registerToGroup` API. If the group name passed to the function does not exist, a new group with that name will be created. 
 
-```py {lineNos=table lineNoStart=15} 
+```python {lineNos=table lineNoStart=15} 
  ).registerToGroup("lateral movement")
 ```
 
 Overall, the full `scshell.py` module looks as follows.
 
-```py {lineNos=table}
+```python {lineNos=table}
 import conquest 
 import os.path 
 

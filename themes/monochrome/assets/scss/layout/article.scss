@@ -78,17 +78,20 @@ article {
 
   pre {
     @include my-4;
-    padding: 1rem;
+    padding: 1.1rem 1.25rem;
     overflow-x: auto;
     border-radius: .5rem;
-    background-color: #272822; // from monokai
-    color: $gray-50;
+    // Background and colour are set per-theme in code.scss via .chroma.
+    // This fallback covers un-highlighted <pre> blocks (no language tag).
+    background-color: var(--color-code-bg);
+    color: var(--color-code-text);
 
-    code { /* Disable inline code style */
+    code { /* Disable inline code style inside pre */
       display: inherit;
       border-radius: 0;
       padding: 0;
       background-color: transparent;
+      font-size: 0.85em;
     }
   }
 
@@ -110,31 +113,33 @@ article {
   .highlight {
     @include my-4;
     position: relative;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
 
     .code-toolbar {
       padding: 0;
-
-      pre {
-        padding: 1rem;
-        border-radius: 0.375rem;
-      }
+      pre { border-radius: 0; }
     }
 
     > div,
     > pre {
-      padding: 0.75rem;
-      border-radius: 0.375rem;
+      padding: 1.1rem 1.25rem;
+      border-radius: 0;
       overflow-x: auto;
+      margin: 0;
 
       pre {
         padding: 0;
         margin: 0;
         border-radius: 0;
+        border: none;
 
-        code { /* Disable inline code style */
+        code {
           border-radius: 0;
           padding: 0;
           background-color: transparent;
+          font-size: 0.85em;
         }
       }
     }
@@ -177,9 +182,12 @@ article {
   figure {
     @include my-4;
     text-align: center;
-    
+
     figcaption {
       @include my-2;
+      font-size: 0.82rem;
+      color: var(--color-text-secondary);
+      font-style: italic;
     }
   }
 

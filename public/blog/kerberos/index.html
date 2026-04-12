@@ -65,6 +65,11 @@
             document.documentElement.setAttribute("data-theme", "light");
         }
     </script>
+
+    <script defer src="/js/toc.js" integrity=""></script>
+
+
+
 <script defer src="/js/header.js" integrity=""></script>
 
 
@@ -217,7 +222,7 @@
     
     <span class="date">October 10, 2023</span>
     
-    
+
     
     <span> • </span>
      
@@ -236,12 +241,13 @@
     
 </div>
 
-
-
-
-<details class="collapsible-menu-wrapper"><summary class="collapsible-menu-type"><span>Table of contents</span></summary><div class="collapsible-menu">
-        
-            <nav id="TableOfContents">
+<details class="toc-mobile">
+    <summary class="toc-mobile-summary">
+        <span class="toc-mobile-label">Contents</span>
+        <span class="toc-mobile-chevron"></span>
+    </summary>
+    <div class="toc-mobile-body">
+        <nav id="TableOfContentsMobile">
   <ul>
     <li><a href="#components">Components</a></li>
     <li><a href="#workflow">Workflow</a></li>
@@ -255,18 +261,18 @@
     <li><a href="#conclusion">Conclusion</a></li>
   </ul>
 </nav>
-        
-    </div></details>
+    </div>
+</details>
+<div class="post-layout">
+    <div class="post-body">
+        <div class="blog-body">
 
+            
+                <h2 class="blog-introduction-header" id="introduction">Introduction</h2>
+            
 
-<div class="blog-body">
-
-    
-        <h2 class="blog-introduction-header" id="introduction">Introduction</h2>
-      
-    
-    
-    <div class="content-margin">
+            
+            <div class="content-margin">
 
 
 
@@ -486,9 +492,22 @@
       </tr>
   </tbody>
 </table>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<!--
+    <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+      <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="allowfullscreen" loading="eager" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/5N242XcKAsM?autoplay=0&amp;controls=1&amp;end=0&amp;loop=0&amp;mute=0&amp;start=0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" title="YouTube video"></iframe>
+    </div>
+
+
+    <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+      <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="allowfullscreen" loading="eager" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/qW361k3-BtU?autoplay=0&amp;controls=1&amp;end=0&amp;loop=0&amp;mute=0&amp;start=0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" title="YouTube video"></iframe>
+    </div>
+
+
+    <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+      <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="allowfullscreen" loading="eager" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/snGeZlDQL2Q?autoplay=0&amp;controls=1&amp;end=0&amp;loop=0&amp;mute=0&amp;start=0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" title="YouTube video"></iframe>
+    </div>
+--> 
+<!-- Resources -->
 <div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
@@ -508,6 +527,27 @@
 </div>
 
 </article></div>
+            
+
+        </div>
+    </div>
+    <aside class="toc-sidebar">
+        <div class="toc-sidebar-title">Contents</div>
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#components">Components</a></li>
+    <li><a href="#workflow">Workflow</a></li>
+    <li><a href="#attack-vectors">Attack Vectors</a>
+      <ul>
+        <li><a href="#roasting--credential-gathering--hash-gathering">Roasting / Credential gathering / Hash gathering</a></li>
+        <li><a href="#ticket-attacks">Ticket Attacks</a></li>
+        <li><a href="#kerberos-delegation-attacks">Kerberos Delegation Attacks</a></li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </aside>
     
 </div>
 

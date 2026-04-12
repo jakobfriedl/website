@@ -21,10 +21,7 @@
 {{- /* Mobile: collapsible ToC, shown below xl breakpoint */ -}}
 {{ if $has_toc }}
 <details class="toc-mobile">
-    <summary class="toc-mobile-summary">
-        <span class="toc-mobile-label">Contents</span>
-        <span class="toc-mobile-chevron"></span>
-    </summary>
+    <summary class="toc-mobile-summary"><span>Table of Contents</span></summary>
     <div class="toc-mobile-body">
         {{ .TableOfContents | replaceRE `id="TableOfContents"` `id="TableOfContentsMobile"` | safeHTML }}
     </div>

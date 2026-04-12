@@ -65,6 +65,11 @@
             document.documentElement.setAttribute("data-theme", "light");
         }
     </script>
+
+    <script defer src="/js/toc.js" integrity=""></script>
+
+
+
 <script defer src="/js/header.js" integrity=""></script>
 
 
@@ -224,7 +229,7 @@
     
     <span class="date">February 20, 2025</span>
     
-    
+
     
     <span> • </span>
      
@@ -243,12 +248,13 @@
     
 </div>
 
-
-
-
-<details class="collapsible-menu-wrapper"><summary class="collapsible-menu-type"><span>Table of contents</span></summary><div class="collapsible-menu">
-        
-            <nav id="TableOfContents">
+<details class="toc-mobile">
+    <summary class="toc-mobile-summary">
+        <span class="toc-mobile-label">Contents</span>
+        <span class="toc-mobile-chevron"></span>
+    </summary>
+    <div class="toc-mobile-body">
+        <nav id="TableOfContentsMobile">
   <ul>
     <li><a href="#requirements">Requirements</a></li>
     <li><a href="#the-idea">The Idea</a></li>
@@ -263,7 +269,12 @@
       <ul>
         <li><a href="#hardware">Hardware</a></li>
         <li><a href="#setting-up-the-connection">Setting up the connection</a></li>
-        <li><a href="#automatic-check-in">Automatic check-in</a></li>
+        <li><a href="#automatic-check-in">Automatic check-in</a>
+          <ul>
+            <li><a href="#webserver-setup">Webserver Setup</a></li>
+            <li><a href="#cronjob">Cronjob</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
     <li><a href="#next-steps">Next Steps</a>
@@ -275,18 +286,18 @@
     </li>
   </ul>
 </nav>
-        
-    </div></details>
+    </div>
+</details>
+<div class="post-layout">
+    <div class="post-body">
+        <div class="blog-body">
 
+            
+                <h2 class="blog-introduction-header" id="introduction">Introduction</h2>
+            
 
-<div class="blog-body">
-
-    
-        <h2 class="blog-introduction-header" id="introduction">Introduction</h2>
-      
-    
-    
-    <div class="content-margin">
+            
+            <div class="content-margin">
 
 
 
@@ -354,15 +365,15 @@
 
 <h3>Setting up stunnel</h3>
 
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt update
-</span></span><span style="display:flex;"><span>sudo apt upgrade
-</span></span><span style="display:flex;"><span>sudo apt install stunnel -y
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo apt update
+</span></span><span class="line"><span class="cl">sudo apt upgrade
+</span></span><span class="line"><span class="cl">sudo apt install stunnel -y
 </span></span></code></pre></div><p>After installing stunnel, we first generate the self-signed SSL certificates which enable us to hide the OpenVPN traffic with TLS encryption. The following commands will be prompted for information about the certificate, such as Country or State, but we will leave them blank for our purpose.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">cd</span> /etc/stunnel
-</span></span><span style="display:flex;"><span>openssl genrsa -out key.pem <span style="color:#ff0;font-weight:bold">2048</span> 
-</span></span><span style="display:flex;"><span>openssl req -new -x509 -key key.pem -out cert.pem -days <span style="color:#ff0;font-weight:bold">3650</span>
-</span></span><span style="display:flex;"><span>cat key.pem cert.pem &gt;&gt; stunnel.pem 
-</span></span><span style="display:flex;"><span>openssl pkcs12 -export -out stunnel.p12 -inkey key.pem -in cert.pem
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">cd</span> /etc/stunnel
+</span></span><span class="line"><span class="cl">openssl genrsa -out key.pem <span class="m">2048</span> 
+</span></span><span class="line"><span class="cl">openssl req -new -x509 -key key.pem -out cert.pem -days <span class="m">3650</span>
+</span></span><span class="line"><span class="cl">cat key.pem cert.pem &gt;&gt; stunnel.pem 
+</span></span><span class="line"><span class="cl">openssl pkcs12 -export -out stunnel.p12 -inkey key.pem -in cert.pem
 </span></span></code></pre></div><p>
 
 
@@ -380,41 +391,41 @@
     
 </figure></p>
 <p>Fix permissions on the certificate.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>chmod <span style="color:#ff0;font-weight:bold">600</span> /etc/stunnel/stunnel.pem
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">chmod <span class="m">600</span> /etc/stunnel/stunnel.pem
 </span></span></code></pre></div><p>We further create a directory for stunnel logs.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo mkdir -p /var/log/stunnel 
-</span></span><span style="display:flex;"><span>sudo touch /var/log/stunnel/stunnel.log 
-</span></span><span style="display:flex;"><span>sudo chown stunnel4:stunnel4 /var/log/stunnel/stunnel.log
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo mkdir -p /var/log/stunnel 
+</span></span><span class="line"><span class="cl">sudo touch /var/log/stunnel/stunnel.log 
+</span></span><span class="line"><span class="cl">sudo chown stunnel4:stunnel4 /var/log/stunnel/stunnel.log
 </span></span></code></pre></div><p>The main configuration of stunnel is done in <code>/etc/stunnel/stunnel.conf</code>. The important service-level options are defined under <code>[openvpn]</code>.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">12
+<div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>output = /var/log/stunnel/stunnel.log 
-</span></span><span style="display:flex;"><span>pid = /var/run/stunnel4/stunnel.pid 
-</span></span><span style="display:flex;"><span>setuid = stunnel4 
-</span></span><span style="display:flex;"><span>setgid = stunnel4 
-</span></span><span style="display:flex;"><span>socket = l:TCP_NODELAY=1 
-</span></span><span style="display:flex;"><span>cert = /etc/stunnel/stunnel.pem 
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>[openvpn] 
-</span></span><span style="display:flex;"><span>client = no
-</span></span><span style="display:flex;"><span>accept = 443 
-</span></span><span style="display:flex;"><span>connect = 127.0.0.1:1194 
-</span></span><span style="display:flex;"><span>cert = /etc/stunnel/stunnel.pem
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="l">output = /var/log/stunnel/stunnel.log </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">pid = /var/run/stunnel4/stunnel.pid </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">setuid = stunnel4 </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">setgid = stunnel4 </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">socket = l:TCP_NODELAY=1 </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">cert = /etc/stunnel/stunnel.pem </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">[</span><span class="l">openvpn] </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">client = no</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">accept = 443 </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">connect = 127.0.0.1:1194 </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">cert = /etc/stunnel/stunnel.pem</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><ul>
 <li><code>client = no</code> : Stunnel is running in server mode</li>
@@ -422,10 +433,10 @@
 <li><code>connect = 127.0.0.1:1194</code>: Incoming connections to the stunnel port are forwarded to the locally running OpenVPN server on port 1194</li>
 </ul>
 <p>After the configuration, we start the stunnel service.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl <span style="color:#fff;font-weight:bold">enable</span> stunnel4
-</span></span><span style="display:flex;"><span>sudo systemctl restart stunnel4
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo systemctl <span class="nb">enable</span> stunnel4
+</span></span><span class="line"><span class="cl">sudo systemctl restart stunnel4
 </span></span></code></pre></div><p>We verify that the stunnel service is running on port 443 on our VPN server.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo netstat -tulnp
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo netstat -tulnp
 </span></span></code></pre></div><p>
 
 
@@ -446,9 +457,9 @@
 <h3>Setting up OpenVPN</h3>
 
 <p>We use the OpenVPN install script to set up the VPN server with the following options.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>wget https://git.io/vpn -O openvpn-install.sh 
-</span></span><span style="display:flex;"><span>chmod +x openvpn-install.sh 
-</span></span><span style="display:flex;"><span>sudo ./openvpn-install.sh
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">wget https://git.io/vpn -O openvpn-install.sh 
+</span></span><span class="line"><span class="cl">chmod +x openvpn-install.sh 
+</span></span><span class="line"><span class="cl">sudo ./openvpn-install.sh
 </span></span></code></pre></div><p>
 
 
@@ -484,9 +495,9 @@
     
 </figure></p>
 <p>We now start the OpenVPN service as we did with stunnel.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl <span style="color:#fff;font-weight:bold">enable</span> openvpn-server@server.service
-</span></span><span style="display:flex;"><span>sudo systemctl restart openvpn-server@server.service
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo netstat -tulnp
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo systemctl <span class="nb">enable</span> openvpn-server@server.service
+</span></span><span class="line"><span class="cl">sudo systemctl restart openvpn-server@server.service
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo netstat -tulnp
 </span></span></code></pre></div><p>
 
 
@@ -546,26 +557,26 @@
 <h3>Setting up the connection</h3>
 
 <p>Like on the DigitalOcean droplet, we first install stunnel.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt update
-</span></span><span style="display:flex;"><span>sudo apt upgrade
-</span></span><span style="display:flex;"><span>sudo apt install stunnel4 -y 
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo apt update
+</span></span><span class="line"><span class="cl">sudo apt upgrade
+</span></span><span class="line"><span class="cl">sudo apt install stunnel4 -y 
 </span></span></code></pre></div><p>We again create the configuration file <code>/etc/stunnel/stunnel.conf</code>, however this time, <code>client</code> is set to yes, as we are working on the dropbox and not on the server.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">4
+<div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>[openvpn]
-</span></span><span style="display:flex;"><span>client = yes 
-</span></span><span style="display:flex;"><span>accept = 127.0.0.1:1194 
-</span></span><span style="display:flex;"><span>connect = &lt;public-vpnserver-ip&gt;:443
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="p">[</span><span class="l">openvpn]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">client = yes </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">accept = 127.0.0.1:1194 </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">connect = &lt;public-vpnserver-ip&gt;:443</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
-</div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl <span style="color:#fff;font-weight:bold">enable</span> stunnel4
-</span></span><span style="display:flex;"><span>sudo systemctl start stunnel4
+</div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo systemctl <span class="nb">enable</span> stunnel4
+</span></span><span class="line"><span class="cl">sudo systemctl start stunnel4
 </span></span></code></pre></div><p>
 
 
@@ -584,96 +595,96 @@
 </figure></p>
 <p>We then take the <code>pi.ovpn</code> file that was generated on the OpenVPN server and modify it to connect to the locally running OpenVPN instance instead. All traffic to this VPN will be forwarded to the droplet on port 443.</p>
 <p>The file is saved as <code>/etc/openvpn/openvpn.conf</code> to be executed on system startup.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 3
-</span><span style="background-color:#191919"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 4
-</span></span><span style="background-color:#191919"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 5
-</span></span><span style="background-color:#191919"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 6
-</span></span><span style="background-color:#191919"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 7
-</span></span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">16
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">17
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">18
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">19
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">20
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">21
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">22
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">23
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">24
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">25
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">26
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">27
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">28
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">29
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">30
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">31
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">32
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">33
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">34
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">35
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">36
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">37
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">38
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">39
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">40
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">41
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">42
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">43
+<div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="hl"><span class="lnt"> 4
+</span></span><span class="hl"><span class="lnt"> 5
+</span></span><span class="hl"><span class="lnt"> 6
+</span></span><span class="hl"><span class="lnt"> 7
+</span></span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>client
-</span></span><span style="display:flex;"><span>dev tun
-</span></span><span style="display:flex;"><span>proto tcp
-</span></span><span style="display:flex; background-color:#191919"><span>remote 127.0.0.1 1194 
-</span></span><span style="display:flex; background-color:#191919"><span>route-nopull 
-</span></span><span style="display:flex; background-color:#191919"><span>script-security 2 
-</span></span><span style="display:flex; background-color:#191919"><span>route-up /etc/openvpn/routing.sh
-</span></span><span style="display:flex;"><span>resolv-retry infinite
-</span></span><span style="display:flex;"><span>nobind
-</span></span><span style="display:flex;"><span>persist-key
-</span></span><span style="display:flex;"><span>persist-tun
-</span></span><span style="display:flex;"><span>remote-cert-tls server
-</span></span><span style="display:flex;"><span>auth SHA512
-</span></span><span style="display:flex;"><span>ignore-unknown-option block-outside-dns
-</span></span><span style="display:flex;"><span>verb 3
-</span></span><span style="display:flex;"><span>&lt;ca&gt;
-</span></span><span style="display:flex;"><span>-----BEGIN CERTIFICATE-----
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>... SNIP ...
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>-----END CERTIFICATE-----
-</span></span><span style="display:flex;"><span>&lt;/ca&gt;
-</span></span><span style="display:flex;"><span>&lt;cert&gt;
-</span></span><span style="display:flex;"><span>-----BEGIN CERTIFICATE-----
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>... SNIP ...
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>-----END CERTIFICATE-----
-</span></span><span style="display:flex;"><span>&lt;/cert&gt;
-</span></span><span style="display:flex;"><span>&lt;key&gt;
-</span></span><span style="display:flex;"><span>-----BEGIN PRIVATE KEY-----
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>... SNIP ...
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>-----END PRIVATE KEY-----
-</span></span><span style="display:flex;"><span>&lt;/key&gt;
-</span></span><span style="display:flex;"><span>&lt;tls-crypt&gt;
-</span></span><span style="display:flex;"><span>-----BEGIN OpenVPN Static key V1-----
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>... SNIP ...
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>-----END OpenVPN Static key V1-----
-</span></span><span style="display:flex;"><span>&lt;/tls-crypt&gt;</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="l">client</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">dev tun</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">proto tcp</span><span class="w">
+</span></span></span><span class="line hl"><span class="cl"><span class="w"></span><span class="l">remote 127.0.0.1 1194 </span><span class="w">
+</span></span></span><span class="line hl"><span class="cl"><span class="w"></span><span class="l">route-nopull </span><span class="w">
+</span></span></span><span class="line hl"><span class="cl"><span class="w"></span><span class="l">script-security 2 </span><span class="w">
+</span></span></span><span class="line hl"><span class="cl"><span class="w"></span><span class="l">route-up /etc/openvpn/routing.sh</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">resolv-retry infinite</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">nobind</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">persist-key</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">persist-tun</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">remote-cert-tls server</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">auth SHA512</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">ignore-unknown-option block-outside-dns</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">verb 3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">&lt;ca&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nn">---</span>--<span class="l">BEGIN CERTIFICATE-----</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nn">...</span><span class="w"> </span><span class="l">SNIP ...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nn">---</span>--<span class="l">END CERTIFICATE-----</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">&lt;/ca&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">&lt;cert&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nn">---</span>--<span class="l">BEGIN CERTIFICATE-----</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nn">...</span><span class="w"> </span><span class="l">SNIP ...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nn">---</span>--<span class="l">END CERTIFICATE-----</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">&lt;/cert&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">&lt;key&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nn">---</span>--<span class="l">BEGIN PRIVATE KEY-----</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nn">...</span><span class="w"> </span><span class="l">SNIP ...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nn">---</span>--<span class="l">END PRIVATE KEY-----</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">&lt;/key&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">&lt;tls-crypt&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nn">---</span>--<span class="l">BEGIN OpenVPN Static key V1-----</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nn">...</span><span class="w"> </span><span class="l">SNIP ...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nn">---</span>--<span class="l">END OpenVPN Static key V1-----</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">&lt;/tls-crypt&gt;</span></span></span></code></pre></td></tr></table>
 </div>
 </div>
 <p>The added/modified values are:</p>
@@ -684,30 +695,30 @@
 <li><code>route-up /etc/openvpn/routing.sh</code></li>
 </ul>
 <p>The <code>routing.sh</code> script needs to be created.</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">6
+<div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#0f0;font-weight:bold">#!/bin/bash 
-</span></span></span><span style="display:flex;"><span><span style="color:#0f0;font-weight:bold"></span>SERVER_IP=<span style="color:#0ff;font-weight:bold">&#34;public-vpnserver-ip&#34;</span> 
-</span></span><span style="display:flex;"><span>GATEWAY=<span style="color:#fff;font-weight:bold">$(</span>ip route get 8.8.8.8 | grep -oP <span style="color:#0ff;font-weight:bold">&#39;via \K\S+&#39;</span><span style="color:#fff;font-weight:bold">)</span> 
-</span></span><span style="display:flex;"><span>sudo ip route add $SERVER_IP/32 via $GATEWAY 
-</span></span><span style="display:flex;"><span>sudo ip route add 0.0.0.0/1 via 10.8.0.1 
-</span></span><span style="display:flex;"><span>sudo ip route add 128.0.0.0/1 via 10.8.0.1
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="cp">#!/bin/bash 
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="nv">SERVER_IP</span><span class="o">=</span><span class="s2">&#34;public-vpnserver-ip&#34;</span> 
+</span></span><span class="line"><span class="cl"><span class="nv">GATEWAY</span><span class="o">=</span><span class="k">$(</span>ip route get 8.8.8.8 <span class="p">|</span> grep -oP <span class="s1">&#39;via \K\S+&#39;</span><span class="k">)</span> 
+</span></span><span class="line"><span class="cl">sudo ip route add <span class="nv">$SERVER_IP</span>/32 via <span class="nv">$GATEWAY</span> 
+</span></span><span class="line"><span class="cl">sudo ip route add 0.0.0.0/1 via 10.8.0.1 
+</span></span><span class="line"><span class="cl">sudo ip route add 128.0.0.0/1 via 10.8.0.1
 </span></span></code></pre></td></tr></table>
 </div>
-</div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo chmod +x /etc/openvpn/routing.sh
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl <span style="color:#fff;font-weight:bold">enable</span> openvpn 
-</span></span><span style="display:flex;"><span>sudo systemctl restart openvpn 
-</span></span><span style="display:flex;"><span>sudo systemctl status openvpn
+</div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo chmod +x /etc/openvpn/routing.sh
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo systemctl <span class="nb">enable</span> openvpn 
+</span></span><span class="line"><span class="cl">sudo systemctl restart openvpn 
+</span></span><span class="line"><span class="cl">sudo systemctl status openvpn
 </span></span></code></pre></div><p>In order to test the configuration, we reboot the Raspberry Pi.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo reboot
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo reboot
 </span></span></code></pre></div><p>After the reboot, we find that our Raspberry Pi is connected to the private VPN network and has the IP 10.8.0.2.
 
 
@@ -726,7 +737,7 @@
     
 </figure></p>
 <p>On the server, we create a second VPN client for the attacker machine.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./openvpn-install.sh
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">./openvpn-install.sh
 </span></span></code></pre></div><p>
 
 
@@ -744,7 +755,7 @@
     
 </figure></p>
 <p>In a Kali virtual machine, we connect to the VPN server. In this case, there is no need for us to install stunnel, since we are in our personal network where we are able to control the firewall rules. Upon being connected, we are assigned a new internal IP address, <code>10.8.0.3</code> and are able to communicate with the Raspberry Pi.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo openvpn attacker.ovpn
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo openvpn attacker.ovpn
 </span></span></code></pre></div><p>
 
 
@@ -769,242 +780,242 @@
 
 <h4>Webserver Setup</h4>
 
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install python3-venv
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir -p /var/www/html/app
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo apt install python3-venv
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">mkdir -p /var/www/html/app
 </span></span></code></pre></div><p>Create app.py, which has the source code for the application. A</p>
-<div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">16
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">17
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">18
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">19
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">20
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">21
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">22
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">23
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">24
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">25
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">26
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">27
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">28
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">29
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">30
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">31
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">32
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">33
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">34
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">35
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">36
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">37
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">38
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">39
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">40
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">41
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">42
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">43
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">44
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">45
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">46
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">47
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">48
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">49
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">50
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">51
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">52
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">53
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">54
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">55
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">56
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">57
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">58
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">59
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">60
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">61
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">62
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">63
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">64
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">65
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">66
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">67
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">68
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">69
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">70
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">71
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">72
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">73
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">74
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">75
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">76
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">77
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">78
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">79
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">80
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">81
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">82
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">83
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">84
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">85
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">86
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">87
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">88
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">89
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">90
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">91
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">92
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">93
+<div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span><span class="lnt">86
+</span><span class="lnt">87
+</span><span class="lnt">88
+</span><span class="lnt">89
+</span><span class="lnt">90
+</span><span class="lnt">91
+</span><span class="lnt">92
+</span><span class="lnt">93
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">from</span> flask <span style="color:#fff;font-weight:bold">import</span> Flask, request, render_template_string, jsonify, make_response
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">from</span> flask_httpauth <span style="color:#fff;font-weight:bold">import</span> HTTPBasicAuth
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">from</span> datetime <span style="color:#fff;font-weight:bold">import</span> datetime
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>app = Flask(__name__)
-</span></span><span style="display:flex;"><span>auth = HTTPBasicAuth()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>users = {<span style="color:#0ff;font-weight:bold">&#34;[REDACTED]&#34;</span>: <span style="color:#0ff;font-weight:bold">&#34;[REDACTED]&#34;</span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>@auth.verify_password
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">def</span> verify_password(username, password):
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">if</span> username in users and users[username] == password:
-</span></span><span style="display:flex;"><span>        <span style="color:#fff;font-weight:bold">return</span> username
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">None</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#007f7f"># Store the latest received data and timestamp</span>
-</span></span><span style="display:flex;"><span>latest_data = {<span style="color:#0ff;font-weight:bold">&#34;hostname&#34;</span>: <span style="color:#0ff;font-weight:bold">&#34;Unknown&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;interfaces&#34;</span>: [], <span style="color:#0ff;font-weight:bold">&#34;timestamp&#34;</span>: <span style="color:#0ff;font-weight:bold">&#34;Never&#34;</span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>@app.route(<span style="color:#0ff;font-weight:bold">&#39;/&#39;</span>)
-</span></span><span style="display:flex;"><span>@auth.login_required
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">def</span> index():
-</span></span><span style="display:flex;"><span>    current_time = datetime.now()
-</span></span><span style="display:flex;"><span>    last_checkin = datetime.strptime(latest_data[<span style="color:#0ff;font-weight:bold">&#34;timestamp&#34;</span>], <span style="color:#0ff;font-weight:bold">&#34;%Y-%m-</span><span style="color:#0ff;font-weight:bold">%d</span><span style="color:#0ff;font-weight:bold"> %H:%M:%S&#34;</span>) <span style="color:#fff;font-weight:bold">if</span> latest_data[<span style="color:#0ff;font-weight:bold">&#34;timestamp&#34;</span>] != <span style="color:#0ff;font-weight:bold">&#34;Never&#34;</span> <span style="color:#fff;font-weight:bold">else</span> <span style="color:#fff;font-weight:bold">None</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#007f7f"># Calculate border color based on check-in time</span>
-</span></span><span style="display:flex;"><span>    border_color = <span style="color:#0ff;font-weight:bold">&#34;green&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">if</span> last_checkin and (current_time - last_checkin).total_seconds() &gt; <span style="color:#ff0;font-weight:bold">60</span>:
-</span></span><span style="display:flex;"><span>        border_color = <span style="color:#0ff;font-weight:bold">&#34;red&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    formatted_data = <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Hostname: </span><span style="color:#0ff;font-weight:bold">{</span>latest_data[<span style="color:#0ff;font-weight:bold">&#39;hostname&#39;</span>]<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">Last Check-in: </span><span style="color:#0ff;font-weight:bold">{</span>latest_data[<span style="color:#0ff;font-weight:bold">&#39;timestamp&#39;</span>]<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">\n\n</span><span style="color:#0ff;font-weight:bold">Network Interfaces:</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">for</span> iface in latest_data[<span style="color:#0ff;font-weight:bold">&#34;interfaces&#34;</span>]:
-</span></span><span style="display:flex;"><span>        formatted_data += <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">{</span>iface[<span style="color:#0ff;font-weight:bold">&#39;interface&#39;</span>]<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">:</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#fff;font-weight:bold">for</span> addr in iface[<span style="color:#0ff;font-weight:bold">&#34;addresses&#34;</span>]:
-</span></span><span style="display:flex;"><span>            formatted_data += <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;  </span><span style="color:#0ff;font-weight:bold">{</span>addr[<span style="color:#0ff;font-weight:bold">&#39;family&#39;</span>]<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">: </span><span style="color:#0ff;font-weight:bold">{</span>addr[<span style="color:#0ff;font-weight:bold">&#39;address&#39;</span>]<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    response = make_response(render_template_string(<span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">        &lt;!DOCTYPE html&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">        &lt;html&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">        &lt;head&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">            &lt;title&gt;System Info&lt;/title&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">            &lt;style&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">                body {
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">                    font-family: Arial, sans-serif;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">                    display: flex;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">                    justify-content: center;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">                    align-items: center;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">                    height: 100vh;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">                    background-color: #f4f4f4;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">                }
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">                pre {
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">                    background: #fff;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">                    padding: 20px;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">                    border-radius: 10px;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">                    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">                    font-size: 14px;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">                    white-space: pre-wrap;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">                    border: 2px solid {{ border_color }};
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">                    transition: border-color 0.5s ease-in-out;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">                }
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">            &lt;/style&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">        &lt;/head&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">        &lt;body&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">            &lt;pre id=&#34;data-box&#34;&gt;{{ formatted_data }}&lt;/pre&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">        &lt;/body&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">        &lt;/html&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>, formatted_data=formatted_data, border_color=border_color))
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#007f7f"># Prevent caching</span>
-</span></span><span style="display:flex;"><span>    response.headers[<span style="color:#0ff;font-weight:bold">&#34;Cache-Control&#34;</span>] = <span style="color:#0ff;font-weight:bold">&#34;no-cache, no-store, must-revalidate&#34;</span>
-</span></span><span style="display:flex;"><span>    response.headers[<span style="color:#0ff;font-weight:bold">&#34;Pragma&#34;</span>] = <span style="color:#0ff;font-weight:bold">&#34;no-cache&#34;</span>
-</span></span><span style="display:flex;"><span>    response.headers[<span style="color:#0ff;font-weight:bold">&#34;Expires&#34;</span>] = <span style="color:#0ff;font-weight:bold">&#34;0&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">return</span> response
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>@app.route(<span style="color:#0ff;font-weight:bold">&#39;/data&#39;</span>, methods=[<span style="color:#0ff;font-weight:bold">&#39;POST&#39;</span>])
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">def</span> receive_data():
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">global</span> latest_data
-</span></span><span style="display:flex;"><span>    data = request.get_json()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">if</span> not data or <span style="color:#0ff;font-weight:bold">&#34;hostname&#34;</span> not in data or <span style="color:#0ff;font-weight:bold">&#34;interfaces&#34;</span> not in data:
-</span></span><span style="display:flex;"><span>        <span style="color:#fff;font-weight:bold">return</span> jsonify({<span style="color:#0ff;font-weight:bold">&#34;error&#34;</span>: <span style="color:#0ff;font-weight:bold">&#34;Invalid JSON format&#34;</span>}), <span style="color:#ff0;font-weight:bold">400</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    latest_data = {
-</span></span><span style="display:flex;"><span>        <span style="color:#0ff;font-weight:bold">&#34;hostname&#34;</span>: data[<span style="color:#0ff;font-weight:bold">&#34;hostname&#34;</span>],
-</span></span><span style="display:flex;"><span>        <span style="color:#0ff;font-weight:bold">&#34;interfaces&#34;</span>: data[<span style="color:#0ff;font-weight:bold">&#34;interfaces&#34;</span>],
-</span></span><span style="display:flex;"><span>        <span style="color:#0ff;font-weight:bold">&#34;timestamp&#34;</span>: datetime.now().strftime(<span style="color:#0ff;font-weight:bold">&#34;%Y-%m-</span><span style="color:#0ff;font-weight:bold">%d</span><span style="color:#0ff;font-weight:bold"> %H:%M:%S&#34;</span>)
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#fff;font-weight:bold">return</span> jsonify({<span style="color:#0ff;font-weight:bold">&#34;message&#34;</span>: <span style="color:#0ff;font-weight:bold">&#34;OK&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;timestamp&#34;</span>: latest_data[<span style="color:#0ff;font-weight:bold">&#34;timestamp&#34;</span>]}), <span style="color:#ff0;font-weight:bold">200</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">if</span> __name__ == <span style="color:#0ff;font-weight:bold">&#39;__main__&#39;</span>:
-</span></span><span style="display:flex;"><span>    app.run(host=<span style="color:#0ff;font-weight:bold">&#39;0.0.0.0&#39;</span>, port=<span style="color:#ff0;font-weight:bold">8080</span>, debug=<span style="color:#fff;font-weight:bold">False</span>)
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">render_template_string</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">make_response</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">flask_httpauth</span> <span class="kn">import</span> <span class="n">HTTPBasicAuth</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">auth</span> <span class="o">=</span> <span class="n">HTTPBasicAuth</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">users</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;[REDACTED]&#34;</span><span class="p">:</span> <span class="s2">&#34;[REDACTED]&#34;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nd">@auth.verify_password</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">verify_password</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">username</span> <span class="ow">in</span> <span class="n">users</span> <span class="ow">and</span> <span class="n">users</span><span class="p">[</span><span class="n">username</span><span class="p">]</span> <span class="o">==</span> <span class="n">password</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">username</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Store the latest received data and timestamp</span>
+</span></span><span class="line"><span class="cl"><span class="n">latest_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;hostname&#34;</span><span class="p">:</span> <span class="s2">&#34;Unknown&#34;</span><span class="p">,</span> <span class="s2">&#34;interfaces&#34;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&#34;timestamp&#34;</span><span class="p">:</span> <span class="s2">&#34;Never&#34;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nd">@app.route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nd">@auth.login_required</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">last_checkin</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">latest_data</span><span class="p">[</span><span class="s2">&#34;timestamp&#34;</span><span class="p">],</span> <span class="s2">&#34;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&#34;</span><span class="p">)</span> <span class="k">if</span> <span class="n">latest_data</span><span class="p">[</span><span class="s2">&#34;timestamp&#34;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&#34;Never&#34;</span> <span class="k">else</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Calculate border color based on check-in time</span>
+</span></span><span class="line"><span class="cl">    <span class="n">border_color</span> <span class="o">=</span> <span class="s2">&#34;green&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">last_checkin</span> <span class="ow">and</span> <span class="p">(</span><span class="n">current_time</span> <span class="o">-</span> <span class="n">last_checkin</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">60</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">border_color</span> <span class="o">=</span> <span class="s2">&#34;red&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">formatted_data</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;Hostname: </span><span class="si">{</span><span class="n">latest_data</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">Last Check-in: </span><span class="si">{</span><span class="n">latest_data</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Network Interfaces:</span><span class="se">\n</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">iface</span> <span class="ow">in</span> <span class="n">latest_data</span><span class="p">[</span><span class="s2">&#34;interfaces&#34;</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">formatted_data</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">iface</span><span class="p">[</span><span class="s1">&#39;interface&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="se">\n</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="n">iface</span><span class="p">[</span><span class="s2">&#34;addresses&#34;</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">formatted_data</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&#34;  </span><span class="si">{</span><span class="n">addr</span><span class="p">[</span><span class="s1">&#39;family&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">addr</span><span class="p">[</span><span class="s1">&#39;address&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">response</span> <span class="o">=</span> <span class="n">make_response</span><span class="p">(</span><span class="n">render_template_string</span><span class="p">(</span><span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &lt;!DOCTYPE html&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &lt;html&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &lt;head&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">            &lt;title&gt;System Info&lt;/title&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">            &lt;style&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                body {
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    font-family: Arial, sans-serif;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    display: flex;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    justify-content: center;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    align-items: center;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    height: 100vh;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    background-color: #f4f4f4;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                }
+</span></span></span><span class="line"><span class="cl"><span class="s2">                pre {
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    background: #fff;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    padding: 20px;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    border-radius: 10px;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    font-size: 14px;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    white-space: pre-wrap;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    border: 2px solid {{ border_color }};
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    transition: border-color 0.5s ease-in-out;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                }
+</span></span></span><span class="line"><span class="cl"><span class="s2">            &lt;/style&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &lt;/head&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &lt;body&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">            &lt;pre id=&#34;data-box&#34;&gt;{{ formatted_data }}&lt;/pre&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &lt;/body&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &lt;/html&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span><span class="p">,</span> <span class="n">formatted_data</span><span class="o">=</span><span class="n">formatted_data</span><span class="p">,</span> <span class="n">border_color</span><span class="o">=</span><span class="n">border_color</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Prevent caching</span>
+</span></span><span class="line"><span class="cl">    <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&#34;Cache-Control&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&#34;no-cache, no-store, must-revalidate&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&#34;Pragma&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&#34;no-cache&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&#34;Expires&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&#34;0&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">response</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nd">@app.route</span><span class="p">(</span><span class="s1">&#39;/data&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">receive_data</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="k">global</span> <span class="n">latest_data</span>
+</span></span><span class="line"><span class="cl">    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span> <span class="ow">or</span> <span class="s2">&#34;hostname&#34;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span> <span class="ow">or</span> <span class="s2">&#34;interfaces&#34;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&#34;error&#34;</span><span class="p">:</span> <span class="s2">&#34;Invalid JSON format&#34;</span><span class="p">}),</span> <span class="mi">400</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">latest_data</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;hostname&#34;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s2">&#34;hostname&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;interfaces&#34;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s2">&#34;interfaces&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;timestamp&#34;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&#34;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&#34;message&#34;</span><span class="p">:</span> <span class="s2">&#34;OK&#34;</span><span class="p">,</span> <span class="s2">&#34;timestamp&#34;</span><span class="p">:</span> <span class="n">latest_data</span><span class="p">[</span><span class="s2">&#34;timestamp&#34;</span><span class="p">]}),</span> <span class="mi">200</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">cd</span> /var/www/html/app
-</span></span><span style="display:flex;"><span>python3 -m venv venv
-</span></span><span style="display:flex;"><span><span style="color:#fff;font-weight:bold">source</span> venv/bin/activate 
-</span></span><span style="display:flex;"><span>pip install flask flask-httpauth
+</div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">cd</span> /var/www/html/app
+</span></span><span class="line"><span class="cl">python3 -m venv venv
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> venv/bin/activate 
+</span></span><span class="line"><span class="cl">pip install flask flask-httpauth
 </span></span></code></pre></div><p>Create a service for the Flask webserver.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>vim /etc/systemd/system/app.service
-</span></span></code></pre></div><div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">13
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">vim /etc/systemd/system/app.service
+</span></span></code></pre></div><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>[Unit]
-</span></span><span style="display:flex;"><span>Description=App
-</span></span><span style="display:flex;"><span>After=network.target
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>[Service]
-</span></span><span style="display:flex;"><span>User=www-data
-</span></span><span style="display:flex;"><span>Group=www-data
-</span></span><span style="display:flex;"><span>WorkingDirectory=/var/www/html/app
-</span></span><span style="display:flex;"><span>Environment=&#34;PATH=/var/www/html/app/venv/bin&#34;
-</span></span><span style="display:flex;"><span>ExecStart=/var/www/html/app/venv/bin/python3 app.py
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>[Install]
-</span></span><span style="display:flex;"><span>WantedBy=multi-user.target
-</span></span></code></pre></td></tr></table>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="p">[</span><span class="l">Unit]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">Description=App</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">After=network.target</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">[</span><span class="l">Service]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">User=www-data</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">Group=www-data</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">WorkingDirectory=/var/www/html/app</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">Environment=&#34;PATH=/var/www/html/app/venv/bin&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">ExecStart=/var/www/html/app/venv/bin/python3 app.py</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">[</span><span class="l">Install]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">WantedBy=multi-user.target</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
-</div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl daemon-reload
-</span></span><span style="display:flex;"><span>sudo systemctl start app
-</span></span><span style="display:flex;"><span>sudo systemctl <span style="color:#fff;font-weight:bold">enable</span> app
+</div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo systemctl daemon-reload
+</span></span><span class="line"><span class="cl">sudo systemctl start app
+</span></span><span class="line"><span class="cl">sudo systemctl <span class="nb">enable</span> app
 </span></span></code></pre></div><p>
 
 
@@ -1025,30 +1036,30 @@
 <h4>Cronjob</h4>
 
 <p>On the Raspberry Pi dropbox, after installing the necessary dependencies, we first create a simple bash script that sends the relevant data to the webserver.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install jq -y
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>vim /root/checkin.sh
-</span></span></code></pre></div><div class="highlight"><div style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;" class="mc-table"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#727272">6
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo apt install jq -y
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">vim /root/checkin.sh
+</span></span></code></pre></div><div class="highlight"><div class="chroma">
+<table class="lntable" class="mc-table"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
 </span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#0f0;font-weight:bold">#!/bin/bash
-</span></span></span><span style="display:flex;"><span><span style="color:#0f0;font-weight:bold"></span>SERVER_URL=<span style="color:#0ff;font-weight:bold">&#34;http://&lt;public-vpnserver-ip&gt;:8080/data&#34;</span>
-</span></span><span style="display:flex;"><span>HOSTNAME=<span style="color:#fff;font-weight:bold">$(</span>hostname<span style="color:#fff;font-weight:bold">)</span>
-</span></span><span style="display:flex;"><span>INTERFACES=<span style="color:#fff;font-weight:bold">$(</span>ip -json addr show | jq <span style="color:#0ff;font-weight:bold">&#39;[.[] | {interface: .ifname, addresses: [.addr_info[] | {family: .family, address: .local}]}]&#39;</span><span style="color:#fff;font-weight:bold">)</span>
-</span></span><span style="display:flex;"><span>JSON_PAYLOAD=<span style="color:#fff;font-weight:bold">$(</span>jq -n --arg hostname <span style="color:#0ff;font-weight:bold">&#34;</span>$HOSTNAME<span style="color:#0ff;font-weight:bold">&#34;</span> --argjson interfaces <span style="color:#0ff;font-weight:bold">&#34;</span>$INTERFACES<span style="color:#0ff;font-weight:bold">&#34;</span> <span style="color:#0ff;font-weight:bold">&#39;{hostname: $hostname, interfaces: $interfaces}&#39;</span><span style="color:#fff;font-weight:bold">)</span>
-</span></span><span style="display:flex;"><span>curl -X POST <span style="color:#0ff;font-weight:bold">&#34;</span>$SERVER_URL<span style="color:#0ff;font-weight:bold">&#34;</span> -H <span style="color:#0ff;font-weight:bold">&#34;Content-Type: application/json&#34;</span> -d <span style="color:#0ff;font-weight:bold">&#34;</span>$JSON_PAYLOAD<span style="color:#0ff;font-weight:bold">&#34;</span>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="cp">#!/bin/bash
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="nv">SERVER_URL</span><span class="o">=</span><span class="s2">&#34;http://&lt;public-vpnserver-ip&gt;:8080/data&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">HOSTNAME</span><span class="o">=</span><span class="k">$(</span>hostname<span class="k">)</span>
+</span></span><span class="line"><span class="cl"><span class="nv">INTERFACES</span><span class="o">=</span><span class="k">$(</span>ip -json addr show <span class="p">|</span> jq <span class="s1">&#39;[.[] | {interface: .ifname, addresses: [.addr_info[] | {family: .family, address: .local}]}]&#39;</span><span class="k">)</span>
+</span></span><span class="line"><span class="cl"><span class="nv">JSON_PAYLOAD</span><span class="o">=</span><span class="k">$(</span>jq -n --arg hostname <span class="s2">&#34;</span><span class="nv">$HOSTNAME</span><span class="s2">&#34;</span> --argjson interfaces <span class="s2">&#34;</span><span class="nv">$INTERFACES</span><span class="s2">&#34;</span> <span class="s1">&#39;{hostname: $hostname, interfaces: $interfaces}&#39;</span><span class="k">)</span>
+</span></span><span class="line"><span class="cl">curl -X POST <span class="s2">&#34;</span><span class="nv">$SERVER_URL</span><span class="s2">&#34;</span> -H <span class="s2">&#34;Content-Type: application/json&#34;</span> -d <span class="s2">&#34;</span><span class="nv">$JSON_PAYLOAD</span><span class="s2">&#34;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>chmod +x /root/checkin.sh
+</div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">chmod +x /root/checkin.sh
 </span></span></code></pre></div><p>After making the script executable, we finally create a new cronjob that runs the script every minute.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>crontab -e
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>*/1 * * * * /root/checkin.sh
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">crontab -e
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">*/1 * * * * /root/checkin.sh
 </span></span></code></pre></div><p>
 
 
@@ -1140,6 +1151,45 @@
 <p>Of course, there are several improvements to be made in this projects to make it more usable and efficient. Since I would probably need more than just one dropbox when doing a red team engagement, the first step would be to create a setup script that automates the installation and configuration of a Raspberry Pi to turn it into a penetration testing dropbox. The webserver would then also need to be overhauled to be able to show and manage multiple dropboxes, with the hostname being the unique identifier.</p>
 <p>Additionally, there are plenty of improvements to be made regarding security, including encryption of the check-in requests and exfiltrated data on the Raspberry Pi. For now, I am very happy with this working proof-of-concept, especially since it is easy to build on and contains a lot of functionality that I originally wanted to implement.</p>
 </article></div>
+            
+
+        </div>
+    </div>
+    <aside class="toc-sidebar">
+        <div class="toc-sidebar-title">Contents</div>
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#requirements">Requirements</a></li>
+    <li><a href="#the-idea">The Idea</a></li>
+    <li><a href="#the-server">The Server</a>
+      <ul>
+        <li><a href="#setting-up-the-server">Setting up the server</a></li>
+        <li><a href="#setting-up-stunnel">Setting up stunnel</a></li>
+        <li><a href="#setting-up-openvpn">Setting up OpenVPN</a></li>
+      </ul>
+    </li>
+    <li><a href="#the-dropbox">The Dropbox</a>
+      <ul>
+        <li><a href="#hardware">Hardware</a></li>
+        <li><a href="#setting-up-the-connection">Setting up the connection</a></li>
+        <li><a href="#automatic-check-in">Automatic check-in</a>
+          <ul>
+            <li><a href="#webserver-setup">Webserver Setup</a></li>
+            <li><a href="#cronjob">Cronjob</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#next-steps">Next Steps</a>
+      <ul>
+        <li><a href="#network-attacks">Network Attacks</a></li>
+        <li><a href="#wireless-attacks">Wireless Attacks</a></li>
+        <li><a href="#improvements">Improvements</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </aside>
     
 </div>
 

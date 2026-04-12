@@ -65,6 +65,11 @@
             document.documentElement.setAttribute("data-theme", "light");
         }
     </script>
+
+    <script defer src="/js/toc.js" integrity=""></script>
+
+
+
 <script defer src="/js/header.js" integrity=""></script>
 
 
@@ -224,7 +229,7 @@
     
     <span class="date">September 7, 2023</span>
     
-    
+
     
     <span> • </span>
      
@@ -243,12 +248,13 @@
     
 </div>
 
-
-
-
-<details class="collapsible-menu-wrapper"><summary class="collapsible-menu-type"><span>Table of contents</span></summary><div class="collapsible-menu">
-        
-            <nav id="TableOfContents">
+<details class="toc-mobile">
+    <summary class="toc-mobile-summary">
+        <span class="toc-mobile-label">Contents</span>
+        <span class="toc-mobile-chevron"></span>
+    </summary>
+    <div class="toc-mobile-body">
+        <nav id="TableOfContentsMobile">
   <ul>
     <li><a href="#what-are-hackthebox-pro-labs">What are HackTheBox Pro Labs?</a></li>
     <li><a href="#offshore-trust-terror">Offshore: Trust Terror</a></li>
@@ -257,18 +263,18 @@
     <li><a href="#conclusion">Conclusion</a></li>
   </ul>
 </nav>
-        
-    </div></details>
+    </div>
+</details>
+<div class="post-layout">
+    <div class="post-body">
+        <div class="blog-body">
 
+            
+                <h2 class="blog-introduction-header" id="introduction">Introduction</h2>
+            
 
-<div class="blog-body">
-
-    
-        <h2 class="blog-introduction-header" id="introduction">Introduction</h2>
-      
-    
-    
-    <div class="content-margin">
+            
+            <div class="content-margin">
 
 
 
@@ -277,7 +283,7 @@
     
     <p>During the summer months of July and August of 2023 I had the opportunity to complete three of the six buyable HackTheBox Pro Lab certifications: Offshore, a Penetration Tester Level 3 lab, as well as RastaLabs and Zephyr, both of which are Red Team Operator Level 1 certifications respectively.</p>
 <p>In this blog post I want to outline my experiences, struggles and learning outcomes of these labs and provide my personal opinion on them.</p>
-<!-- raw HTML omitted -->
+<!--more-->
 <p>These networks greatly improved my understanding of Active Directory infrastructure, enumeration and exploitation. While I will roughly explain the topics and attack vectors covered in each lab in the following paragraphs, this blog is in no way intended to serve as a walkthrough and will not go into detail regarding the exploitation steps in order to protect the integrity of the certifications.</p>
 <p>
 
@@ -296,58 +302,19 @@
     
 </figure></p>
 
-<h2 id="what-are-hackthebox-pro-labs" class="header-anchor-wrapper">What are HackTheBox Pro Labs?
-  <a href="#what-are-hackthebox-pro-labs" class="header-anchor-link">
-    <svg width="16px" height="16px" viewBox="0 0 24 24">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
-</svg>
-
-</svg>
-  </a>
-</h2>
+<h2>What are HackTheBox Pro Labs?</h2>
 
 <p>HackTheBox is one of the leading companies in the field of cyber security training and certification. They offer a wide variety of free and paid services, including free penetration testing training machines that can be used to hone enumeration and exploitation skills on Linux or Windows targets. In addition to these standalone boxes, the platform also provides paid access to the so-called HackTheBox Pro Labs for advanced training purposes. Pro Labs are immersive Active Directory networks that are designed to simulate real-world environments and consist of multiple machines that are connected to each other. The overall goal of each lab is to obtain Domain Admin privileges on the entire network and collect all flags along the way that are then submitted as a proof of compromise. While some flags are necessary to progress through the lab, others are acquired by completing additional exploitation on standalone domains or machines in the network. After completion, a certificate is issued that can be used to prove the holder&rsquo;s skills and knowledge in the field of penetration testing Active Directory environments and red team tactics.</p>
 <p>The Pro Lab service is subscription paid: For 40€ per month, a buyer gets access to all 6 networks with difficulties ranging from suiting beginner penetration testers to APT-level red team operators. The labs can be completed via VPN access in any order and at any time, as long as the subscription is active.</p>
 
-<h2 id="offshore-trust-terror" class="header-anchor-wrapper">Offshore: Trust Terror
-  <a href="#offshore-trust-terror" class="header-anchor-link">
-    <svg width="16px" height="16px" viewBox="0 0 24 24">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
-</svg>
-
-</svg>
-  </a>
-</h2>
+<h2>Offshore: Trust Terror</h2>
 
 <p>Starting a week into July, the Offshore lab was the first network I tackled. This Penetration Tester Level 3 lab consists of 21 machines with a total of 38 flags to be collected along the journey. With an environment that big, it was no surprise that the Offshore lab took me the longest to complete. Without taking away too much from the attack vectors and topics covered in the lab, Offshore focuses primarily on conventional penetration testing, which includes exploiting CVEs, credential gathering and common Active Directory misconfigurations. Where I took away the most from the lab was the enumeration and exploitation of domain and forest trusts. Due to the sheer size of the network, the Offshore network was divided into multiple domains with different trust relationships between them. It was more often than not necessary to obtain Domain Admin privileges on one domain in order to access the next one. Visualizing the landscape with tools like <a href="https://github.com/BloodHoundAD/BloodHound">BloodHound</a> was absolutely crucial for finding the necessary attack vectors to progress.</p>
 <p>For auditing a network of this scale, simple reverse shell handlers are simply not enough to keep track of all the machines and their respective shells. It demands for a more advanced approach, using a Command &amp; Control framework. The <a href="https://www.thec2matrix.com/">C2-Matrix</a> provides a great overview of the most popular frameworks and their respective features, like Metasploit or the infamous Cobalt Strike. I personally fell in love with the <a href="https://havocframework.com/">Havoc</a> framework, due to its beautiful user interface, open source code and uncanny similarity to the commercial Cobalt Strike. Havoc manages sessions that are created by executing agents (so-called demons) on the target machines and allows the user to use a variety of commands and modules to interact with the victim hosts.</p>
 <p>It was also in this lab when I learned the importance of pivoting. For those unaware, pivoting is the process of using a compromised machine to attack other machines in the network. This is especially useful when the compromised machine is not directly accessible from the attacker&rsquo;s machine. While I initially attempted to pivot using a socks proxy on the target machine and proxychains on the attacker box, this turned out to be very inefficient and resulted in the incredible long runtime of scans and commands. Luckily, I came across the fantastic <a href="https://github.com/Nicocha30/ligolo-ng">ligolo-ng</a> tool, which instead uses a TCP tunnel to forward traffic from the target machine to the attacker&rsquo;s machine. This greatly improved the speed of scans and commands and made the lab a lot more enjoyable. It also proved to be very useful for the subsequent labs, since those are heavily reliant on pivoting as well.</p>
 <p>Overall, I absolutely enjoyed the Offshore lab. It was a great introduction to the Pro Labs and provided a lot of knowledge that I could apply to the subsequent labs. However, some flags where hidden in very specific places and required a lot of enumeration to find, which was slightly annoying, especially since I had already compromised the entire forest and but still had to go back to the side quests to obtain the certificates. The intention behind that is obviously to teach new techniques and encourage the user to enumerate more, but I personally found it slightly annoying at the end.</p>
 
-<h2 id="rastalabs-evasion-madness" class="header-anchor-wrapper">RastaLabs: Evasion Madness
-  <a href="#rastalabs-evasion-madness" class="header-anchor-link">
-    <svg width="16px" height="16px" viewBox="0 0 24 24">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
-</svg>
-
-</svg>
-  </a>
-</h2>
+<h2>RastaLabs: Evasion Madness</h2>
 
 <p>I started RastaLabs, the first Red Team Operator lab in the series directly after finishing Offshore. In contrast to the aforementioned, RastaLabs only contains 15 machines and requires 22 flags to be submitted. RastaLabs is heavily oriented towards red teaming and focuses on the evasion of detection mechanisms. This includes the evasion of anti-virus software, network traffic monitoring and bypassing other endpoint restrictions like AppLocker. This proved to be rather challenging, since I had never dealt with AV evasion of this scale before. It in turn provided a great learning experience and motivated me to dive deeper into malware development and evading detection mechanisms and lead me to create a simple shellcode stager using <a href="https://nim-lang.org/">Nim</a> which I used to execute my Havoc demons in-memory. Since RastaLabs is a Red Team lab, it included the exploitation of interactive users via malicious phishing emails and a lot of interesting credential harvesting techniques, like exploiting a KeePass password database.</p>
 <p>Of course I also discovered numerous new Active Directory and Kerberos exploitation techniques, as well as other attacks that I found incredibly interesting. At this point I want to mention two resources that helped me a lot during the labs: <a href="https://book.hacktricks.xyz/welcome/readme">HackTricks</a> and <a href="https://www.ired.team/">ired.team</a>. Both of these sources provide valuable information on penetration testing tools, privilege escalation, Active Directory exploitation and much more. I can highly recommend them to anyone who is interested in learning more about these topics.</p>
@@ -355,42 +322,32 @@
 <pre tabindex="0"><code>dotnet inline-execute /opt/win-binaries/Rubeus.exe triage
 </code></pre><p>I really enjoyed RastaLabs because it taught me a lot of new techniques and procedures. Since I was already familiar with my toolset from the previous lab, I was able to progress through the lab a lot faster and complete it after roughly 10 days. Again, my only complaint is that some flags were hidden in very strange and specific places and required a lot of enumeration and support to find. I also want to give a heads-up to anyone who is interested in starting RastaLabs: Use multiple different password lists for brute-forcing or cracking and consider creating your own, it will save you a lot of time.</p>
 
-<h2 id="zephyr-pivoting-nightmare" class="header-anchor-wrapper">Zephyr: Pivoting Nightmare
-  <a href="#zephyr-pivoting-nightmare" class="header-anchor-link">
-    <svg width="16px" height="16px" viewBox="0 0 24 24">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
-</svg>
-
-</svg>
-  </a>
-</h2>
+<h2>Zephyr: Pivoting Nightmare</h2>
 
 <p>After the quick and successful completion of RastaLabs, I was highly motivated to attack the Zephyr Pro Lab. This Red Team Operator Level 1 lab consists of 17 machines and 17 flags and to me seemed like a combination of Offshore and RastaLabs. From Offshore, it inherited the cross-domain and forest trust attacks while it also featured interactive users and defense evasion like RastaLabs, but to a lesser extent. What was very different to the previous networks is that no machine in the Zephyr lab allowed RDP access, meaning I had to rely purely on Havoc und evil-winrm for remote access and post-exploitation. In addition to that, my good friend ligolo-ng came in handy again for pivoting through the network, where some hosts where pretty tricky to reach.</p>
 <p>Zephyr covered a variety of Active Directory misconfiguration relating to ACL abuse and group memberships, as well as very interesting MSSQL Server attacks. It also featured CVEs that I had not heard of before, which was a great opportunity to learn about new exploits and how to use them. It also proved to be beneficial to improve my enumeration and local privilege escalation skills.</p>
 <p>At this point, I was already very familiar with the Active Directory penetration testing process and knew what to look for when I encountered different AD ACLs or configurations. I had also become very comfortable with Havoc, Bloodhound, Rubeus, mimikatz and loads of other tools I consistently used during the labs. Like RastaLabs, Zephyr took me roughly 10 days to finish and thus completed my summer of Pro Labs. While for this lab, the flags very not as hidden as in the previous labs, I had some issues with pivoting to certain machines, which was very frustrating at times and it seemed to me like the lab was significantly less stable than the previous ones.</p>
 
-<h2 id="conclusion" class="header-anchor-wrapper">Conclusion
-  <a href="#conclusion" class="header-anchor-link">
-    <svg width="16px" height="16px" viewBox="0 0 24 24">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-    stroke-linejoin="round">
-    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
-</svg>
-
-</svg>
-  </a>
-</h2>
+<h2>Conclusion</h2>
 
 <p>HackTheBox&rsquo;s Offshore, RastaLabs and Zephyr undoubtedly took my understanding of Active Directory infrastructure, configuration and exploitation to another level. I have learned by far the most during these labs and I am very happy to have been able to complete them. I can highly recommend them to anyone who is interested in improving their Active Directory skillset as well as anyone who wants to discover new adversarial techniques and procedures. This is however not the end! I am looking forward to completing the remaining three Pro Labs, especially the advanced Cybernetics and APT Labs networks and will write a follow-up blog post once I have finished them as well.</p>
 </article></div>
+            
+
+        </div>
+    </div>
+    <aside class="toc-sidebar">
+        <div class="toc-sidebar-title">Contents</div>
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#what-are-hackthebox-pro-labs">What are HackTheBox Pro Labs?</a></li>
+    <li><a href="#offshore-trust-terror">Offshore: Trust Terror</a></li>
+    <li><a href="#rastalabs-evasion-madness">RastaLabs: Evasion Madness</a></li>
+    <li><a href="#zephyr-pivoting-nightmare">Zephyr: Pivoting Nightmare</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </aside>
     
 </div>
 
